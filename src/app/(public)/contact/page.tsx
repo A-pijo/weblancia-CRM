@@ -10,7 +10,7 @@ import { FaqJsonLd } from "@/components/shared/json-ld"
 import { EnvelopeSimple, Phone, MapPin, Clock } from "@/components/icons"
 import { siteConfig } from "@/lib/constants/site"
 import { ContactForm } from "./contact-form"
-import type { FAQ } from "@/types/common"
+import { getActiveFAQWithIds } from "@/lib/faq/queries"
 
 export const metadata: Metadata = {
   title: "Contact | Weblancia",
@@ -46,30 +46,9 @@ const contactInfo = [
   },
 ]
 
-const faqItems: FAQ[] = [
-  {
-    question: "Quels sont vos tarifs ?",
-    answer:
-      "Nos tarifs varient en fonction de la complexité et de l'ampleur de chaque projet. Nous proposons des devis personnalisés après avoir compris vos besoins. Contactez-nous pour une estimation gratuite.",
-  },
-  {
-    question: "Quels sont les délais de réalisation ?",
-    answer:
-      "Les délais dépendent du type de projet. Un site vitrine peut être livré en 2 à 4 semaines, tandis qu'un e-commerce ou une application sur mesure peut prendre 2 à 6 mois. Nous établissons un calendrier précis lors de notre première consultation.",
-  },
-  {
-    question: "Comment se déroule notre collaboration ?",
-    answer:
-      "Notre processus commence par une consultation gratuite pour comprendre vos objectifs. Ensuite, nous élaborons une stratégie, concevons les maquettes, développons la solution, et assurons un suivi après livraison. Vous êtes impliqué à chaque étape.",
-  },
-  {
-    question: "Proposez-vous un support après la livraison ?",
-    answer:
-      "Oui, nous offrons différentes formules de maintenance et de support pour garantir le bon fonctionnement de votre projet. Nous sommes disponibles pour toute évolution ou correction technique après la mise en ligne.",
-  },
-]
+export default async function ContactPage() {
+  const faqItems = await getActiveFAQWithIds()
 
-export default function ContactPage() {
   return (
     <>
       <HeroDefault
@@ -130,10 +109,12 @@ export default function ContactPage() {
             <h2 className="text-h2 font-semibold text-center mb-12">Questions fréquentes</h2>
             <div className="max-w-3xl mx-auto">
               <Accordion>
-                {faqItems.map((item, index) => (
-                  <AccordionItem key={index} title={item.question}>
-                    {item.answer}
-                  </AccordionItem>
+                {faqItems.map((item) => (
+                  <div key={item.id} id={`faq-${item.id}`}>
+                    <AccordionItem title={item.question}>
+                      {item.answer}
+                    </AccordionItem>
+                  </div>
                 ))}
               </Accordion>
             </div>

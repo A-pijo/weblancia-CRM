@@ -8,6 +8,7 @@ import { SectionHeader } from "@/components/shared/section-header"
 import { TeamCard } from "@/components/cards/team-card"
 import type { TeamMember } from "@/types/team"
 import { siteConfig } from "@/lib/constants/site"
+import { getActiveTeamMembers } from "@/lib/team/queries"
 
 export const metadata: Metadata = {
   title: "Notre Équipe | Weblancia",
@@ -27,16 +28,8 @@ const values = [
   { title: "Engagement", description: "Nous nous impliquons pleinement dans la réussite de chaque projet comme s'il était le nôtre." },
 ]
 
-const teamMembers: TeamMember[] = [
-  { name: "Yassine El Khazouni", role: "Fondateur & CEO", bio: "Expert en transformation digitale avec plus de 8 ans d'expérience dans le conseil et le développement web.", photo: "/images/team/yassine.jpg", social: { linkedin: "https://linkedin.com", twitter: "https://twitter.com" } },
-  { name: "Sara Benali", role: "Directrice Marketing", bio: "Spécialiste en marketing digital et stratégies de croissance omnicanales.", photo: "/images/team/sara.jpg", social: { linkedin: "https://linkedin.com" } },
-  { name: "Omar Tazi", role: "Lead Developer", bio: "Développeur full-stack passionné par les architectures modernes et les performances web.", photo: "/images/team/omar.jpg", social: { linkedin: "https://linkedin.com" } },
-  { name: "Leila El Amrani", role: "Design Director", bio: "Designer UI/UX avec une passion pour les interfaces intuitives et les expériences utilisateur mémorables.", photo: "/images/team/leila.jpg" },
-  { name: "Khalid Idrissi", role: "Chef de Projet", bio: "Project manager certifié PMP avec une expertise en méthodologies agiles et delivery.", photo: "/images/team/khalid.jpg", social: { linkedin: "https://linkedin.com" } },
-]
-
-export default function TeamPage() {
-  const members = teamMembers
+export default async function TeamPage() {
+  const teamMembers: TeamMember[] = await getActiveTeamMembers()
 
   return (
     <>
@@ -55,11 +48,13 @@ export default function TeamPage() {
               align="center"
             />
           </AnimatedReveal>
-          {members.length > 0 ? (
+          {teamMembers.length > 0 ? (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-8">
-              {members.map((member, index) => (
+              {teamMembers.map((member, index) => (
                 <AnimatedReveal key={member.name} delay={index * 0.08}>
-                  <TeamCard member={member} />
+                  <div id={`member-${member.id}`}>
+                    <TeamCard member={member} />
+                  </div>
                 </AnimatedReveal>
               ))}
             </div>

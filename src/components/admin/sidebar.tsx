@@ -40,6 +40,7 @@ const NAV_ITEMS: (NavItem | "divider")[] = [
   { label: "Academy", href: "/admin/academy", icon: icons.academy },
   { label: "Testimonials", href: "/admin/testimonials", icon: icons.testimonials },
   { label: "FAQ", href: "/admin/faq", icon: icons.faq },
+  { label: "Team", href: "/admin/team", icon: icons.users },
   { label: "Media", href: "/admin/media", icon: icons.media },
   "divider",
   { label: "SEO", href: "/admin/seo", icon: icons.seo },

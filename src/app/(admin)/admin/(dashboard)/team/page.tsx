@@ -7,53 +7,55 @@ import { ActionButton } from "@/components/admin/action-button"
 import { DataTable } from "@/components/admin/data-table"
 import type { Column } from "@/components/admin/data-table"
 
-interface FAQRow {
+interface TeamMemberRow {
   id: number
-  question: string
+  name: string
+  role: string
   isActive: boolean
   displayOrder: number
 }
 
-export default function AdminFAQPage() {
+export default function AdminTeamPage() {
   const router = useRouter()
-  const [items, setItems] = useState<FAQRow[]>([])
+  const [members, setMembers] = useState<TeamMemberRow[]>([])
   const [total, setTotal] = useState(0)
   const [page, setPage] = useState(1)
   const [totalPages, setTotalPages] = useState(1)
   const [loading, setLoading] = useState(true)
 
-  const fetchItems = useCallback(async () => {
+  const fetchMembers = useCallback(async () => {
     setLoading(true)
     const params = new URLSearchParams()
     params.set("page", String(page))
-    params.set("limit", "50")
-    const res = await fetch(`/api/faq?${params}`)
+    params.set("limit", "20")
+    const res = await fetch(`/api/team?${params}`)
     const data = await res.json()
-    setItems(data.items ?? [])
+    setMembers(data.items ?? [])
     setTotal(data.total ?? 0)
     setTotalPages(data.totalPages ?? 1)
     setLoading(false)
   }, [page])
 
-  useEffect(() => { fetchItems() }, [fetchItems])
+  useEffect(() => { fetchMembers() }, [fetchMembers])
 
   const handleToggle = async (id: number, isActive: boolean) => {
-    await fetch(`/api/faq/${id}`, {
+    await fetch(`/api/team/${id}`, {
       method: "PATCH",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ _action: "toggle", isActive }),
     })
-    fetchItems()
+    fetchMembers()
   }
 
   const handleDelete = async (id: number) => {
-    if (!confirm("Delete this FAQ?")) return
-    await fetch(`/api/faq/${id}`, { method: "DELETE" })
-    fetchItems()
+    if (!confirm("Delete this team member?")) return
+    await fetch(`/api/team/${id}`, { method: "DELETE" })
+    fetchMembers()
   }
 
-  const columns: Column<FAQRow>[] = [
-    { key: "question", label: "Question", render: (m) => <span className="font-medium line-clamp-1">{m.question}</span> },
+  const columns: Column<TeamMemberRow>[] = [
+    { key: "name", label: "Name", render: (m) => <span className="font-medium">{m.name}</span> },
+    { key: "role", label: "Role", render: (m) => <span className="text-admin-text-secondary">{m.role}</span> },
     { key: "displayOrder", label: "Order", render: (m) => <span>{m.displayOrder}</span> },
     {
       key: "isActive", label: "Status", render: (m) => (
@@ -66,7 +68,7 @@ export default function AdminFAQPage() {
     {
       key: "actions", label: "Actions", render: (m) => (
         <div className="flex gap-2">
-          <button onClick={() => router.push(`/admin/faq/${m.id}`)}
+          <button onClick={() => router.push(`/admin/team/${m.id}`)}
             className="text-xs text-admin-accent hover:underline">Edit</button>
           <button onClick={() => handleDelete(m.id)}
             className="text-xs text-red-400 hover:underline">Delete</button>
@@ -78,17 +80,17 @@ export default function AdminFAQPage() {
   return (
     <div className="space-y-6">
       <PageHeader
-        title="FAQ"
-        description={`${total} question${total === 1 ? "" : "s"}`}
+        title="Team"
+        description={`${total} member${total === 1 ? "" : "s"}`}
         actions={
-          <ActionButton onClick={() => router.push("/admin/faq/new")}>
+          <ActionButton onClick={() => router.push("/admin/team/new")}>
             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="12" y1="5" x2="12" y2="19" /><line x1="5" y1="12" x2="19" y2="12" /></svg>
-            New FAQ
+            New Member
           </ActionButton>
         }
       />
       <DataTable
-        items={items}
+        items={members}
         total={total}
         page={page}
         totalPages={totalPages}

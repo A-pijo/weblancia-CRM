@@ -16,6 +16,43 @@ const db = new PrismaClient({ adapter })
 async function main() {
   console.log("Seeding database...")
 
+  // ── Team Members (always runs) ───────────────────────────
+
+  const existingTeam = await db.teamMember.count()
+  if (existingTeam > 0) {
+    console.log("Team members already exist, skipping...")
+  } else {
+    const teamMembers = [
+      { name: "Yassine El Khazouni", role: "Fondateur & CEO", bio: "Expert en transformation digitale avec plus de 8 ans d'expérience dans le conseil et le développement web.", image: "/images/team/yassine.jpg", linkedin: "https://linkedin.com", twitter: "https://twitter.com", displayOrder: 1, isActive: true },
+      { name: "Sara Benali", role: "Directrice Marketing", bio: "Spécialiste en marketing digital et stratégies de croissance omnicanales.", image: "/images/team/sara.jpg", linkedin: "https://linkedin.com", displayOrder: 2, isActive: true },
+      { name: "Omar Tazi", role: "Lead Developer", bio: "Développeur full-stack passionné par les architectures modernes et les performances web.", image: "/images/team/omar.jpg", linkedin: "https://linkedin.com", displayOrder: 3, isActive: true },
+      { name: "Leila El Amrani", role: "Design Director", bio: "Designer UI/UX avec une passion pour les interfaces intuitives et les expériences utilisateur mémorables.", image: "/images/team/leila.jpg", displayOrder: 4, isActive: true },
+      { name: "Khalid Idrissi", role: "Chef de Projet", bio: "Project manager certifié PMP avec une expertise en méthodologies agiles et delivery.", image: "/images/team/khalid.jpg", linkedin: "https://linkedin.com", displayOrder: 5, isActive: true },
+    ]
+    for (const m of teamMembers) {
+      await db.teamMember.create({ data: m })
+    }
+    console.log(`Seeded ${teamMembers.length} team members`)
+  }
+
+  // ── FAQ (always runs) ──────────────────────────────────────
+
+  const existingFAQ = await db.fAQ.count()
+  if (existingFAQ > 0) {
+    console.log("FAQs already exist, skipping...")
+  } else {
+    const faqs = [
+      { question: "Quels sont vos tarifs ?", answer: "Nos tarifs varient en fonction de la complexité et de l'ampleur de chaque projet. Nous proposons des devis personnalisés après avoir compris vos besoins. Contactez-nous pour une estimation gratuite.", displayOrder: 1, isActive: true },
+      { question: "Quels sont les délais de réalisation ?", answer: "Les délais dépendent du type de projet. Un site vitrine peut être livré en 2 à 4 semaines, tandis qu'un e-commerce ou une application sur mesure peut prendre 2 à 6 mois. Nous établissons un calendrier précis lors de notre première consultation.", displayOrder: 2, isActive: true },
+      { question: "Comment se déroule notre collaboration ?", answer: "Notre processus commence par une consultation gratuite pour comprendre vos objectifs. Ensuite, nous élaborons une stratégie, concevons les maquettes, développons la solution, et assurons un suivi après livraison. Vous êtes impliqué à chaque étape.", displayOrder: 3, isActive: true },
+      { question: "Proposez-vous un support après la livraison ?", answer: "Oui, nous offrons différentes formules de maintenance et de support pour garantir le bon fonctionnement de votre projet. Nous sommes disponibles pour toute évolution ou correction technique après la mise en ligne.", displayOrder: 4, isActive: true },
+    ]
+    for (const f of faqs) {
+      await db.fAQ.create({ data: f })
+    }
+    console.log(`Seeded ${faqs.length} FAQs`)
+  }
+
   const existingSuperAdmin = await db.role.findUnique({ where: { name: "SuperAdmin" } })
   if (!existingSuperAdmin) {
     await db.role.createMany({
@@ -45,7 +82,6 @@ async function main() {
   const existingCategories = await db.serviceCategory.findMany()
   if (existingCategories.length > 0) {
     console.log("Service categories already exist, skipping...")
-    await db.$disconnect()
     return
   }
 

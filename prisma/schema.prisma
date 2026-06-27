@@ -569,6 +569,25 @@ model SeoMetadata {
   certificates Certificate[]
 }
 
+// ── Team ───────────────────────────────────────────────────
+
+model TeamMember {
+  id           Int      @id @default(autoincrement())
+  name         String   @db.VarChar(200)
+  role         String   @db.VarChar(200)
+  bio          String?  @db.Text
+  image        String?  @db.VarChar(500)
+  linkedin     String?  @db.VarChar(500)
+  twitter      String?  @db.VarChar(500)
+  github       String?  @db.VarChar(500)
+  email        String?  @db.VarChar(200)
+  phone        String?  @db.VarChar(50)
+  displayOrder Int      @default(0)
+  isActive     Boolean  @default(true)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+}
+
 // ── Settings ────────────────────────────────────────────────
 
 model Setting {
