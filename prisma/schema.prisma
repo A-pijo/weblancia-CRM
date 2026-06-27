@@ -1,0 +1,584 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "mysql"
+}
+
+// ── Roles & Users ──────────────────────────────────────────
+
+model Role {
+  id          Int     @id @default(autoincrement())
+  name        String  @unique @db.VarChar(50)
+  description String? @db.Text
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  users User[]
+}
+
+model User {
+  id        Int      @id @default(autoincrement())
+  email     String   @unique @db.VarChar(255)
+  password  String   @db.VarChar(255)
+  name      String   @db.VarChar(100)
+  roleId    Int
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  role Role @relation(fields: [roleId], references: [id], onDelete: Restrict)
+
+  @@index([roleId])
+}
+
+// ── Services ────────────────────────────────────────────────
+
+model ServiceCategory {
+  id           Int     @id @default(autoincrement())
+  slug         String  @unique @db.VarChar(100)
+  title        String  @db.VarChar(200)
+  description  String? @db.Text
+  icon         String? @db.VarChar(50)
+  displayOrder Int     @default(0)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  services Service[]
+}
+
+model Service {
+  id               Int      @id @default(autoincrement())
+  slug             String   @unique @db.VarChar(100)
+  title            String   @db.VarChar(200)
+  description      String?  @db.Text
+  fullDescription  String?  @db.Text
+  icon             String?  @db.VarChar(50)
+  categoryId       Int
+  isFeatured       Boolean  @default(false)
+  isActive         Boolean  @default(true)
+  displayOrder     Int      @default(0)
+
+  startingPrice    Float?
+  currency         String?  @db.VarChar(10)
+  ctaText          String?  @db.VarChar(100)
+
+  deliverables     Json?
+  benefits         Json?
+  process          Json?
+  technologies     Json?
+  faqs             Json?
+  relatedServices  Json?
+
+  featuredImage    String?  @db.VarChar(500)
+  galleryImages    Json?
+
+  clientCount      Int?
+  projectCount     Int?
+  satisfactionRate Float?
+
+  outcome          String?  @db.Text
+  seoMetadataId    Int?
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+
+  category     ServiceCategory @relation(fields: [categoryId], references: [id], onDelete: Restrict)
+  seoMetadata  SeoMetadata?    @relation(fields: [seoMetadataId], references: [id], onDelete: SetNull)
+
+  @@index([categoryId])
+  @@index([isActive])
+  @@index([isFeatured])
+}
+
+// ── Portfolio ──────────────────────────────────────────────
+
+model Project {
+  id            Int      @id @default(autoincrement())
+  slug          String   @unique @db.VarChar(100)
+  title         String   @db.VarChar(200)
+  description   String?  @db.Text
+  client        String?  @db.VarChar(200)
+  clientLogo    String?  @db.VarChar(500)
+  clientWebsite String?  @db.VarChar(500)
+  industry      String?  @db.VarChar(100)
+  country       String?  @db.VarChar(100)
+  date          DateTime?
+  duration      String?  @db.VarChar(50)
+  url           String?  @db.VarChar(500)
+  isFeatured    Boolean  @default(false)
+  isActive      Boolean  @default(true)
+  displayOrder  Int      @default(0)
+  status        String?  @db.VarChar(50)
+
+  // Content
+  fullCaseStudy String? @db.Text
+  challenge     String? @db.Text
+  solution      String? @db.Text
+
+  // Structured data
+  results          Json?
+  technologies     Json?
+  servicesProvided Json?
+  teamMembers      Json?
+  clientTestimonial Json?
+
+  // Media
+  featuredImage     String? @db.VarChar(500)
+  desktopScreenshot String? @db.VarChar(500)
+  tabletScreenshot  String? @db.VarChar(500)
+  mobileScreenshot  String? @db.VarChar(500)
+  videoUrl          String? @db.VarChar(500)
+
+  seoMetadataId Int?
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  images      ProjectImage[]
+  seoMetadata SeoMetadata? @relation(fields: [seoMetadataId], references: [id], onDelete: SetNull)
+
+  @@index([isFeatured])
+  @@index([isActive])
+  @@index([displayOrder])
+}
+
+model ProjectImage {
+  id           Int     @id @default(autoincrement())
+  projectId    Int
+  url          String  @db.VarChar(500)
+  alt          String? @db.VarChar(200)
+  width        Int?
+  height       Int?
+  displayOrder Int    @default(0)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  project Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
+
+  @@index([projectId])
+}
+
+// ── Blog ────────────────────────────────────────────────────
+
+model BlogCategory {
+  id          Int     @id @default(autoincrement())
+  slug        String  @unique @db.VarChar(100)
+  title       String  @db.VarChar(200)
+  description String? @db.Text
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  posts BlogPost[]
+}
+
+model BlogPost {
+  id            Int      @id @default(autoincrement())
+  slug          String   @unique @db.VarChar(100)
+  title         String   @db.VarChar(200)
+  excerpt       String?  @db.Text
+  content       String?  @db.Text
+  categoryId    Int
+  author        String?  @db.VarChar(100)
+  publishedAt   DateTime?
+  isPublished   Boolean  @default(false)
+  isFeatured    Boolean  @default(false)
+  readingTime   Int?
+  tags          Json?
+  featuredImage String?  @db.VarChar(500)
+
+  // SEO fields
+  focusKeyword  String? @db.VarChar(200)
+  canonicalUrl  String? @db.VarChar(500)
+  robots        String? @db.VarChar(100)
+  ogTitle       String? @db.VarChar(200)
+  ogDescription String? @db.Text
+  ogImage       String? @db.VarChar(500)
+  twitterCard   String? @db.VarChar(100)
+
+  seoMetadataId Int?
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  category    BlogCategory @relation(fields: [categoryId], references: [id], onDelete: Restrict)
+  seoMetadata SeoMetadata? @relation(fields: [seoMetadataId], references: [id], onDelete: SetNull)
+
+  @@index([categoryId])
+  @@index([publishedAt])
+  @@index([isPublished])
+  @@index([isFeatured])
+}
+
+// ── Testimonials ────────────────────────────────────────────
+
+model Testimonial {
+  id           Int     @id @default(autoincrement())
+  name         String  @db.VarChar(100)
+  role         String? @db.VarChar(100)
+  company      String? @db.VarChar(200)
+  content      String  @db.Text
+  rating       Int?
+  avatar       String? @db.VarChar(500)
+  displayOrder Int    @default(0)
+  isActive     Boolean @default(true)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  @@index([isActive])
+  @@index([displayOrder])
+}
+
+// ── FAQ ─────────────────────────────────────────────────────
+
+model FAQ {
+  id           Int     @id @default(autoincrement())
+  question     String  @db.Text
+  answer       String  @db.Text
+  category     String? @db.VarChar(100)
+  displayOrder Int    @default(0)
+  isActive     Boolean @default(true)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  @@index([isActive])
+  @@index([category])
+}
+
+// ── Academy ─────────────────────────────────────────────────
+
+model AcademyCategory {
+  id          Int      @id @default(autoincrement())
+  slug        String   @unique @db.VarChar(100)
+  title       String   @db.VarChar(200)
+  description String?  @db.Text
+  icon        String?  @db.VarChar(50)
+  displayOrder Int     @default(0)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  courses    Course[]
+  workshops  Workshop[]
+  resources  Resource[]
+  certificates Certificate[]
+}
+
+model Course {
+  id                   Int      @id @default(autoincrement())
+  slug                 String   @unique @db.VarChar(100)
+  title                String   @db.VarChar(200)
+  shortDescription     String?  @db.Text
+  fullDescription      String?  @db.Text
+  instructor           String?  @db.VarChar(100)
+  academyCategoryId    Int?
+  level                String?  @db.VarChar(50)
+  duration             String?  @db.VarChar(50)
+  language             String?  @db.VarChar(50)
+  price                Decimal? @db.Decimal(10, 2)
+  discountPrice        Decimal? @db.Decimal(10, 2)
+  isFeatured           Boolean  @default(false)
+  isPublished          Boolean  @default(false)
+  thumbnail            String?  @db.VarChar(500)
+  gallery              Json?
+  curriculum           Json?
+  requirements         Json?
+  learningOutcomes     Json?
+  certificateIncluded  Boolean  @default(false)
+  downloadableResources Json?
+  faqs                 Json?
+
+  // SEO fields
+  focusKeyword  String? @db.VarChar(200)
+  canonicalUrl  String? @db.VarChar(500)
+  robots        String? @db.VarChar(100)
+  ogTitle       String? @db.VarChar(200)
+  ogDescription String? @db.Text
+  ogImage       String? @db.VarChar(500)
+  twitterCard   String? @db.VarChar(100)
+
+  seoMetadataId Int?
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  seoMetadata SeoMetadata? @relation(fields: [seoMetadataId], references: [id], onDelete: SetNull)
+  category     AcademyCategory? @relation(fields: [academyCategoryId], references: [id], onDelete: SetNull)
+
+  registrations CourseRegistration[]
+  sessions      CourseSession[]
+
+  @@index([isPublished])
+  @@index([isFeatured])
+  @@index([academyCategoryId])
+  @@index([level])
+}
+
+model Workshop {
+  id                   Int      @id @default(autoincrement())
+  slug                 String   @unique @db.VarChar(100)
+  title                String   @db.VarChar(200)
+  description          String?  @db.Text
+  instructor           String?  @db.VarChar(100)
+  academyCategoryId    Int?
+  date                 DateTime?
+  time                 String?  @db.VarChar(20)
+  duration             String?  @db.VarChar(50)
+  seats                Int?
+  location             String?  @db.VarChar(200)
+  type                 String?  @db.VarChar(50)
+  price                Decimal? @db.Decimal(10, 2)
+  registrationDeadline DateTime?
+  status               String?  @db.VarChar(50)
+  isPublished          Boolean  @default(false)
+
+  focusKeyword  String? @db.VarChar(200)
+  canonicalUrl  String? @db.VarChar(500)
+  robots        String? @db.VarChar(100)
+  ogTitle       String? @db.VarChar(200)
+  ogDescription String? @db.Text
+  ogImage       String? @db.VarChar(500)
+  twitterCard   String? @db.VarChar(100)
+
+  seoMetadataId Int?
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  seoMetadata SeoMetadata? @relation(fields: [seoMetadataId], references: [id], onDelete: SetNull)
+  category     AcademyCategory? @relation(fields: [academyCategoryId], references: [id], onDelete: SetNull)
+
+  @@index([isPublished])
+  @@index([academyCategoryId])
+  @@index([status])
+  @@index([date])
+}
+
+model Resource {
+  id            Int      @id @default(autoincrement())
+  slug          String   @unique @db.VarChar(100)
+  title         String   @db.VarChar(200)
+  description   String?  @db.Text
+  academyCategoryId Int?
+  type          String?  @db.VarChar(50)
+  file          String?  @db.VarChar(500)
+  thumbnail     String?  @db.VarChar(500)
+  image         String?  @db.VarChar(500)
+  isFree        Boolean  @default(true)
+  isPublished   Boolean  @default(false)
+  downloads     Int      @default(0)
+
+  focusKeyword  String? @db.VarChar(200)
+  canonicalUrl  String? @db.VarChar(500)
+  robots        String? @db.VarChar(100)
+  ogTitle       String? @db.VarChar(200)
+  ogDescription String? @db.Text
+  ogImage       String? @db.VarChar(500)
+  twitterCard   String? @db.VarChar(100)
+
+  seoMetadataId Int?
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  seoMetadata SeoMetadata? @relation(fields: [seoMetadataId], references: [id], onDelete: SetNull)
+  category     AcademyCategory? @relation(fields: [academyCategoryId], references: [id], onDelete: SetNull)
+
+  @@index([isPublished])
+  @@index([type])
+  @@index([academyCategoryId])
+}
+
+model Certificate {
+  id            Int      @id @default(autoincrement())
+  slug          String   @unique @db.VarChar(100)
+  title         String   @db.VarChar(200)
+  description   String?  @db.Text
+  requirements  Json?
+  badge         String?  @db.VarChar(500)
+  duration      String?  @db.VarChar(50)
+  level         String?  @db.VarChar(50)
+  academyCategoryId Int?
+  isPublished   Boolean  @default(false)
+
+  focusKeyword  String? @db.VarChar(200)
+  canonicalUrl  String? @db.VarChar(500)
+  robots        String? @db.VarChar(100)
+  ogTitle       String? @db.VarChar(200)
+  ogDescription String? @db.Text
+  ogImage       String? @db.VarChar(500)
+  twitterCard   String? @db.VarChar(100)
+
+  seoMetadataId Int?
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  seoMetadata SeoMetadata? @relation(fields: [seoMetadataId], references: [id], onDelete: SetNull)
+  category     AcademyCategory? @relation(fields: [academyCategoryId], references: [id], onDelete: SetNull)
+
+  @@index([isPublished])
+  @@index([academyCategoryId])
+}
+
+// ── Course Registration ────────────────────────────────────
+
+model CourseRegistration {
+  id             Int      @id @default(autoincrement())
+  firstName      String   @db.VarChar(100)
+  lastName       String   @db.VarChar(100)
+  email          String   @db.VarChar(255)
+  phone          String?  @db.VarChar(50)
+  country        String?  @db.VarChar(100)
+  city           String?  @db.VarChar(100)
+  company        String?  @db.VarChar(200)
+  currentLevel   String?  @db.VarChar(100)
+  courseId       Int
+  preferredSession String? @db.VarChar(200)
+  message        String?  @db.Text
+  status         String   @default("pending") @db.VarChar(50)
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  course Course @relation(fields: [courseId], references: [id], onDelete: Cascade)
+
+  @@index([courseId])
+  @@index([status])
+  @@index([email])
+}
+
+model CourseSession {
+  id             Int      @id @default(autoincrement())
+  courseId       Int
+  title          String   @db.VarChar(200)
+  meetingLink    String?  @db.VarChar(500)
+  meetingPassword String? @db.VarChar(100)
+  trainer        String?  @db.VarChar(100)
+  startDate      DateTime
+  endDate        DateTime?
+  timezone       String?  @db.VarChar(50)
+  maxParticipants Int?
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  course Course @relation(fields: [courseId], references: [id], onDelete: Cascade)
+
+  @@index([courseId])
+  @@index([startDate])
+}
+
+// ── Forms & Submissions ─────────────────────────────────────
+
+model ContactRequest {
+  id        Int      @id @default(autoincrement())
+  name      String   @db.VarChar(100)
+  email     String   @db.VarChar(255)
+  phone     String?  @db.VarChar(50)
+  subject   String?  @db.VarChar(200)
+  company   String?  @db.VarChar(200)
+  message   String   @db.Text
+  isRead    Boolean  @default(false)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([isRead])
+  @@index([email])
+}
+
+model BookCall {
+  id              Int      @id @default(autoincrement())
+  name            String   @db.VarChar(100)
+  email           String   @db.VarChar(255)
+  phone           String?  @db.VarChar(50)
+  company         String?  @db.VarChar(200)
+  consultationType String? @db.VarChar(100)
+  date            String?  @db.VarChar(50)
+  time            String?  @db.VarChar(50)
+  notes           String?  @db.Text
+  isConfirmed     Boolean  @default(false)
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  @@index([isConfirmed])
+  @@index([email])
+}
+
+model StartProject {
+  id          Int      @id @default(autoincrement())
+  name        String   @db.VarChar(100)
+  email       String   @db.VarChar(255)
+  phone       String?  @db.VarChar(50)
+  company     String?  @db.VarChar(200)
+  projectType String?  @db.VarChar(100)
+  budget      String?  @db.VarChar(100)
+  timeline    String?  @db.VarChar(100)
+  description String   @db.Text
+  source      String?  @db.VarChar(100)
+  isRead      Boolean  @default(false)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([isRead])
+  @@index([email])
+}
+
+model NewsletterSubscriber {
+  id          Int      @id @default(autoincrement())
+  email       String   @unique @db.VarChar(255)
+  isActive    Boolean  @default(true)
+  subscribedAt DateTime @default(now())
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([isActive])
+}
+
+// ── Media ───────────────────────────────────────────────────
+
+model Media {
+  id        Int      @id @default(autoincrement())
+  url       String   @db.VarChar(500)
+  filename  String   @db.VarChar(255)
+  mimeType  String?  @db.VarChar(100)
+  size      Int?
+  width     Int?
+  height    Int?
+  alt       String?  @db.VarChar(200)
+  title     String?  @db.VarChar(255)
+  caption   String?  @db.Text
+  category  String?  @db.VarChar(100)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([mimeType])
+  @@index([category])
+}
+
+// ── SEO ─────────────────────────────────────────────────────
+
+model SeoMetadata {
+  id          Int      @id @default(autoincrement())
+  title       String?  @db.VarChar(200)
+  description String?  @db.Text
+  ogImage     String?  @db.VarChar(500)
+  canonicalUrl String? @db.VarChar(500)
+  noIndex     Boolean  @default(false)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  services    Service[]
+  projects    Project[]
+  posts       BlogPost[]
+  courses     Course[]
+  resources   Resource[]
+  workshops   Workshop[]
+  certificates Certificate[]
+}
+
+// ── Settings ────────────────────────────────────────────────
+
+model Setting {
+  id        Int      @id @default(autoincrement())
+  key       String   @unique @db.VarChar(100)
+  value     String   @db.Text
+  type      String?  @db.VarChar(50)
+  group     String?  @db.VarChar(100)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([group])
+}

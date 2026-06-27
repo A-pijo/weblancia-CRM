@@ -1,0 +1,169 @@
+{
+  "site": {
+    "name": "Weblancia",
+    "tagline": "Agence Digitale Premium",
+    "description": "Design, développement, SEO & branding — une agence digitale premium à Casablanca"
+  },
+  "nav": {
+    "work": "Work",
+    "services": "Services",
+    "academy": "Academy",
+    "insights": "Insights",
+    "about": "À propos",
+    "contact": "Contact",
+    "bookCall": "Réserver un appel",
+    "startProject": "Commencer un projet",
+    "search": "Rechercher"
+  },
+  "actions": {
+    "learnMore": "En savoir plus",
+    "contactUs": "Contactez-nous",
+    "getStarted": "Commencer",
+    "send": "Envoyer",
+    "submit": "Soumettre",
+    "cancel": "Annuler",
+    "close": "Fermer",
+    "accept": "Accepter",
+    "decline": "Refuser",
+    "readMore": "Lire la suite",
+    "viewAll": "Voir tout",
+    "back": "Retour",
+    "subscribe": "S'abonner"
+  },
+  "home": {
+    "heroTitle": "Nous créons des expériences digitales qui transforment les marques",
+    "heroSubtitle": "Design, développement, SEO et branding — une agence digitale premium à Casablanca qui donne vie à votre vision.",
+    "trustTitle": "Ils nous font confiance",
+    "processTitle": "Notre processus",
+    "testimonialsTitle": "Ce qu'ils disent",
+    "ctaTitle": "Prêt à donner vie à votre projet ?",
+    "ctaSubtitle": "Discutons de votre vision lors d'une consultation gratuite.",
+    "ctaButton": "Commencer votre projet"
+  },
+  "footer": {
+    "newsletterTitle": "Restez informé",
+    "newsletterText": "Recevez les dernières actualités et ressources dans votre boîte mail.",
+    "newsletterPlaceholder": "Votre email",
+    "services": "Services",
+    "work": "Work",
+    "academy": "Academy",
+    "connect": "Connect",
+    "copyright": "Tous droits réservés."
+  },
+  "cookie": {
+    "message": "Nous utilisons des cookies pour améliorer votre expérience. En continuant à naviguer sur ce site, vous acceptez notre utilisation des cookies.",
+    "accept": "Accepter",
+    "decline": "Refuser"
+  },
+  "search": {
+    "placeholder": "Rechercher un service, un projet, un article...",
+    "noResults": "Aucun résultat trouvé",
+    "results": "résultats"
+  },
+  "services": {
+    "title": "Nos Services",
+    "subtitle": "Des solutions digitales complètes pour propulser votre entreprise",
+    "allCategories": "Toutes les catégories",
+    "backToServices": "Retour aux services"
+  },
+  "work": {
+    "title": "Nos Réalisations",
+    "subtitle": "Découvrez nos projets récents et les résultats que nous avons obtenus pour nos clients",
+    "allWork": "Tout le travail",
+    "viewProject": "Voir le projet",
+    "result": "Résultat"
+  },
+  "about": {
+    "title": "À Propos",
+    "subtitle": "Une équipe passionnée dédiée à votre réussite digitale",
+    "team": "Notre Équipe",
+    "mission": "Notre Mission",
+    "careers": "Carrières",
+    "values": "Nos Valeurs"
+  },
+  "academy": {
+    "title": "Weblancia Academy",
+    "subtitle": "Formez-vous aux métiers du digital avec nos experts",
+    "courses": "Cours",
+    "workshops": "Ateliers",
+    "resources": "Ressources",
+    "certificates": "Certificats",
+    "careers": "Carrières",
+    "enroll": "S'inscrire",
+    "free": "Gratuit",
+    "level": "Niveau"
+  },
+  "consultation": {
+    "title": "Consultation Gratuite",
+    "subtitle": "Discutons de votre projet sans engagement",
+    "bookNow": "Réserver maintenant"
+  },
+  "contact": {
+    "title": "Contactez-nous",
+    "subtitle": "Une question ? Un projet ? Nous sommes là pour vous accompagner.",
+    "formName": "Nom complet",
+    "formEmail": "Email",
+    "formPhone": "Téléphone",
+    "formSubject": "Sujet",
+    "formMessage": "Message",
+    "formConsent": "J'accepte d'être contacté",
+    "formSubmit": "Envoyer le message",
+    "successTitle": "Merci !",
+    "successText": "Nous vous répondrons dans les 48 heures.",
+    "faqTitle": "Questions fréquentes",
+    "infoTitle": "Nos coordonnées"
+  },
+  "startProject": {
+    "title": "Commencer votre projet",
+    "subtitle": "Racontez-nous votre vision. Nous vous contacterons pour en discuter en détail.",
+    "personalInfo": "Informations personnelles",
+    "projectInfo": "Votre projet",
+    "name": "Nom complet",
+    "email": "Email",
+    "phone": "Téléphone",
+    "company": "Entreprise",
+    "projectType": "Type de projet",
+    "budget": "Budget",
+    "timeline": "Délai souhaité",
+    "source": "Comment nous avez-vous connu ?",
+    "description": "Description du projet",
+    "consent": "J'accepte les conditions de confidentialité",
+    "submit": "Envoyer mon projet",
+    "successTitle": "Merci !",
+    "successText": "Nous avons bien reçu votre projet. Notre équipe vous contactera sous 48 heures."
+  },
+  "bookCall": {
+    "title": "Réserver un appel",
+    "subtitle": "Planifiez un appel gratuit avec notre équipe pour discuter de votre projet.",
+    "name": "Nom complet",
+    "email": "Email",
+    "phone": "Téléphone",
+    "company": "Entreprise (optionnel)",
+    "type": "Type de consultation",
+    "date": "Date souhaitée",
+    "time": "Créneau horaire",
+    "notes": "Notes (optionnel)",
+    "submit": "Réserver ma consultation",
+    "successTitle": "Merci !",
+    "successText": "Nous confirmons votre rendez-vous par email sous 24 heures."
+  },
+  "legal": {
+    "title": "Mentions Légales",
+    "privacy": "Politique de Confidentialité",
+    "terms": "Conditions d'Utilisation",
+    "cookies": "Politique des Cookies"
+  },
+  "errors": {
+    "notFound": "Page non trouvée",
+    "notFoundText": "Désolé, la page que vous recherchez n'existe pas.",
+    "backHome": "Retour à l'accueil",
+    "error": "Une erreur est survenue",
+    "errorText": "Veuillez réessayer plus tard.",
+    "retry": "Réessayer"
+  },
+  "locale": {
+    "fr": "Français",
+    "en": "English",
+    "ar": "العربية"
+  }
+}

@@ -1,0 +1,84 @@
+"use client"
+
+import { useState, useEffect } from "react"
+import { useRouter, useParams } from "next/navigation"
+import { PageHeader } from "@/components/admin/page-header"
+import { BlogForm } from "@/components/admin/blog/blog-form"
+import type { BlogFormData } from "@/lib/validations/blog"
+
+export default function EditBlogPage() {
+  const router = useRouter()
+  const params = useParams<{ id: string }>()
+  const [categories, setCategories] = useState<{ id: number; title: string }[]>([])
+  const [defaultValues, setDefaultValues] = useState<Partial<BlogFormData> | null>(null)
+  const [submitting, setSubmitting] = useState(false)
+  const [loading, setLoading] = useState(true)
+
+  useEffect(() => {
+    async function load() {
+      const [postRes, catRes] = await Promise.all([
+        fetch(`/api/blog/${params.id}`),
+        fetch("/api/blog?limit=1"),
+      ])
+      const post = await postRes.json()
+      const catData = await catRes.json()
+      if (catData.items) {
+        const cats = catData.items.map((p: any) => p.category)
+        const unique = cats.filter((c: any, i: number, a: any[]) => a.findIndex((x: any) => x.id === c.id) === i)
+        setCategories(unique)
+      }
+
+      setDefaultValues({
+        title: post.title,
+        slug: post.slug,
+        excerpt: post.excerpt ?? "",
+        content: post.content ?? "",
+        categoryId: post.categoryId,
+        author: post.author ?? "",
+        publishedAt: post.publishedAt ? post.publishedAt.split("T")[0] : "",
+        isPublished: post.isPublished,
+        isFeatured: post.isFeatured,
+        readingTime: post.readingTime ?? undefined,
+        tags: post.tags ?? [],
+        featuredImage: post.featuredImage ?? "",
+        focusKeyword: post.focusKeyword ?? "",
+        canonicalUrl: post.canonicalUrl ?? "",
+        robots: post.robots ?? "index, follow",
+        ogTitle: post.ogTitle ?? "",
+        ogDescription: post.ogDescription ?? "",
+        ogImage: post.ogImage ?? "",
+        twitterCard: post.twitterCard ?? "summary_large_image",
+      })
+      setLoading(false)
+    }
+    load()
+  }, [params.id])
+
+  const handleSubmit = async (data: BlogFormData) => {
+    setSubmitting(true)
+    try {
+      const res = await fetch(`/api/blog/${params.id}`, { method: "PATCH", headers: { "Content-Type": "application/json" }, body: JSON.stringify(data) })
+      if (!res.ok) { const err = await res.json(); alert(err.error?.message ?? "Failed"); return }
+      router.push("/admin/blog")
+      router.refresh()
+    } finally { setSubmitting(false) }
+  }
+
+  if (loading) {
+    return (
+      <div className="space-y-6">
+        <PageHeader title="Edit Article" description="Loading..." />
+        <div className="flex items-center justify-center py-12"><div className="animate-spin h-6 w-6 border-2 border-admin-accent border-t-transparent rounded-full" /></div>
+      </div>
+    )
+  }
+
+  return (
+    <div className="space-y-6 max-w-4xl">
+      <PageHeader title="Edit Article" description="Update blog article" />
+      <div className="bg-[#141414] border border-admin-border/50 rounded-xl p-6">
+        <BlogForm categories={categories} defaultValues={defaultValues ?? undefined} onSubmit={handleSubmit} isSubmitting={submitting} />
+      </div>
+    </div>
+  )
+}

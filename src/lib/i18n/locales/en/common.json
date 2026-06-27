@@ -1,0 +1,169 @@
+{
+  "site": {
+    "name": "Weblancia",
+    "tagline": "Premium Digital Agency",
+    "description": "Web design, development, SEO & branding — a premium digital agency in Casablanca"
+  },
+  "nav": {
+    "work": "Work",
+    "services": "Services",
+    "academy": "Academy",
+    "insights": "Insights",
+    "about": "About",
+    "contact": "Contact",
+    "bookCall": "Book a Call",
+    "startProject": "Start a Project",
+    "search": "Search"
+  },
+  "actions": {
+    "learnMore": "Learn More",
+    "contactUs": "Contact Us",
+    "getStarted": "Get Started",
+    "send": "Send",
+    "submit": "Submit",
+    "cancel": "Cancel",
+    "close": "Close",
+    "accept": "Accept",
+    "decline": "Decline",
+    "readMore": "Read More",
+    "viewAll": "View All",
+    "back": "Back",
+    "subscribe": "Subscribe"
+  },
+  "home": {
+    "heroTitle": "We create digital experiences that transform brands",
+    "heroSubtitle": "Design, development, SEO and branding — a premium digital agency in Casablanca bringing your vision to life.",
+    "trustTitle": "Trusted by",
+    "processTitle": "Our Process",
+    "testimonialsTitle": "What They Say",
+    "ctaTitle": "Ready to bring your project to life?",
+    "ctaSubtitle": "Let's discuss your vision during a free consultation.",
+    "ctaButton": "Start Your Project"
+  },
+  "footer": {
+    "newsletterTitle": "Stay in the loop",
+    "newsletterText": "Get the latest insights and resources delivered to your inbox.",
+    "newsletterPlaceholder": "Your email",
+    "services": "Services",
+    "work": "Work",
+    "academy": "Academy",
+    "connect": "Connect",
+    "copyright": "All rights reserved."
+  },
+  "cookie": {
+    "message": "We use cookies to enhance your experience. By continuing to visit this site you agree to our use of cookies.",
+    "accept": "Accept",
+    "decline": "Decline"
+  },
+  "search": {
+    "placeholder": "Search a service, project, article...",
+    "noResults": "No results found",
+    "results": "results"
+  },
+  "services": {
+    "title": "Our Services",
+    "subtitle": "Complete digital solutions to propel your business",
+    "allCategories": "All Categories",
+    "backToServices": "Back to Services"
+  },
+  "work": {
+    "title": "Our Work",
+    "subtitle": "Discover our recent projects and the results we achieved for our clients",
+    "allWork": "All Work",
+    "viewProject": "View Project",
+    "result": "Result"
+  },
+  "about": {
+    "title": "About Us",
+    "subtitle": "A passionate team dedicated to your digital success",
+    "team": "Our Team",
+    "mission": "Our Mission",
+    "careers": "Careers",
+    "values": "Our Values"
+  },
+  "academy": {
+    "title": "Weblancia Academy",
+    "subtitle": "Train in digital skills with our experts",
+    "courses": "Courses",
+    "workshops": "Workshops",
+    "resources": "Resources",
+    "certificates": "Certificates",
+    "careers": "Careers",
+    "enroll": "Enroll",
+    "free": "Free",
+    "level": "Level"
+  },
+  "consultation": {
+    "title": "Free Consultation",
+    "subtitle": "Let's discuss your project with no obligation",
+    "bookNow": "Book Now"
+  },
+  "contact": {
+    "title": "Contact Us",
+    "subtitle": "A question? A project? We are here to help.",
+    "formName": "Full Name",
+    "formEmail": "Email",
+    "formPhone": "Phone",
+    "formSubject": "Subject",
+    "formMessage": "Message",
+    "formConsent": "I agree to be contacted",
+    "formSubmit": "Send Message",
+    "successTitle": "Thank you!",
+    "successText": "We will get back to you within 48 hours.",
+    "faqTitle": "Frequently Asked Questions",
+    "infoTitle": "Our Contact Info"
+  },
+  "startProject": {
+    "title": "Start Your Project",
+    "subtitle": "Tell us your vision. We'll get back to you to discuss it in detail.",
+    "personalInfo": "Personal Information",
+    "projectInfo": "Your Project",
+    "name": "Full Name",
+    "email": "Email",
+    "phone": "Phone",
+    "company": "Company",
+    "projectType": "Project Type",
+    "budget": "Budget",
+    "timeline": "Timeline",
+    "source": "How did you hear about us?",
+    "description": "Project Description",
+    "consent": "I accept the privacy policy",
+    "submit": "Submit My Project",
+    "successTitle": "Thank you!",
+    "successText": "We received your project details. Our team will contact you within 48 hours."
+  },
+  "bookCall": {
+    "title": "Book a Call",
+    "subtitle": "Schedule a free call with our team to discuss your project.",
+    "name": "Full Name",
+    "email": "Email",
+    "phone": "Phone",
+    "company": "Company (optional)",
+    "type": "Consultation Type",
+    "date": "Preferred Date",
+    "time": "Time Slot",
+    "notes": "Notes (optional)",
+    "submit": "Book My Consultation",
+    "successTitle": "Thank you!",
+    "successText": "We will confirm your appointment by email within 24 hours."
+  },
+  "legal": {
+    "title": "Legal Notice",
+    "privacy": "Privacy Policy",
+    "terms": "Terms of Service",
+    "cookies": "Cookie Policy"
+  },
+  "errors": {
+    "notFound": "Page Not Found",
+    "notFoundText": "Sorry, the page you are looking for does not exist.",
+    "backHome": "Back to Home",
+    "error": "An error occurred",
+    "errorText": "Please try again later.",
+    "retry": "Retry"
+  },
+  "locale": {
+    "fr": "Français",
+    "en": "English",
+    "ar": "العربية"
+  }
+}

@@ -1,25 +1,56 @@
 {
   "name": "weblancia",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "private": true,
   "scripts": {
+    "predev": "node -e \"try{require('fs').rmSync('.next/dev/cache',{recursive:true,force:true})}catch(e){}\"",
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "typecheck": "tsc --noEmit",
+    "db:generate": "prisma generate",
+    "db:push": "prisma db push",
+    "db:migrate": "prisma migrate dev",
+    "db:studio": "prisma studio",
+    "db:seed": "prisma db seed",
+    "seed": "npx tsx prisma/seed.ts",
+    "validate": "node scripts/validate-build.mjs",
+    "validate:env": "node .env.validation.mjs",
+    "validate:routes": "node scripts/validate-metadata.mjs",
+    "validate:all": "npm run typecheck && npm run lint && npm run validate:routes && npm run build"
   },
   "dependencies": {
+    "@hookform/resolvers": "^3.9.1",
+    "@prisma/adapter-mariadb": "^7.8.0",
+    "@prisma/client": "^7.8.0",
+    "bcryptjs": "^3.0.3",
+    "clsx": "^2.1.1",
+    "framer-motion": "^12.42.0",
+    "image-size": "^2.0.2",
+    "jose": "^6.2.3",
+    "mariadb": "^3.5.3",
     "next": "16.2.9",
     "react": "19.2.4",
-    "react-dom": "19.2.4"
+    "react-dom": "19.2.4",
+    "react-hook-form": "^7.56.3",
+    "recharts": "^3.9.0",
+    "tailwind-merge": "^3.6.0",
+    "zod": "^3.24.1"
+  },
+  "prisma": {
+    "seed": "npx tsx prisma/seed.ts"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4",
+    "@types/bcryptjs": "^2.4.6",
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "eslint": "^9",
     "eslint-config-next": "16.2.9",
+    "linkinator": "^6.1.2",
+    "prisma": "^7.8.0",
     "tailwindcss": "^4",
     "typescript": "^5"
   }
