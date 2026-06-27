@@ -5,19 +5,23 @@ const globalForPrisma = globalThis as unknown as {
   prisma: PrismaClient | undefined
 }
 
+function env(key: string, fallback: string): string {
+  return process.env[`DB_${key}`] || process.env[`DATABASE_${key}`] || fallback
+}
+
 function createClient(): PrismaClient | undefined {
-  const host = process.env.DATABASE_HOST
+  const host = env("HOST", "")
   if (!host) {
-    if (typeof window === "undefined") console.warn("[DB] DATABASE_HOST not set — database unavailable")
+    if (typeof window === "undefined") console.warn("[DB] DB_HOST not set — database unavailable")
     return undefined
   }
   try {
     const adapter = new PrismaMariaDb({
       host,
-      user: process.env.DATABASE_USER ?? "root",
-      password: process.env.DATABASE_PASSWORD ?? "",
-      database: process.env.DATABASE_NAME ?? "weblancia",
-      port: Number(process.env.DATABASE_PORT ?? 3306),
+      user: env("USER", "root"),
+      password: env("PASSWORD", ""),
+      database: env("NAME", "weblancia"),
+      port: Number(env("PORT", "3306")),
       connectionLimit: 5,
       connectTimeout: 10000,
       acquireTimeout: 10000,
@@ -126,7 +130,7 @@ if (process.env.NODE_ENV !== "production") {
 }
 
 export function isDbAvailable(): boolean {
-  return !!process.env.DATABASE_HOST
+  return !!(process.env.DB_HOST || process.env.DATABASE_HOST)
 }
 
 export default db

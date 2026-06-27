@@ -5,7 +5,7 @@
   "scripts": {
     "predev": "node -e \"try{require('fs').rmSync('.next/dev/cache',{recursive:true,force:true})}catch(e){}\"",
     "dev": "next dev",
-    "prebuild": "node -e \"if(!process.env.DATABASE_URL){process.env.DATABASE_URL='mysql://root@localhost:3306/weblancia'};require('child_process').execSync('npx prisma generate',{stdio:'inherit',cwd:process.cwd(),env:process.env})\"",
+    "prebuild": "node -e \"if(!process.env.DATABASE_URL){var h=process.env.DB_HOST||process.env.DATABASE_HOST||'localhost',u=process.env.DB_USER||process.env.DATABASE_USER||'root',p=process.env.DB_PASSWORD||process.env.DATABASE_PASSWORD||'',d=process.env.DB_NAME||process.env.DATABASE_NAME||'weblancia',o=process.env.DB_PORT||process.env.DATABASE_PORT||'3306';process.env.DATABASE_URL='mysql://'+encodeURIComponent(u)+':'+encodeURIComponent(p)+'@'+h+':'+o+'/'+encodeURIComponent(d)};require('child_process').execSync('npx prisma generate',{stdio:'inherit',cwd:process.cwd(),env:process.env})\"",
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
@@ -33,6 +33,7 @@
     "image-size": "^2.0.2",
     "jose": "^6.2.3",
     "mariadb": "^3.5.3",
+    "mysql2": "^3.22.5",
     "next": "16.2.9",
     "prisma": "^7.8.0",
     "react": "19.2.4",
