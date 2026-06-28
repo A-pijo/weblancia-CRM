@@ -54,6 +54,22 @@ export async function testConnection(): Promise<{ ok: boolean; error?: string }>
   }
 }
 
+export async function dbDiagnostics(): Promise<Record<string, unknown>> {
+  try {
+    const p = getPool()
+    const [dbRes] = await p.execute("SELECT DATABASE() AS db")
+    const dbName = (dbRes as Record<string, unknown>[])[0]?.db ?? "unknown"
+    const [tablesRes] = await p.execute("SHOW TABLES")
+    const tables = (tablesRes as Record<string, unknown>[]).map((r) => Object.values(r)[0])
+    const [userCount] = await p.execute("SELECT COUNT(*) AS c FROM User")
+    const userCnt = (userCount as Record<string, unknown>[])[0]?.c ?? 0
+    return { database: dbName, tables, tableCount: tables.length, userCount: userCnt }
+  } catch (err: unknown) {
+    const message = err instanceof Error ? err.message : String(err)
+    return { error: message }
+  }
+}
+
 export async function closePool(): Promise<void> {
   if (pool) {
     await pool.end()
