@@ -64,7 +64,7 @@ async function main() {
     })
 
     const superAdminRole = await db.role.findUnique({ where: { name: "SuperAdmin" } })
-    const password = await bcrypt.hash("ChangeMe123!", 12)
+    const password = await bcrypt.hash("Admin123!", 12)
     await db.user.create({
       data: {
         email: "admin@weblancia.com",
@@ -74,7 +74,7 @@ async function main() {
         isActive: true,
       },
     })
-    console.log("Admin account created: admin@weblancia.com / ChangeMe123!")
+    console.log("Admin account created: admin@weblancia.com / Admin123!")
   } else {
     console.log("Roles already exist, skipping...")
   }
