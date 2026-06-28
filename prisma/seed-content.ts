@@ -1,12 +1,16 @@
 import { PrismaClient } from "../src/generated/prisma/client"
 import { PrismaMariaDb } from "@prisma/adapter-mariadb"
 
+function readEnv(key: string): string {
+  return process.env[`DB_${key}`] || process.env[`DATABASE_${key}`] || ""
+}
+
 const adapter = new PrismaMariaDb({
-  host: process.env.DATABASE_HOST ?? "localhost",
-  user: process.env.DATABASE_USER ?? "root",
-  password: process.env.DATABASE_PASSWORD ?? "",
-  database: process.env.DATABASE_NAME ?? "weblancia",
-  port: Number(process.env.DATABASE_PORT ?? 3306),
+  host: readEnv("HOST") || "localhost",
+  user: readEnv("USER") || "root",
+  password: readEnv("PASSWORD") || "",
+  database: readEnv("NAME") || "weblancia",
+  port: Number(readEnv("PORT") || "3306"),
   connectionLimit: 1,
 })
 const db = new PrismaClient({ adapter })

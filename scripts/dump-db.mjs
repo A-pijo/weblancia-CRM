@@ -1,12 +1,16 @@
 import mysql from "mysql2/promise"
 import fs from "fs"
 
+function readEnv(key, fallback) {
+  return process.env[`DB_${key}`] || process.env[`DATABASE_${key}`] || fallback
+}
+
 async function main() {
   const c = await mysql.createConnection({
-    host: process.env.DB_HOST || "localhost",
-    user: process.env.DB_USER || "root",
-    password: process.env.DB_PASSWORD || "",
-    database: process.env.DB_NAME || "weblancia",
+    host: readEnv("HOST", "localhost"),
+    user: readEnv("USER", "root"),
+    password: readEnv("PASSWORD", ""),
+    database: readEnv("NAME", "weblancia"),
     multipleStatements: true,
   })
 
