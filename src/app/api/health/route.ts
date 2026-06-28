@@ -5,13 +5,19 @@ export async function GET() {
   const app = { ok: true, timestamp: new Date().toISOString() }
   const db = await testConnection()
 
-  let diagnostics: Record<string, unknown> | null = null
+  let databaseName: string | null = null
+  let tableCount = 0
+  let userCount = 0
+
   if (db.ok) {
-    diagnostics = await dbDiagnostics()
+    const d = await dbDiagnostics()
+    databaseName = d.database as string
+    tableCount = d.tableCount as number
+    userCount = d.userCount as number
   }
 
   return NextResponse.json(
-    { app, database: db, diagnostics },
+    { app, database: db, databaseName, tableCount, userCount },
     { status: db.ok ? 200 : 503 },
   )
 }
