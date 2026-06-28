@@ -62,9 +62,21 @@ async function main() {
         { name: "Editor", description: "Can manage services, blog, portfolio, academy, testimonials, FAQ" },
       ],
     })
+    console.log("Roles created")
+  } else {
+    console.log("Roles already exist, skipping...")
+  }
 
-    const superAdminRole = await db.role.findUnique({ where: { name: "SuperAdmin" } })
-    const password = await bcrypt.hash("Admin123!", 12)
+  const superAdminRole = await db.role.findUnique({ where: { name: "SuperAdmin" } })
+  const password = await bcrypt.hash("Admin123!", 12)
+  const existingAdmin = await db.user.findUnique({ where: { email: "admin@weblancia.com" } })
+  if (existingAdmin) {
+    await db.user.update({
+      where: { email: "admin@weblancia.com" },
+      data: { password, name: "Super Admin", isActive: true, roleId: superAdminRole!.id },
+    })
+    console.log("Admin account updated: admin@weblancia.com / Admin123!")
+  } else {
     await db.user.create({
       data: {
         email: "admin@weblancia.com",
@@ -75,8 +87,6 @@ async function main() {
       },
     })
     console.log("Admin account created: admin@weblancia.com / Admin123!")
-  } else {
-    console.log("Roles already exist, skipping...")
   }
 
   const existingCategories = await db.serviceCategory.findMany()

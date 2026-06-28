@@ -9,7 +9,7 @@ function readEnv(key: string): string {
   return process.env[`DB_${key}`] || process.env[`DATABASE_${key}`] || ""
 }
 
-const REQUIRED_VARS = ["HOST", "USER", "PASSWORD", "NAME"] as const
+const REQUIRED_VARS = ["HOST", "USER", "NAME"] as const
 
 function validateDbEnv(): boolean {
   const missing = REQUIRED_VARS.filter((k) => !readEnv(k))

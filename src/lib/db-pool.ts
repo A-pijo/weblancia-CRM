@@ -2,7 +2,7 @@ import mysql from "mysql2/promise"
 
 let pool: mysql.Pool | null = null
 
-const REQUIRED_KEYS = ["HOST", "USER", "PASSWORD", "NAME"] as const
+const REQUIRED_KEYS = ["HOST", "USER", "NAME"] as const
 
 function readVar(key: string): string {
   return process.env[`DB_${key}`] || process.env[`DATABASE_${key}`] || ""
