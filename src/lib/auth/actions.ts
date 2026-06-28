@@ -27,7 +27,7 @@ export async function login(_prev: unknown, formData: FormData) {
   })
 
   if (!user) {
-    return { error: !process.env.DATABASE_HOST ? "Service de connexion indisponible. Réessayez plus tard." : "Email ou mot de passe incorrect." }
+    return { error: !(process.env.DB_HOST || process.env.DATABASE_HOST) ? "Service de connexion indisponible. Réessayez plus tard." : "Email ou mot de passe incorrect." }
   }
   if (!user.isActive) {
     return { error: "Email ou mot de passe incorrect." }

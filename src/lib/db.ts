@@ -9,27 +9,32 @@ function readEnv(key: string): string {
   return process.env[`DB_${key}`] || process.env[`DATABASE_${key}`] || ""
 }
 
-function createClient(): PrismaClient | undefined {
-  const host = readEnv("HOST")
-  const user = readEnv("USER")
-  const password = readEnv("PASSWORD")
-  const database = readEnv("NAME")
-  const port = Number(readEnv("PORT") || "3306")
+const REQUIRED_VARS = ["HOST", "USER", "PASSWORD", "NAME"] as const
 
-  if (!host || !user || !database) {
+function validateDbEnv(): boolean {
+  const missing = REQUIRED_VARS.filter((k) => !readEnv(k))
+  if (missing.length > 0) {
     if (typeof window === "undefined") {
-      console.error("[DB] Missing required env vars: DB_HOST, DB_USER, DB_NAME")
+      console.error(
+        `[DB] Missing required env vars: ${missing.map((k) => `DB_${k}`).join(", ")}. ` +
+        "Database will be unavailable.",
+      )
     }
-    return undefined
+    return false
   }
+  return true
+}
+
+function createClient(): PrismaClient | undefined {
+  if (!validateDbEnv()) return undefined
 
   try {
     const adapter = new PrismaMariaDb({
-      host,
-      user,
-      password,
-      database,
-      port,
+      host: readEnv("HOST"),
+      user: readEnv("USER"),
+      password: readEnv("PASSWORD"),
+      database: readEnv("NAME"),
+      port: Number(readEnv("PORT") || "3306"),
       connectionLimit: 5,
       connectTimeout: 10000,
       acquireTimeout: 10000,
@@ -138,7 +143,7 @@ if (process.env.NODE_ENV !== "production") {
 }
 
 export function isDbAvailable(): boolean {
-  return !!(readEnv("HOST") && readEnv("USER") && readEnv("NAME"))
+  return REQUIRED_VARS.every((k) => !!readEnv(k))
 }
 
 export default db

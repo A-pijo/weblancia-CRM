@@ -2,18 +2,30 @@ import mysql from "mysql2/promise"
 
 let pool: mysql.Pool | null = null
 
+const REQUIRED_KEYS = ["HOST", "USER", "PASSWORD", "NAME"] as const
+
+function readVar(key: string): string {
+  return process.env[`DB_${key}`] || process.env[`DATABASE_${key}`] || ""
+}
+
 function getConfig() {
-  const host = process.env.DB_HOST || process.env.DATABASE_HOST || ""
-  const user = process.env.DB_USER || process.env.DATABASE_USER || ""
-  const password = process.env.DB_PASSWORD || process.env.DATABASE_PASSWORD || ""
-  const database = process.env.DB_NAME || process.env.DATABASE_NAME || ""
-  const port = Number(process.env.DB_PORT || process.env.DATABASE_PORT || 3306)
-
-  if (!host) console.error("[DB-POOL] DB_HOST is not set")
-  if (!user) console.error("[DB-POOL] DB_USER is not set")
-  if (!database) console.error("[DB-POOL] DB_NAME is not set")
-
-  return { host, user, password, database, port }
+  const missing: string[] = []
+  for (const k of REQUIRED_KEYS) {
+    if (!readVar(k)) missing.push(`DB_${k}`)
+  }
+  if (missing.length > 0) {
+    throw new Error(
+      `[DB-POOL] Missing required environment variables: ${missing.join(", ")}. ` +
+      "Set them in Hostinger Node.js environment panel before deploying.",
+    )
+  }
+  return {
+    host: readVar("HOST"),
+    user: readVar("USER"),
+    password: readVar("PASSWORD"),
+    database: readVar("NAME"),
+    port: Number(readVar("PORT") || "3306"),
+  }
 }
 
 export function getPool(): mysql.Pool {
