@@ -24,12 +24,14 @@ export async function GET() {
 
 export async function POST() {
   const p = getPool()
-  const [res] = await p.execute("SELECT DATABASE() AS db")
-  const dbName = (res as Record<string, unknown>[])[0]?.db ?? "unknown"
-  const [tables] = await p.execute("SHOW TABLES")
-  const tableList = (tables as Record<string, unknown>[]).map((r) => Object.values(r)[0])
-  const [users] = await p.execute("SELECT COUNT(*) AS c FROM User")
-  const userCount = (users as Record<string, unknown>[])[0]?.c ?? 0
+  const dbRes = await p.query("SELECT CURRENT_DATABASE() AS db")
+  const dbName = dbRes.rows[0]?.db ?? "unknown"
+  const tablesRes = await p.query(
+    "SELECT table_name FROM information_schema.tables WHERE table_schema = CURRENT_SCHEMA()",
+  )
+  const tableList = tablesRes.rows.map((r) => r.table_name)
+  const usersRes = await p.query('SELECT COUNT(*)::int AS c FROM "User"')
+  const userCount = usersRes.rows[0]?.c ?? 0
 
   return NextResponse.json({
     database: dbName,

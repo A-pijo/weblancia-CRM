@@ -3,14 +3,13 @@
 
 const requiredVars = [
   "SITE_URL",
-  "DB_HOST",
-  "DB_USER",
-  "DB_PASSWORD",
-  "DB_NAME",
+  "DATABASE_URL",
   "JWT_SECRET",
 ]
 
 const optionalVars = [
+  "SUPABASE_URL",
+  "SUPABASE_ANON_KEY",
   "SMTP_HOST",
   "SMTP_PORT",
   "SMTP_USER",

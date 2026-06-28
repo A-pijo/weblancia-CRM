@@ -18,42 +18,35 @@ function constructURL() {
   const u = readEnv("USER")
   const p = readEnv("PASSWORD")
   const d = readEnv("NAME")
-  const o = readEnv("PORT") || "3306"
-  return `mysql://${encodeURIComponent(u)}:${encodeURIComponent(p)}@${h}:${o}/${encodeURIComponent(d)}`
+  const o = readEnv("PORT") || "5432"
+  return `postgresql://${encodeURIComponent(u)}:${encodeURIComponent(p)}@${h}:${o}/${encodeURIComponent(d)}`
 }
 
 console.log("")
 console.log("=== Build: Prisma Client Setup ===")
 console.log("")
 
-// 1. Validate DB env vars
-const missing = REQUIRED.filter((k) => !readEnv(k))
-
-const hostVal = readEnv("HOST")
-if (missing.length > 0) {
-  log("env", false, `DB_HOST, DB_USER, DB_NAME not set in environment`)
-  console.error("  Set these in Hostinger Node.js env panel for production.")
-  console.error("  Local builds use the client from postinstall -- continuing.\n")
-}
-
-// 2. Construct DATABASE_URL if not set
-if (missing.length === 0) {
-  log("env", true, `DB_HOST=${hostVal}, DB_USER=${readEnv("USER")}, DB_NAME=${readEnv("NAME")}`)
-  if (!process.env.DATABASE_URL) {
+// 1. Set DATABASE_URL (prefer existing, fall back to DB_* construction)
+const hasDbUrl = !!process.env.DATABASE_URL
+if (!hasDbUrl) {
+  const missing = REQUIRED.filter((k) => !readEnv(k))
+  if (missing.length === 0) {
     process.env.DATABASE_URL = constructURL()
     log("DATABASE_URL", true, "constructed from DB_* vars")
   } else {
-    log("DATABASE_URL", true, "already set")
+    log("DATABASE_URL", false, "not set — prisma generate will use postinstall client")
   }
+} else {
+  log("DATABASE_URL", true, "already set")
 }
 
-// 3. prisma generate (non-fatal -- postinstall already ran it)
+// 2. prisma generate (non-fatal — postinstall already ran it)
 try {
   log("prisma generate", true, "running...")
   execSync("npx prisma generate", { stdio: "inherit", env: process.env })
   log("prisma generate", true, "ok")
 } catch (e) {
-  log("prisma generate", false, "engine not available -- using existing client from postinstall")
+  log("prisma generate", false, "engine not available — using existing client from postinstall")
 }
 
 console.log("")

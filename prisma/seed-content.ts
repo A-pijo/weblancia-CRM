@@ -1,18 +1,19 @@
+import pg from "pg"
 import { PrismaClient } from "../src/generated/prisma/client"
-import { PrismaMariaDb } from "@prisma/adapter-mariadb"
+import { PrismaPg } from "@prisma/adapter-pg"
 
-function readEnv(key: string): string {
-  return process.env[`DB_${key}`] || process.env[`DATABASE_${key}`] || ""
+function getDatabaseUrl(): string {
+  if (process.env.DATABASE_URL) return process.env.DATABASE_URL
+  const h = process.env.DB_HOST || process.env.DATABASE_HOST || "localhost"
+  const u = process.env.DB_USER || process.env.DATABASE_USER || "postgres"
+  const p = process.env.DB_PASSWORD || process.env.DATABASE_PASSWORD || "postgres"
+  const d = process.env.DB_NAME || process.env.DATABASE_NAME || "weblancia"
+  const o = process.env.DB_PORT || process.env.DATABASE_PORT || "5432"
+  return `postgresql://${encodeURIComponent(u)}:${encodeURIComponent(p)}@${h}:${o}/${encodeURIComponent(d)}`
 }
 
-const adapter = new PrismaMariaDb({
-  host: readEnv("HOST") || "localhost",
-  user: readEnv("USER") || "root",
-  password: readEnv("PASSWORD") || "",
-  database: readEnv("NAME") || "weblancia",
-  port: Number(readEnv("PORT") || "3306"),
-  connectionLimit: 1,
-})
+const pool = new pg.Pool({ connectionString: getDatabaseUrl() })
+const adapter = new PrismaPg(pool)
 const db = new PrismaClient({ adapter })
 
 interface FAQItem { question: string; answer: string }

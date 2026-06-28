@@ -1,49 +1,40 @@
+import pg from "pg"
 import { PrismaClient } from "@/generated/prisma/client"
-import { PrismaMariaDb } from "@prisma/adapter-mariadb"
+import { PrismaPg } from "@prisma/adapter-pg"
 
 const globalForPrisma = globalThis as unknown as {
   prisma: PrismaClient | undefined
 }
 
+const REQUIRED_VARS = ["HOST", "USER", "NAME"] as const
+
 function readEnv(key: string): string {
   return process.env[`DB_${key}`] || process.env[`DATABASE_${key}`] || ""
 }
 
-const REQUIRED_VARS = ["HOST", "USER", "NAME"] as const
-
-function validateDbEnv(): boolean {
-  const missing = REQUIRED_VARS.filter((k) => !readEnv(k))
-  if (missing.length > 0) {
-    if (typeof window === "undefined") {
-      console.error(
-        `[DB] Missing required env vars: ${missing.map((k) => `DB_${k}`).join(", ")}. ` +
-        "Database will be unavailable.",
-      )
-    }
-    return false
-  }
-  return true
+function getDatabaseUrl(): string | undefined {
+  if (process.env.DATABASE_URL) return process.env.DATABASE_URL
+  const h = readEnv("HOST")
+  const u = readEnv("USER")
+  const p = readEnv("PASSWORD")
+  const d = readEnv("NAME")
+  const o = readEnv("PORT") || "5432"
+  if (!h || !u || !d) return undefined
+  return `postgresql://${encodeURIComponent(u)}:${encodeURIComponent(p)}@${h}:${o}/${encodeURIComponent(d)}`
 }
 
 function createClient(): PrismaClient | undefined {
-  if (!validateDbEnv()) return undefined
+  const url = getDatabaseUrl()
+  if (!url) {
+    if (typeof window === "undefined") {
+      console.error("[DB] DATABASE_URL or DB_HOST/USER/NAME not set. Database unavailable.")
+    }
+    return undefined
+  }
 
   try {
-    const adapter = new PrismaMariaDb({
-      host: readEnv("HOST"),
-      user: readEnv("USER"),
-      password: readEnv("PASSWORD"),
-      database: readEnv("NAME"),
-      port: Number(readEnv("PORT") || "3306"),
-      connectionLimit: 5,
-      connectTimeout: 10000,
-      acquireTimeout: 10000,
-      idleTimeout: 30000,
-    }, {
-      onConnectionError(err) {
-        console.error("[DB] MariaDB connection error:", err)
-      },
-    })
+    const pool = new pg.Pool({ connectionString: url })
+    const adapter = new PrismaPg(pool)
     return new PrismaClient({ adapter })
   } catch (err) {
     console.error("[DB] Failed to create PrismaClient:", err)
@@ -55,12 +46,17 @@ function isConnectionError(error: unknown): boolean {
   if (!(error instanceof Error)) return false
   const name = error.name ?? ""
   const message = error.message ?? ""
+  const code = (error as unknown as Record<string, unknown>).code
   return (
-    name === "DriverAdapterError" ||
-    message.includes("pool timeout") ||
-    message.includes("get a connection from pool") ||
-    message.includes("Can't reach database server") ||
-    message.includes("Connection refused")
+    code === "ECONNREFUSED" ||
+    code === "P1001" ||
+    code === "P1002" ||
+    name === "PrismaClientInitializationError" ||
+    message.includes("connection") ||
+    message.includes("connect") ||
+    message.includes("timeout") ||
+    message.includes("refused") ||
+    message.includes("ECONNREFUSED")
   )
 }
 
@@ -143,7 +139,7 @@ if (process.env.NODE_ENV !== "production") {
 }
 
 export function isDbAvailable(): boolean {
-  return REQUIRED_VARS.every((k) => !!readEnv(k))
+  return !!(process.env.DATABASE_URL || REQUIRED_VARS.every((k) => !!readEnv(k)))
 }
 
 export default db

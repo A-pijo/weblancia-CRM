@@ -1,5 +1,5 @@
 // Production database diagnostic
-// Run on Hostinger: node scripts/db-diag.mjs
+// Run: node scripts/db-diag.mjs
 
 function mask(s) {
   if (!s || s.length === 0) return "(empty)"
@@ -22,9 +22,9 @@ console.log("\n=== DATABASE_URL Decoded ===")
 const rawUrl = process.env.DATABASE_URL || process.env.DB_URL || "(not set)"
 if (rawUrl !== "(not set)") {
   try {
-    const m = rawUrl.match(/^mysql:\/\/([^:]+):([^@]+)@([^:]+):(\d+)\/(.+)$/)
+    const m = rawUrl.match(/^postgresql:\/\/([^:]+):([^@]+)@([^:]+):(\d+)\/(.+)$/)
     if (m) {
-      console.log(`  Protocol: mysql`)
+      console.log(`  Protocol: postgresql`)
       console.log(`  User:     ${m[1]}`)
       console.log(`  Password: ${mask(m[2])}`)
       console.log(`  Host:     ${m[3]}`)
@@ -38,51 +38,70 @@ if (rawUrl !== "(not set)") {
   }
 }
 
-// 3. What the runtime code actually reads
-console.log("\n=== Runtime Read (src/lib/db.ts) ===")
-function readEnv(key) {
-  return process.env[`DB_${key}`] || process.env[`DATABASE_${key}`] || ""
+// 3. Connection info for runtime
+console.log("\n=== Connection Info ===")
+let connHost = "(not set)"
+let connPort = 5432
+let connUser = "(not set)"
+let connPass = ""
+let connDb = "(not set)"
+
+if (process.env.DATABASE_URL) {
+  try {
+    const u = new URL(process.env.DATABASE_URL)
+    connHost = u.hostname
+    connPort = Number(u.port || "5432")
+    connUser = decodeURIComponent(u.username)
+    connPass = decodeURIComponent(u.password)
+    connDb = u.pathname.replace(/^\//, "")
+  } catch (e) {
+    console.log(`  (failed to parse DATABASE_URL: ${e.message})`)
+  }
+} else {
+  function readEnv(key) {
+    return process.env[`DB_${key}`] || process.env[`DATABASE_${key}`] || ""
+  }
+  connHost = readEnv("HOST") || "(empty)"
+  connUser = readEnv("USER") || "(empty)"
+  connPass = readEnv("PASSWORD")
+  connDb = readEnv("NAME") || "(empty)"
+  connPort = Number(readEnv("PORT") || "5432")
 }
-const runtime = {
-  HOST: readEnv("HOST") || "(empty — will fail validation)",
-  USER: readEnv("USER") || "(empty — will fail validation)",
-  PASSWORD: readEnv("PASSWORD"),
-  NAME: readEnv("NAME") || "(empty — will fail validation)",
-  PORT: Number(readEnv("PORT") || "3306"),
-}
-console.log(`  host:     ${runtime.HOST}`)
-console.log(`  user:     ${runtime.USER}`)
-console.log(`  password: ${mask(runtime.PASSWORD)}`)
-console.log(`  database: ${runtime.NAME}`)
-console.log(`  port:     ${runtime.PORT}`)
+
+console.log(`  host:     ${connHost}`)
+console.log(`  user:     ${connUser}`)
+console.log(`  password: ${mask(connPass)}`)
+console.log(`  database: ${connDb}`)
+console.log(`  port:     ${connPort}`)
 
 // 4. Test connection
 console.log("\n=== Connection Test ===")
-import mysql from "mysql2/promise"
+import pg from "pg"
 
-const hosts = [runtime.HOST, "127.0.0.1", "localhost", "::1"]
+const { Pool } = pg
+const hosts = [connHost, "127.0.0.1", "localhost", "::1"]
 const tested = new Set()
 for (const host of hosts) {
-  if (!host || tested.has(host)) continue
+  if (!host || tested.has(host) || host.startsWith("(")) continue
   tested.add(host)
   try {
-    const c = await mysql.createConnection({
+    const pool = new Pool({
       host,
-      user: runtime.USER,
-      password: runtime.PASSWORD,
-      database: runtime.NAME,
-      port: runtime.PORT,
-      connectTimeout: 5000,
+      user: connUser,
+      password: connPass,
+      database: connDb,
+      port: connPort,
+      connectionTimeoutMillis: 5000,
     })
-    const [r] = await c.execute("SELECT 1 AS alive")
-    const [u] = await c.execute("SELECT COUNT(*) AS c FROM User")
-    console.log(`  ${host} -> OK | SELECT 1: ${r[0].alive} | Users: ${u[0].c}`)
-    await c.end()
+    const r = await pool.query("SELECT 1 AS alive")
+    const u = await pool.query('SELECT COUNT(*)::int AS c FROM "User"')
+    console.log(`  ${host} -> OK | SELECT 1: ${r.rows[0].alive} | Users: ${u.rows[0].c}`)
+    await pool.end()
   } catch (e) {
     console.log(`  ${host} -> FAIL: ${e.message}`)
   }
 }
 
-console.log("\n=== Hosts NOT tested (would be helpful on Hostinger) ===")
-console.log("  If all above fail, try running this script ON the Hostinger")
+console.log("\n=== Hosts NOT tested (would be helpful on production) ===")
+console.log("  If all above fail, try running this script ON the production")
 console.log("  server to test the actual production env vars.")
