@@ -2,7 +2,7 @@ import type { MetadataRoute } from "next"
 import { db } from "@/lib/db"
 import { getServiceCategories } from "@/lib/services/queries"
 
-const baseUrl = "https://weblancia.ma"
+const baseUrl = "https://app.weblancia.com"
 
 const staticRoutes = [
   { url: "", priority: 1, changeFrequency: "weekly" as const },

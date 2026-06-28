@@ -15,7 +15,7 @@ import type { WorkItem } from "@/types/work"
 import type { Service } from "@/types/service"
 import type { Stat, ProcessStep, Testimonial } from "@/types/common"
 
-const siteUrl = "https://weblancia.ma"
+const siteUrl = "https://app.weblancia.com"
 
 export const metadata: Metadata = {
   title: "Weblancia | Agence Digitale Premium à Casablanca",

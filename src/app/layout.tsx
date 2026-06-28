@@ -21,7 +21,7 @@ export const metadata: Metadata = {
   },
   description:
     "Agence digitale premium à Casablanca : développement web, marketing digital, design UI/UX, consulting et branding.",
-  metadataBase: new URL("https://weblancia.ma"),
+  metadataBase: new URL("https://app.weblancia.com"),
   alternates: {
     canonical: "/",
     languages: {

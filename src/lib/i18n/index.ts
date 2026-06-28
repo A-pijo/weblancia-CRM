@@ -78,7 +78,7 @@ export function getRtlClass(locale: Locale): string {
 }
 
 export function getMetadataForLocale(locale: Locale, pagePath: string, title: string, description: string): Metadata {
-  const baseUrl = "https://weblancia.ma"
+  const baseUrl = "https://app.weblancia.com"
   const pathPart = pagePath.replace(/^\//, "")
   const fullPath = locale === "fr" ? `/${pathPart}` : `/${locale}/${pathPart}`
 

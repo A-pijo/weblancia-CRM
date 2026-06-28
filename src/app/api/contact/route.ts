@@ -39,7 +39,7 @@ export async function POST(request: Request) {
       `Sujet: ${subject}`,
       `Message: ${message}`,
       "---",
-      `Envoyé depuis weblancia.ma`,
+      `Envoyé depuis app.weblancia.com`,
     ].join("\n")
 
     await sendEmail({

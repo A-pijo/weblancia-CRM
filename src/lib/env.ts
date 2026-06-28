@@ -14,7 +14,7 @@ export const env = {
   GA_MEASUREMENT_ID: getEnv("GA_MEASUREMENT_ID"),
   GSC_VERIFICATION: getEnv("GSC_VERIFICATION"),
   CLARITY_ID: getEnv("CLARITY_ID"),
-  SITE_URL: getEnv("SITE_URL", "https://weblancia.ma"),
+  SITE_URL: getEnv("SITE_URL", "https://app.weblancia.com"),
   isDevelopment: typeof process !== "undefined" && process.env.NODE_ENV !== "production",
   isProduction: typeof process !== "undefined" && process.env.NODE_ENV === "production",
 }

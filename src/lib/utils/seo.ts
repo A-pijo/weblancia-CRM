@@ -1,6 +1,6 @@
 import type { Metadata } from "next"
 
-const baseUrl = "https://weblancia.ma"
+const baseUrl = "https://app.weblancia.com"
 
 interface SeoProps {
   title: string

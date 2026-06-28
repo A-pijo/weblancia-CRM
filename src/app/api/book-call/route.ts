@@ -42,7 +42,7 @@ export async function POST(request: Request) {
       `Créneau: ${time}`,
       `Notes: ${notes || "Aucune"}`,
       "---",
-      `Envoyé depuis weblancia.ma`,
+      `Envoyé depuis app.weblancia.com`,
     ].join("\n")
 
     await sendEmail({

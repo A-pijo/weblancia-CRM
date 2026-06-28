@@ -19,7 +19,7 @@ export function Breadcrumbs({ items, className }: BreadcrumbsProps) {
       "@type": "ListItem",
       position: index + 1,
       name: item.label,
-      ...(item.href ? { item: `${process.env.NEXT_PUBLIC_SITE_URL || "https://weblancia.ma"}${item.href}` } : {}),
+      ...(item.href ? { item: `${process.env.NEXT_PUBLIC_SITE_URL || "https://app.weblancia.com"}${item.href}` } : {}),
     })),
   }
 

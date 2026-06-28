@@ -9,6 +9,6 @@ export default function robots(): MetadataRoute.Robots {
         disallow: ["/api/", "/_next/"],
       },
     ],
-    sitemap: "https://weblancia.ma/sitemap.xml",
+    sitemap: "https://app.weblancia.com/sitemap.xml",
   }
 }

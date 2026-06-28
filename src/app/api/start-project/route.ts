@@ -43,7 +43,7 @@ export async function POST(request: Request) {
       `Source: ${source || "Non renseignée"}`,
       `Description: ${description}`,
       "---",
-      `Envoyé depuis weblancia.ma`,
+      `Envoyé depuis app.weblancia.com`,
     ].join("\n")
 
     await sendEmail({
