@@ -1,6 +1,7 @@
 "use client"
 
-import { useEffect, useRef } from "react"
+import { useEffect, useRef, useState } from "react"
+import { useRouter } from "next/navigation"
 import { motion, AnimatePresence } from "framer-motion"
 import { MagnifyingGlass, X } from "@/components/icons"
 
@@ -10,18 +11,31 @@ interface SearchOverlayProps {
 }
 
 export function SearchOverlay({ isOpen, onClose }: SearchOverlayProps) {
+  const router = useRouter()
+  const [query, setQuery] = useState("")
   const inputRef = useRef<HTMLInputElement>(null)
 
   useEffect(() => {
     function handleEscape(e: KeyboardEvent) {
       if (e.key === "Escape") onClose()
     }
+    function handleKeyDown(e: KeyboardEvent) {
+      if (e.key === "Enter" && query.trim()) {
+        router.push(`/search?q=${encodeURIComponent(query.trim())}`)
+        onClose()
+        setQuery("")
+      }
+    }
     if (isOpen) {
       document.addEventListener("keydown", handleEscape)
+      document.addEventListener("keydown", handleKeyDown)
       inputRef.current?.focus()
     }
-    return () => document.removeEventListener("keydown", handleEscape)
-  }, [isOpen, onClose])
+    return () => {
+      document.removeEventListener("keydown", handleEscape)
+      document.removeEventListener("keydown", handleKeyDown)
+    }
+  }, [isOpen, onClose, query, router])
 
   return (
     <AnimatePresence>
@@ -50,6 +64,8 @@ export function SearchOverlay({ isOpen, onClose }: SearchOverlayProps) {
               <input
                 ref={inputRef}
                 type="text"
+                value={query}
+                onChange={(e) => setQuery(e.target.value)}
                 placeholder="Search articles, services, courses..."
                 className="w-full h-14 pl-12 pr-12 rounded-radius-xl bg-surface border border-border text-body text-text-primary placeholder:text-text-tertiary focus:outline-none focus:border-accent shadow-xl"
               />

@@ -1,6 +1,7 @@
 "use client"
 
 import { useState, useRef, useEffect } from "react"
+import { useRouter } from "next/navigation"
 import { CaretDown } from "@/components/icons"
 import { cn } from "@/lib/utils/cn"
 import { siteConfig } from "@/lib/constants/site"
@@ -16,6 +17,7 @@ const locales: Record<string, string> = {
 }
 
 export function LanguageSwitcher({ className }: LanguageSwitcherProps) {
+  const router = useRouter()
   const [isOpen, setIsOpen] = useState(false)
   const [current, setCurrent] = useState(siteConfig.defaultLocale)
   const ref = useRef<HTMLDivElement>(null)
@@ -54,6 +56,8 @@ export function LanguageSwitcher({ className }: LanguageSwitcherProps) {
               onClick={() => {
                 setCurrent(key)
                 setIsOpen(false)
+                document.cookie = `NEXT_LOCALE=${key};path=/;max-age=31536000`
+                router.refresh()
               }}
               className={cn(
                 "w-full text-left px-3 py-1.5 text-caption transition-colors duration-150",

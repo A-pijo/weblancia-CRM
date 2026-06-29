@@ -4,6 +4,8 @@ import { sendEmail } from "@/lib/email"
 import { env } from "@/lib/env"
 import { db } from "@/lib/db"
 import { rateLimit, getClientIp } from "@/lib/rate-limiter"
+import { createLead } from "@/lib/leads/queries"
+import { extractLeadInfo } from "@/lib/leads/tracker"
 
 export async function POST(request: Request) {
   try {
@@ -31,6 +33,9 @@ export async function POST(request: Request) {
       update: { isActive: true },
       create: { email },
     })
+
+    const info = extractLeadInfo(request)
+    await createLead({ ...info, name: email.split("@")[0], email, source: "newsletter", message: "Newsletter subscription" })
 
     await sendEmail({
       to: env.NOTIFICATION_EMAIL,

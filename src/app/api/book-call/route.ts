@@ -4,6 +4,8 @@ import { sendEmail } from "@/lib/email"
 import { env } from "@/lib/env"
 import { db } from "@/lib/db"
 import { rateLimit, getClientIp } from "@/lib/rate-limiter"
+import { createLead } from "@/lib/leads/queries"
+import { extractLeadInfo } from "@/lib/leads/tracker"
 
 export async function POST(request: Request) {
   try {
@@ -26,9 +28,12 @@ export async function POST(request: Request) {
 
     const { name, email, phone, company, consultationType, date, time, notes } = parsed.data
 
-    await db.bookCall.create({
+    const bookCall = await db.bookCall.create({
       data: { name, email, phone, company, consultationType, date, time, notes },
     })
+
+    const info = extractLeadInfo(request)
+    await createLead({ ...info, name, email, phone, company, source: "consultation", service: consultationType, message: `Date: ${date}, Time: ${time}. ${notes ?? ""}`, originalId: bookCall.id })
 
     const emailBody = [
       "Nouvelle demande de consultation",

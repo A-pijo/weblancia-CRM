@@ -4,6 +4,8 @@ import { sendEmail } from "@/lib/email"
 import { env } from "@/lib/env"
 import { db } from "@/lib/db"
 import { rateLimit, getClientIp } from "@/lib/rate-limiter"
+import { createLead } from "@/lib/leads/queries"
+import { extractLeadInfo } from "@/lib/leads/tracker"
 
 export async function POST(request: Request) {
   try {
@@ -26,9 +28,12 @@ export async function POST(request: Request) {
 
     const { name, email, phone, subject, message } = parsed.data
 
-    await db.contactRequest.create({
+    const contact = await db.contactRequest.create({
       data: { name, email, phone, subject, message },
     })
+
+    const info = extractLeadInfo(request)
+    await createLead({ ...info, name, email, phone, message, source: "contact", service: subject, originalId: contact.id })
 
     const emailBody = [
       "Nouveau message de contact",

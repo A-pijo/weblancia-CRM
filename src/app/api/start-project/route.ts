@@ -4,6 +4,8 @@ import { sendEmail } from "@/lib/email"
 import { env } from "@/lib/env"
 import { db } from "@/lib/db"
 import { rateLimit, getClientIp } from "@/lib/rate-limiter"
+import { createLead } from "@/lib/leads/queries"
+import { extractLeadInfo } from "@/lib/leads/tracker"
 
 export async function POST(request: Request) {
   try {
@@ -24,11 +26,14 @@ export async function POST(request: Request) {
       return NextResponse.json({ success: false, errors }, { status: 400 })
     }
 
-    const { name, email, phone, company, projectType, budget, timeline, description, source } = parsed.data
+    const { name, email, phone, company, projectType, budget, timeline, description, source: formSource } = parsed.data
 
-    await db.startProject.create({
-      data: { name, email, phone, company, projectType, budget, timeline, description, source },
+    const project = await db.startProject.create({
+      data: { name, email, phone, company, projectType, budget, timeline, description, source: formSource },
     })
+
+    const info = extractLeadInfo(request)
+    await createLead({ ...info, name, email, phone, company, source: formSource ?? "quote", service: projectType, message: description, budget, originalId: project.id })
 
     const emailBody = [
       "Nouveau projet reçu",
@@ -40,7 +45,7 @@ export async function POST(request: Request) {
       `Type de projet: ${projectType}`,
       `Budget: ${budget}`,
       `Délai: ${timeline}`,
-      `Source: ${source || "Non renseignée"}`,
+      `Source: ${formSource || "Non renseignée"}`,
       `Description: ${description}`,
       "---",
       `Envoyé depuis app.weblancia.com`,

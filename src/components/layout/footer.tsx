@@ -1,5 +1,6 @@
 "use client"
 
+import { useState, type FormEvent } from "react"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { siteConfig } from "@/lib/constants/site"
@@ -71,6 +72,35 @@ export function Footer({ settings }: FooterProps) {
   const companyName = settings?.companyName ?? siteConfig.name
   const copyright = `© ${currentYear} ${companyName}. All rights reserved.`
 
+  const [newsletterEmail, setNewsletterEmail] = useState("")
+  const [newsletterStatus, setNewsletterStatus] = useState<"idle" | "loading" | "success" | "error">("idle")
+  const [newsletterError, setNewsletterError] = useState("")
+
+  async function handleNewsletterSubmit(e: FormEvent) {
+    e.preventDefault()
+    if (!newsletterEmail.trim()) return
+    setNewsletterStatus("loading")
+    setNewsletterError("")
+    try {
+      const res = await fetch("/api/newsletter", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email: newsletterEmail.trim() }),
+      })
+      const data = await res.json()
+      if (res.ok) {
+        setNewsletterStatus("success")
+        setNewsletterEmail("")
+      } else {
+        setNewsletterStatus("error")
+        setNewsletterError(data.error || "Une erreur est survenue")
+      }
+    } catch {
+      setNewsletterStatus("error")
+      setNewsletterError("Erreur de connexion")
+    }
+  }
+
   return (
     <footer className="bg-bg-secondary border-t border-border">
       <div className="container-page">
@@ -82,22 +112,33 @@ export function Footer({ settings }: FooterProps) {
                 Get the latest insights and resources delivered to your inbox.
               </p>
             </div>
-            <form
-              className="flex flex-col sm:flex-row gap-3 w-full md:w-auto"
-              onSubmit={(e) => e.preventDefault()}
-            >
-              <div className="w-full sm:min-w-[280px]">
-                <Input
-                  type="email"
-                  placeholder="Enter your email"
-                  required
-                  aria-label="Email for newsletter"
-                />
-              </div>
-              <Button type="submit" variant="primary" size="default">
-                Subscribe
-              </Button>
-            </form>
+            <div className="w-full md:w-auto">
+              {newsletterStatus === "success" ? (
+                <p className="text-accent font-semibold">Merci ! Vérifiez votre boîte de réception.</p>
+              ) : (
+                <form
+                  className="flex flex-col sm:flex-row gap-3 w-full md:w-auto"
+                  onSubmit={handleNewsletterSubmit}
+                >
+                  <div className="w-full sm:min-w-[280px]">
+                    <Input
+                      type="email"
+                      value={newsletterEmail}
+                      onChange={(e) => setNewsletterEmail(e.target.value)}
+                      placeholder="Enter your email"
+                      required
+                      aria-label="Email for newsletter"
+                    />
+                    {newsletterStatus === "error" && (
+                      <p className="text-caption text-danger mt-1">{newsletterError}</p>
+                    )}
+                  </div>
+                  <Button type="submit" variant="primary" size="default" disabled={newsletterStatus === "loading"}>
+                    {newsletterStatus === "loading" ? "..." : "Subscribe"}
+                  </Button>
+                </form>
+              )}
+            </div>
           </div>
         </div>
 
