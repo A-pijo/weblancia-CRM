@@ -11,22 +11,25 @@ import {
   GoogleAnalytics,
   MicrosoftClarity,
 } from "@/components/shared/analytics"
+import { loadSiteSettings } from "@/lib/settings"
 
-export default function PublicLayout({
+export default async function PublicLayout({
   children,
 }: Readonly<{
   children: React.ReactNode
 }>) {
+  const settings = await loadSiteSettings()
+
   return (
     <div className="flex min-h-screen flex-col bg-bg">
-      <OrganizationJsonLd />
-      <LocalBusinessJsonLd />
-      <WebSiteJsonLd />
+      <OrganizationJsonLd settings={settings} />
+      <LocalBusinessJsonLd settings={settings} />
+      <WebSiteJsonLd settings={settings} />
       <SkipLink />
       <CookieConsentWrapper>
         <Navigation />
         <main id="main-content" className="flex-1">{children}</main>
-        <Footer />
+        <Footer settings={settings} />
         <GoogleAnalytics />
         <MicrosoftClarity />
       </CookieConsentWrapper>

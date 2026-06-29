@@ -2,20 +2,34 @@
 
 import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip } from "recharts"
 
-const data = [
-  { name: "In Progress", value: 8, color: "#C86544" },
-  { name: "Completed", value: 14, color: "#22C55E" },
-  { name: "Planning", value: 5, color: "#3B82F6" },
-  { name: "On Hold", value: 3, color: "#F59E0B" },
-]
+const STATUS_COLORS: Record<string, string> = {
+  "In Progress": "#C86544",
+  "Completed": "#22C55E",
+  "Planning": "#3B82F6",
+  "On Hold": "#F59E0B",
+  "Cancelled": "#EF4444",
+  "Draft": "#64748B",
+}
 
-export function ProjectStatusPieChart() {
+function getColor(name: string): string {
+  return STATUS_COLORS[name] || "#C86544"
+}
+
+export function ProjectStatusPieChart({ data }: { data: { name: string; value: number }[] }) {
+  if (!data || data.length === 0) {
+    return <div className="h-56 flex items-center justify-center text-admin-text-tertiary text-sm">No data yet</div>
+  }
+
+  const total = data.reduce((sum, d) => sum + d.value, 0)
+
+  const coloredData = data.map(d => ({ ...d, color: getColor(d.name) }))
+
   return (
-    <div className="h-56 flex items-center justify-center">
+    <div className="h-56 flex items-center justify-center relative">
       <ResponsiveContainer width="100%" height="100%">
         <PieChart>
           <Pie
-            data={data}
+            data={coloredData}
             cx="50%"
             cy="50%"
             innerRadius={55}
@@ -23,7 +37,7 @@ export function ProjectStatusPieChart() {
             paddingAngle={4}
             dataKey="value"
           >
-            {data.map((entry, index) => (
+            {coloredData.map((entry, index) => (
               <Cell key={`cell-${index}`} fill={entry.color} />
             ))}
           </Pie>
@@ -33,8 +47,8 @@ export function ProjectStatusPieChart() {
           />
         </PieChart>
       </ResponsiveContainer>
-      <div className="absolute flex flex-col items-center">
-        <span className="text-2xl font-bold text-admin-text-primary">30</span>
+      <div className="absolute flex flex-col items-center pointer-events-none">
+        <span className="text-2xl font-bold text-admin-text-primary">{total}</span>
         <span className="text-[10px] text-admin-text-tertiary">Total Projects</span>
       </div>
     </div>

@@ -15,6 +15,8 @@ export const env = {
   GSC_VERIFICATION: getEnv("GSC_VERIFICATION"),
   CLARITY_ID: getEnv("CLARITY_ID"),
   SITE_URL: getEnv("SITE_URL", "https://app.weblancia.com"),
+  AI_PROVIDER: getEnv("AI_PROVIDER", "gemini"),
+  AI_LANGUAGE: getEnv("AI_LANGUAGE", "fr"),
   isDevelopment: typeof process !== "undefined" && process.env.NODE_ENV !== "production",
   isProduction: typeof process !== "undefined" && process.env.NODE_ENV === "production",
 }

@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server"
+import { revalidatePath } from "next/cache"
 import { getBlogPostById, updateBlogPost, softDeleteBlogPost, permanentlyDeleteBlogPost, duplicateBlogPost, toggleBlogPostStatus } from "@/lib/blog/queries"
 import { blogSchema } from "@/lib/validations/blog"
 
@@ -15,11 +16,13 @@ export async function PATCH(req: Request, { params }: { params: Promise<{ id: st
 
   if (body._action === "duplicate") {
     const dup = await duplicateBlogPost(Number(id))
+    try { revalidatePath("/insights"); revalidatePath("/sitemap.xml") } catch {}
     return NextResponse.json(dup)
   }
 
   if (body._action === "toggle") {
     const updated = await toggleBlogPostStatus(Number(id), body.isPublished)
+    try { revalidatePath("/insights"); revalidatePath("/sitemap.xml") } catch {}
     return NextResponse.json(updated)
   }
 
@@ -28,6 +31,7 @@ export async function PATCH(req: Request, { params }: { params: Promise<{ id: st
     return NextResponse.json({ error: parsed.error.flatten() }, { status: 400 })
   }
   const updated = await updateBlogPost(Number(id), parsed.data as unknown as Record<string, unknown>)
+  try { revalidatePath("/insights"); revalidatePath("/sitemap.xml") } catch {}
   return NextResponse.json(updated)
 }
 
@@ -39,5 +43,6 @@ export async function DELETE(req: Request, { params }: { params: Promise<{ id: s
   } else {
     await softDeleteBlogPost(Number(id))
   }
+  try { revalidatePath("/insights"); revalidatePath("/sitemap.xml") } catch {}
   return NextResponse.json({ success: true })
 }

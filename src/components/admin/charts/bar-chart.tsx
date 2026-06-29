@@ -2,22 +2,17 @@
 
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from "recharts"
 
-const data = [
-  { name: "Web Dev", value: 12 },
-  { name: "SEO", value: 8 },
-  { name: "Design", value: 6 },
-  { name: "Marketing", value: 5 },
-  { name: "E-commerce", value: 4 },
-  { name: "Branding", value: 3 },
-]
+export function ProjectsBarChart({ data }: { data: { name: string; value: number }[] }) {
+  if (!data || data.length === 0) {
+    return <div className="h-64 flex items-center justify-center text-admin-text-tertiary text-sm">No data yet</div>
+  }
 
-export function ProjectsBarChart() {
   return (
     <div className="h-64">
       <ResponsiveContainer width="100%" height="100%">
         <BarChart data={data} layout="vertical">
           <CartesianGrid strokeDasharray="3 3" stroke="#334155" horizontal={true} vertical={false} />
-          <XAxis type="number" axisLine={false} tickLine={false} tick={{ fill: "#64748B", fontSize: 12 }} />
+          <XAxis type="number" axisLine={false} tickLine={false} tick={{ fill: "#64748B", fontSize: 12 }} allowDecimals={false} />
           <YAxis dataKey="name" type="category" axisLine={false} tickLine={false} tick={{ fill: "#64748B", fontSize: 12 }} width={80} />
           <Tooltip
             contentStyle={{ background: "#1E293B", border: "1px solid #475569", borderRadius: "8px", boxShadow: "0 4px 20px rgba(0,0,0,0.4)" }}

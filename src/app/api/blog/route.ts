@@ -1,6 +1,8 @@
 import { NextResponse } from "next/server"
+import { revalidatePath } from "next/cache"
 import { getBlogPosts, createBlogPost, getBlogCategories } from "@/lib/blog/queries"
 import { blogSchema } from "@/lib/validations/blog"
+import { rateLimit, getClientIp } from "@/lib/rate-limiter"
 
 export async function GET(req: Request) {
   const { searchParams } = new URL(req.url)
@@ -21,12 +23,25 @@ export async function GET(req: Request) {
 
 export async function POST(req: Request) {
   try {
+    const ip = getClientIp(req)
+    const { allowed } = rateLimit(`blog-create:${ip}`, 20, 60_000)
+    if (!allowed) {
+      return NextResponse.json(
+        { error: "Trop de requêtes. Veuillez réessayer dans quelques minutes." },
+        { status: 429, headers: { "Retry-After": "300", "X-RateLimit-Remaining": "0" } },
+      )
+    }
+
     const body = await req.json()
     const parsed = blogSchema.safeParse(body)
     if (!parsed.success) {
       return NextResponse.json({ error: parsed.error.flatten() }, { status: 400 })
     }
     const post = await createBlogPost(parsed.data as unknown as Record<string, unknown>)
+    try {
+      revalidatePath("/insights")
+      revalidatePath("/sitemap.xml")
+    } catch {}
     return NextResponse.json(post, { status: 201 })
   } catch (e) {
     const message = e instanceof Error ? e.message : "Internal error"

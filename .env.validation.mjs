@@ -10,6 +10,11 @@ const requiredVars = [
 const optionalVars = [
   "SUPABASE_URL",
   "SUPABASE_ANON_KEY",
+  "AI_PROVIDER",
+  "AI_LANGUAGE",
+  "GEMINI_API_KEY",
+  "OPENAI_API_KEY",
+  "CRON_SECRET",
   "SMTP_HOST",
   "SMTP_PORT",
   "SMTP_USER",

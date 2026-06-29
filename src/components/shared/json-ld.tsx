@@ -1,48 +1,81 @@
 import { siteConfig } from "@/lib/constants/site"
+import type { SiteSettings } from "@/lib/settings"
 
-export function OrganizationJsonLd() {
+interface JsonLdSettings {
+  companyName: string
+  siteUrl: string
+  companyDescription: string
+  email: string
+  phone: string
+  addressCity: string
+  addressCountry: string
+  socialLinkedin: string
+  socialXTwitter: string
+  socialInstagram: string
+  socialYoutube: string
+}
+
+function toSettings(s?: Partial<SiteSettings>): JsonLdSettings {
+  return {
+    companyName: s?.companyName ?? siteConfig.name,
+    siteUrl: s?.siteUrl ?? siteConfig.url,
+    companyDescription: s?.companyDescription ?? siteConfig.description,
+    email: s?.email ?? siteConfig.email.hello,
+    phone: s?.phone ?? siteConfig.phone,
+    addressCity: s?.addressCity ?? siteConfig.address.city,
+    addressCountry: s?.addressCountry ?? siteConfig.address.country,
+    socialLinkedin: s?.socialLinkedin ?? siteConfig.social.linkedin,
+    socialXTwitter: s?.socialXTwitter ?? siteConfig.social.twitter,
+    socialInstagram: s?.socialInstagram ?? siteConfig.social.instagram,
+    socialYoutube: s?.socialYoutube ?? siteConfig.social.youtube,
+  }
+}
+
+export function OrganizationJsonLd({ settings }: { settings?: Partial<SiteSettings> }) {
+  const s = toSettings(settings)
   const schema = {
     "@context": "https://schema.org",
     "@type": "Organization",
-    name: "Weblancia",
-    url: siteConfig.url,
-    logo: `${siteConfig.url}/images/og/og-default.jpg`,
-    description: siteConfig.description,
+    name: s.companyName,
+    url: s.siteUrl,
+    logo: `${s.siteUrl}/images/og/og-default.jpg`,
+    description: s.companyDescription,
     address: {
       "@type": "PostalAddress",
-      addressLocality: siteConfig.address.city,
-      addressCountry: siteConfig.address.country,
+      addressLocality: s.addressCity,
+      addressCountry: s.addressCountry,
     },
     contactPoint: {
       "@type": "ContactPoint",
-      telephone: siteConfig.phone,
-      email: siteConfig.email.hello,
+      telephone: s.phone,
+      email: s.email,
       contactType: "customer service",
       availableLanguage: ["French", "English", "Arabic"],
     },
     sameAs: [
-      siteConfig.social.linkedin,
-      siteConfig.social.twitter,
-      siteConfig.social.instagram,
-      siteConfig.social.youtube,
+      s.socialLinkedin,
+      s.socialXTwitter,
+      s.socialInstagram,
+      s.socialYoutube,
     ],
   }
   return <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }} />
 }
 
-export function LocalBusinessJsonLd() {
+export function LocalBusinessJsonLd({ settings }: { settings?: Partial<SiteSettings> }) {
+  const s = toSettings(settings)
   const schema = {
     "@context": "https://schema.org",
     "@type": "LocalBusiness",
-    name: "Weblancia",
-    image: `${siteConfig.url}/images/og/og-default.jpg`,
-    url: siteConfig.url,
-    telephone: siteConfig.phone,
-    email: siteConfig.email.hello,
+    name: s.companyName,
+    image: `${s.siteUrl}/images/og/og-default.jpg`,
+    url: s.siteUrl,
+    telephone: s.phone,
+    email: s.email,
     address: {
       "@type": "PostalAddress",
-      addressLocality: siteConfig.address.city,
-      addressCountry: siteConfig.address.country,
+      addressLocality: s.addressCity,
+      addressCountry: s.addressCountry,
     },
     openingHoursSpecification: [
       {
@@ -57,19 +90,20 @@ export function LocalBusinessJsonLd() {
   return <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }} />
 }
 
-export function WebSiteJsonLd() {
+export function WebSiteJsonLd({ settings }: { settings?: Partial<SiteSettings> }) {
+  const s = toSettings(settings)
   const schema = {
     "@context": "https://schema.org",
     "@type": "WebSite",
-    name: "Weblancia",
-    url: siteConfig.url,
-    description: siteConfig.description,
+    name: s.companyName,
+    url: s.siteUrl,
+    description: s.companyDescription,
     inLanguage: ["fr", "en", "ar"],
     potentialAction: {
       "@type": "SearchAction",
       target: {
         "@type": "EntryPoint",
-        urlTemplate: `${siteConfig.url}/search?q={search_term_string}`,
+        urlTemplate: `${s.siteUrl}/search?q={search_term_string}`,
       },
       "query-input": "required name=search_term_string",
     },

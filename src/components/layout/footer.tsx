@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { SocialLinks } from "@/components/shared/social-links"
 import { LanguageSwitcher } from "@/components/shared/language-switcher"
+import type { SiteSettings } from "@/lib/settings"
 
 interface FooterColumn {
   title: string
@@ -58,9 +59,18 @@ const columns: FooterColumn[] = [
   },
 ]
 
-export function Footer() {
+interface FooterProps {
+  settings?: Partial<SiteSettings>
+}
+
+export function Footer({ settings }: FooterProps) {
   const pathname = usePathname()
   if (pathname.startsWith("/admin")) return null
+
+  const currentYear = new Date().getFullYear()
+  const companyName = settings?.companyName ?? siteConfig.name
+  const copyright = `© ${currentYear} ${companyName}. All rights reserved.`
+
   return (
     <footer className="bg-bg-secondary border-t border-border">
       <div className="container-page">
@@ -115,11 +125,11 @@ export function Footer() {
 
         <div className="flex flex-col md:flex-row items-center justify-between gap-4 py-6 border-t border-border">
           <p className="text-caption text-text-tertiary order-2 md:order-1">
-            {siteConfig.copyright}
+            {copyright}
           </p>
           <div className="flex items-center gap-6 order-1 md:order-2">
             <LanguageSwitcher />
-            <SocialLinks />
+            <SocialLinks settings={settings} />
           </div>
         </div>
       </div>
