@@ -3,6 +3,7 @@
 import { useState, useEffect, createContext, useContext, type ReactNode } from "react"
 import { motion, AnimatePresence } from "framer-motion"
 import { Button } from "@/components/ui/button"
+import { useLocale } from "@/lib/i18n/provider"
 
 type ConsentStatus = "accepted" | "declined" | null
 
@@ -18,6 +19,7 @@ export function useCookieConsent() {
 }
 
 export function CookieConsentProvider({ children }: { children: ReactNode }) {
+  const { t } = useLocale()
   const [status, setStatus] = useState<ConsentStatus>(null)
 
   useEffect(() => {
@@ -49,14 +51,14 @@ export function CookieConsentProvider({ children }: { children: ReactNode }) {
           >
             <div className="container-page flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
               <p className="text-body-sm text-text-secondary max-w-[640px]">
-                Nous utilisons des cookies pour améliorer votre expérience. En continuant à naviguer sur ce site, vous acceptez notre utilisation des cookies.
+                {t("cookie.message")}
               </p>
               <div className="flex items-center gap-3 shrink-0">
                 <Button variant="ghost" size="sm" onClick={decline}>
-                  Refuser
+                  {t("cookie.decline")}
                 </Button>
                 <Button variant="primary" size="sm" onClick={accept}>
-                  Accepter
+                  {t("cookie.accept")}
                 </Button>
               </div>
             </div>

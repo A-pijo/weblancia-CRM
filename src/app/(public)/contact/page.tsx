@@ -9,7 +9,6 @@ import { SocialLinks } from "@/components/shared/social-links"
 import { FaqJsonLd } from "@/components/shared/json-ld"
 import { EnvelopeSimple, Phone, MapPin, Clock } from "@/components/icons"
 import { siteConfig } from "@/lib/constants/site"
-import { loadSiteSettings } from "@/lib/settings"
 import { ContactForm } from "./contact-form"
 import { getActiveFAQWithIds } from "@/lib/faq/queries"
 
@@ -23,31 +22,30 @@ export const metadata: Metadata = {
 }
 
 export default async function ContactPage() {
-  const settings = await loadSiteSettings()
   const faqItems = await getActiveFAQWithIds()
 
   const contactInfo = [
     {
       icon: EnvelopeSimple,
       label: "Email",
-      value: settings.email,
-      href: `mailto:${settings.email}`,
+      value: siteConfig.email.hello,
+      href: `mailto:${siteConfig.email.hello}`,
     },
     {
       icon: Phone,
       label: "Téléphone",
-      value: settings.phone,
-      href: `tel:${settings.phone}`,
+      value: siteConfig.phone,
+      href: `tel:${siteConfig.phone}`,
     },
     {
       icon: MapPin,
       label: "Adresse",
-      value: `${settings.addressCity}, ${settings.addressCountry}`,
+      value: `${siteConfig.address.city}, ${siteConfig.address.country}`,
     },
     {
       icon: Clock,
       label: "Horaires",
-      value: settings.businessHours,
+      value: "Lundi - Vendredi, 9h00 - 18h00",
     },
   ]
 
@@ -97,7 +95,7 @@ export default async function ContactPage() {
                   </div>
                   <hr className="my-6 border-border" />
                   <p className="text-caption text-text-tertiary mb-3">Suivez-nous</p>
-                  <SocialLinks settings={settings} />
+                  <SocialLinks />
                 </Card>
               </AnimatedReveal>
             </div>

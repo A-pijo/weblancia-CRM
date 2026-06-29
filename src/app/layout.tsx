@@ -1,5 +1,6 @@
 import type { Metadata } from "next"
 import { Inter, Playfair_Display } from "next/font/google"
+import { LocaleProvider } from "@/lib/i18n/provider"
 import "./globals.css"
 
 const inter = Inter({
@@ -60,16 +61,15 @@ export default function RootLayout({
   children: React.ReactNode
 }>) {
   return (
-      <html
-        lang="fr"
-        className={`${inter.variable} ${playfair.variable} overflow-x-hidden`}
-      >
+    <html lang="fr" className={`${inter.variable} ${playfair.variable} overflow-x-hidden`}>
       <head>
         <link rel="preconnect" href="https://www.googletagmanager.com" />
         <link rel="preconnect" href="https://www.google-analytics.com" />
         <link rel="preconnect" href="https://*.clarity.ms" crossOrigin="anonymous" />
       </head>
-      <body className="min-h-screen antialiased">{children}</body>
+      <body className="min-h-screen antialiased">
+        <LocaleProvider>{children}</LocaleProvider>
+      </body>
     </html>
   )
 }

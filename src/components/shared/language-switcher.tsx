@@ -4,7 +4,7 @@ import { useState, useRef, useEffect } from "react"
 import { useRouter } from "next/navigation"
 import { CaretDown } from "@/components/icons"
 import { cn } from "@/lib/utils/cn"
-import { siteConfig } from "@/lib/constants/site"
+import { useLocale } from "@/lib/i18n/provider"
 
 interface LanguageSwitcherProps {
   className?: string
@@ -18,8 +18,8 @@ const locales: Record<string, string> = {
 
 export function LanguageSwitcher({ className }: LanguageSwitcherProps) {
   const router = useRouter()
+  const { locale, setLocale } = useLocale()
   const [isOpen, setIsOpen] = useState(false)
-  const [current, setCurrent] = useState(siteConfig.defaultLocale)
   const ref = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
@@ -32,6 +32,12 @@ export function LanguageSwitcher({ className }: LanguageSwitcherProps) {
     return () => document.removeEventListener("mousedown", handleClickOutside)
   }, [])
 
+  function switchLocale(key: string) {
+    setLocale(key as "fr" | "en" | "ar")
+    setIsOpen(false)
+    router.refresh()
+  }
+
   return (
     <div ref={ref} className={cn("relative", className)}>
       <button
@@ -41,7 +47,7 @@ export function LanguageSwitcher({ className }: LanguageSwitcherProps) {
         aria-label="Select language"
         aria-expanded={isOpen}
       >
-        {locales[current]}
+        {locales[locale]}
         <CaretDown
           size={12}
           className={cn("transition-transform duration-200", isOpen && "rotate-180")}
@@ -53,15 +59,10 @@ export function LanguageSwitcher({ className }: LanguageSwitcherProps) {
             <button
               key={key}
               type="button"
-              onClick={() => {
-                setCurrent(key)
-                setIsOpen(false)
-                document.cookie = `NEXT_LOCALE=${key};path=/;max-age=31536000`
-                router.refresh()
-              }}
+              onClick={() => switchLocale(key)}
               className={cn(
                 "w-full text-left px-3 py-1.5 text-caption transition-colors duration-150",
-                key === current
+                key === locale
                   ? "text-text-primary font-medium"
                   : "text-text-secondary hover:text-text-primary hover:bg-bg-secondary",
               )}

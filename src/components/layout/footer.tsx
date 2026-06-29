@@ -8,8 +8,7 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { SocialLinks } from "@/components/shared/social-links"
 import { LanguageSwitcher } from "@/components/shared/language-switcher"
-import type { SiteSettings } from "@/lib/settings"
-
+import { useLocale } from "@/lib/i18n/provider"
 interface FooterColumn {
   title: string
   links: { label: string; href: string }[]
@@ -60,17 +59,20 @@ const columns: FooterColumn[] = [
   },
 ]
 
-interface FooterProps {
-  settings?: Partial<SiteSettings>
+const columnTitleKey: Record<string, string> = {
+  Services: "footer.services",
+  Work: "footer.work",
+  Academy: "footer.academy",
+  Connect: "footer.connect",
 }
 
-export function Footer({ settings }: FooterProps) {
+export function Footer() {
   const pathname = usePathname()
+  const { t } = useLocale()
   if (pathname.startsWith("/admin")) return null
 
   const currentYear = new Date().getFullYear()
-  const companyName = settings?.companyName ?? siteConfig.name
-  const copyright = `© ${currentYear} ${companyName}. All rights reserved.`
+  const copyright = `© ${currentYear} ${siteConfig.name}. ${t("footer.copyright")}`
 
   const [newsletterEmail, setNewsletterEmail] = useState("")
   const [newsletterStatus, setNewsletterStatus] = useState<"idle" | "loading" | "success" | "error">("idle")
@@ -107,14 +109,14 @@ export function Footer({ settings }: FooterProps) {
         <div className="py-10 md:py-20 border-b border-border">
           <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
             <div>
-              <h3 className="text-h4 text-text-primary">Stay in the loop</h3>
+              <h3 className="text-h4 text-text-primary">{t("footer.newsletterTitle")}</h3>
               <p className="text-body-sm text-text-secondary mt-1">
-                Get the latest insights and resources delivered to your inbox.
+                {t("footer.newsletterText")}
               </p>
             </div>
             <div className="w-full md:w-auto">
               {newsletterStatus === "success" ? (
-                <p className="text-accent font-semibold">Merci ! Vérifiez votre boîte de réception.</p>
+                <p className="text-accent font-semibold">{t("contact.successText")}</p>
               ) : (
                 <form
                   className="flex flex-col sm:flex-row gap-3 w-full md:w-auto"
@@ -125,16 +127,16 @@ export function Footer({ settings }: FooterProps) {
                       type="email"
                       value={newsletterEmail}
                       onChange={(e) => setNewsletterEmail(e.target.value)}
-                      placeholder="Enter your email"
+                      placeholder={t("footer.newsletterPlaceholder")}
                       required
-                      aria-label="Email for newsletter"
+                      aria-label={t("footer.newsletterPlaceholder")}
                     />
                     {newsletterStatus === "error" && (
                       <p className="text-caption text-danger mt-1">{newsletterError}</p>
                     )}
                   </div>
                   <Button type="submit" variant="primary" size="default" disabled={newsletterStatus === "loading"}>
-                    {newsletterStatus === "loading" ? "..." : "Subscribe"}
+                    {newsletterStatus === "loading" ? "..." : t("actions.subscribe")}
                   </Button>
                 </form>
               )}
@@ -146,7 +148,7 @@ export function Footer({ settings }: FooterProps) {
           {columns.map((column) => (
             <div key={column.title}>
               <h4 className="text-caption font-semibold text-text-primary mb-4 uppercase tracking-wider">
-                {column.title}
+                {t(columnTitleKey[column.title] ?? column.title)}
               </h4>
               <ul className="space-y-2.5">
                 {column.links.map((link) => (
@@ -170,7 +172,7 @@ export function Footer({ settings }: FooterProps) {
           </p>
           <div className="flex items-center gap-6 order-1 md:order-2">
             <LanguageSwitcher />
-            <SocialLinks settings={settings} />
+            <SocialLinks />
           </div>
         </div>
       </div>

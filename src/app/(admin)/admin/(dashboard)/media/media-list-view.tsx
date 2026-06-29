@@ -1,5 +1,6 @@
 "use client"
 
+/* eslint-disable @next/next/no-img-element -- dynamic user-uploaded media URLs */
 import { useState, useCallback } from "react"
 import { cn } from "@/lib/utils/cn"
 

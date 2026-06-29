@@ -2,6 +2,8 @@ import type { Metadata } from "next"
 
 export type Locale = "fr" | "en" | "ar"
 
+export const LOCALE_COOKIE = "NEXT_LOCALE"
+
 interface Translations {
   [key: string]: string | Translations
 }
@@ -56,6 +58,10 @@ export type Translator = ReturnType<typeof createTranslator>
 export async function getTranslator(locale: Locale): Promise<Translator> {
   await loadTranslations(locale)
   return createTranslator(locale)
+}
+
+export async function loadAllTranslations(): Promise<void> {
+  await Promise.all([loadTranslations("fr"), loadTranslations("en"), loadTranslations("ar")])
 }
 
 export function getLocaleFromPath(pathname: string): Locale {

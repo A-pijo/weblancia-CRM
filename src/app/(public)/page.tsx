@@ -1,4 +1,5 @@
 import type { Metadata } from "next"
+import Link from "next/link"
 import { HeroDefault } from "@/components/sections/hero/hero-default"
 import { TrustBar } from "@/components/sections/trust-bar"
 import { FeaturedWork } from "@/components/sections/featured-work"
@@ -169,9 +170,9 @@ export default async function HomePage() {
               ))}
             </div>
             <div className="text-center mt-8">
-              <a href="/insights" className="inline-flex items-center gap-2 text-accent hover:text-accent-hover text-button font-medium transition-colors">
+              <Link href="/insights" className="inline-flex items-center gap-2 text-accent hover:text-accent-hover text-button font-medium transition-colors">
                 Voir tous les articles
-              </a>
+              </Link>
             </div>
           </div>
         </section>

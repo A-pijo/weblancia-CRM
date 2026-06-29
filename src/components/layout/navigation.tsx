@@ -13,13 +13,23 @@ import {
 } from "@/lib/constants/navigation"
 import { siteConfig } from "@/lib/constants/site"
 import { Button } from "@/components/ui/button"
+import { useLocale } from "@/lib/i18n/provider"
 import { MegaMenu } from "./mega-menu"
 import { MobileNav } from "./mobile-nav"
 import { SearchOverlay } from "./search-overlay"
 
+const navLabelKey: Record<string, string> = {
+  Work: "nav.work",
+  Services: "nav.services",
+  Academy: "nav.academy",
+  Insights: "nav.insights",
+  About: "nav.about",
+}
+
 export function Navigation() {
   const pathname = usePathname()
   const router = useRouter()
+  const { t } = useLocale()
   if (pathname.startsWith("/admin")) return null
   const [scrolled, setScrolled] = useState(false)
   const [activeMega, setActiveMega] = useState<string | null>(null)
@@ -100,14 +110,14 @@ export function Navigation() {
                           activeMega === link.label.toLowerCase() && "text-text-primary",
                         )}
                       >
-                        {link.label}
+                        {t(navLabelKey[link.label] ?? link.label)}
                       </button>
                     ) : (
                       <Link
                         href={link.href}
                         className="inline-block px-4 py-2 text-nav text-text-secondary hover:text-text-primary transition-colors duration-200 rounded-radius-md"
                       >
-                        {link.label}
+                        {t(navLabelKey[link.label] ?? link.label)}
                       </Link>
                     )}
                   </div>
@@ -120,15 +130,15 @@ export function Navigation() {
                 type="button"
                 onClick={() => setSearchOpen(true)}
                 className="text-text-secondary hover:text-text-primary transition-colors duration-200"
-                aria-label="Search"
+                aria-label={t("nav.search")}
               >
                 <MagnifyingGlass size={20} />
               </button>
               <Button variant="secondary" size="sm" onClick={() => router.push("/contact")}>
-                Contact
+                {t("nav.contact")}
               </Button>
               <Button variant="primary" size="sm" onClick={() => router.push("/start-project")}>
-                Start Project
+                {t("nav.startProject")}
               </Button>
             </div>
 

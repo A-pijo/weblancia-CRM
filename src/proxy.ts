@@ -2,6 +2,7 @@ import { NextResponse, type NextRequest } from "next/server"
 import { jwtVerify } from "jose"
 
 const JWT_SECRET = new TextEncoder().encode(process.env.JWT_SECRET ?? "dev-secret-change-in-production-32chars")
+const VALID_LOCALES = ["fr", "en", "ar"]
 
 async function getSession(request: NextRequest) {
   const token = request.cookies.get("session")?.value
@@ -17,6 +18,12 @@ async function getSession(request: NextRequest) {
 export async function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl
   const response = NextResponse.next()
+
+  // i18n: detect locale from cookie
+  const cookie = request.cookies.get("NEXT_LOCALE")?.value
+  const locale = VALID_LOCALES.includes(cookie ?? "") ? cookie! : "fr"
+  response.headers.set("x-locale", locale)
+  response.headers.set("x-dir", locale === "ar" ? "rtl" : "ltr")
 
   // Auth protection for /admin/* — skip in development preview mode
   const isDev = process.env.NODE_ENV === "development"

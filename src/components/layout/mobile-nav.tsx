@@ -15,6 +15,16 @@ import {
 import { Button } from "@/components/ui/button"
 import { SocialLinks } from "@/components/shared/social-links"
 import { LanguageSwitcher } from "@/components/shared/language-switcher"
+import { useLocale } from "@/lib/i18n/provider"
+
+const navLabelKey: Record<string, string> = {
+  Home: "nav.work",
+  Work: "nav.work",
+  Services: "nav.services",
+  Academy: "nav.academy",
+  Insights: "nav.insights",
+  About: "nav.about",
+}
 
 interface MobileNavProps {
   isOpen: boolean
@@ -23,6 +33,7 @@ interface MobileNavProps {
 
 function SubmenuAccordion({ title, columns, onItemClick }: { title: string; columns: MegaMenuColumn[]; onItemClick: () => void }) {
   const [expanded, setExpanded] = useState(false)
+  const { t } = useLocale()
 
   return (
     <div>
@@ -31,7 +42,7 @@ function SubmenuAccordion({ title, columns, onItemClick }: { title: string; colu
         onClick={() => setExpanded(!expanded)}
         className="flex items-center justify-between w-full py-3 text-left"
       >
-        <span className="text-h5">{title}</span>
+        <span className="text-h5">{t(navLabelKey[title] ?? title)}</span>
         <CaretDown
           size={20}
           className={cn(
@@ -53,7 +64,7 @@ function SubmenuAccordion({ title, columns, onItemClick }: { title: string; colu
               {columns.map((column) => (
                 <div key={column.title}>
                   <h4 className="text-caption font-semibold text-text-secondary mb-2">
-                    {column.title}
+                    {t(navLabelKey[column.title] ?? column.title)}
                   </h4>
                   <ul className="space-y-2 pl-2">
                     {column.links.map((link) => (
@@ -83,6 +94,7 @@ function SubmenuAccordion({ title, columns, onItemClick }: { title: string; colu
 
 export function MobileNav({ isOpen, onClose }: MobileNavProps) {
   const router = useRouter()
+  const { t } = useLocale()
 
   useEffect(() => {
     if (isOpen) {
@@ -163,7 +175,7 @@ export function MobileNav({ isOpen, onClose }: MobileNavProps) {
                       className="flex items-center justify-between py-3 text-h5 text-text-primary hover:text-accent transition-colors duration-200"
                       onClick={onClose}
                     >
-                      {link.label}
+                      {t(navLabelKey[link.label] ?? link.label)}
                       <CaretRight size={20} className="text-text-tertiary" />
                     </Link>
                   )
@@ -178,14 +190,14 @@ export function MobileNav({ isOpen, onClose }: MobileNavProps) {
                   size="default"
                   onClick={() => { onClose(); router.push("/contact") }}
                 >
-                  Contact
+                  {t("nav.contact")}
                 </Button>
                 <Button
                   variant="primary"
                   size="default"
                   onClick={() => { onClose(); router.push("/start-project") }}
                 >
-                  Start Project
+                  {t("nav.startProject")}
                 </Button>
               </div>
               <div className="flex items-center justify-between">

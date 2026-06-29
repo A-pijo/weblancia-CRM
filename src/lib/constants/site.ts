@@ -1,13 +1,13 @@
 export const siteConfig = {
   name: "Weblancia",
   tagline: "Premium Digital Agency",
-  description: "Web design, development, SEO & branding agency based in Casablanca. We craft digital experiences that drive results.",
+  description: "Web design, development, SEO & branding agency based in Fès, Morocco. We craft digital experiences that drive results.",
   url: "https://app.weblancia.com",
   locale: "fr_FR",
   locales: ["fr", "en", "ar"],
   defaultLocale: "fr",
   address: {
-    city: "Casablanca",
+    city: "Fès",
     country: "Morocco",
   },
   social: {
@@ -17,11 +17,11 @@ export const siteConfig = {
     youtube: "https://youtube.com/@weblancia",
   },
   email: {
-    hello: "hello@weblancia.ma",
+    hello: "contact@weblancia.com",
     academy: "academy@weblancia.ma",
     careers: "careers@weblancia.ma",
   },
   gscVerification: "google-site-verification-code",
-  phone: "+212 XXX-XXXXXX",
+  phone: "+212 6 64 83 68 41",
   copyright: `© ${new Date().getFullYear()} Weblancia. All rights reserved.`,
 };

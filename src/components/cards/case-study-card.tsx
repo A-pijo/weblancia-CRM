@@ -1,7 +1,8 @@
+import Image from "next/image"
+import Link from "next/link"
 import { cn } from "@/lib/utils/cn"
 import { Badge } from "@/components/ui/badge"
 import type { WorkItem } from "@/types/work"
-import Link from "next/link"
 
 interface CaseStudyCardProps {
   item: WorkItem
@@ -21,7 +22,7 @@ function CaseStudyCard({ item }: CaseStudyCardProps) {
     >
       <div className="relative aspect-video overflow-hidden rounded-radius-md bg-bg-secondary">
         {item.featuredImage && (
-          <img src={item.featuredImage} alt={item.title} loading="lazy" className="absolute inset-0 w-full h-full object-cover group-hover:scale-[1.03] transition-transform duration-500" />
+          <Image src={item.featuredImage} alt={item.title} fill className="object-cover group-hover:scale-[1.03] transition-transform duration-500" sizes="(max-width: 768px) 100vw, 50vw" />
         )}
       </div>
       <div className="p-6">
