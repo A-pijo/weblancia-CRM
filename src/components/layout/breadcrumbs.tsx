@@ -1,5 +1,6 @@
 import Link from "next/link"
 import { cn } from "@/lib/utils/cn"
+import { siteConfig } from "@/lib/constants/site"
 
 interface BreadcrumbItem {
   label: string
@@ -12,14 +13,17 @@ interface BreadcrumbsProps {
 }
 
 export function Breadcrumbs({ items, className }: BreadcrumbsProps) {
-  const jsonLd = {
+  const pageUrl = `${process.env.NEXT_PUBLIC_SITE_URL || siteConfig.url}${items[items.length - 1]?.href ?? ""}`
+  const jsonLd: Record<string, unknown> = {
     "@context": "https://schema.org",
     "@type": "BreadcrumbList",
+    "@id": `${pageUrl}#breadcrumb`,
+    isPartOf: { "@type": "WebPage", "@id": pageUrl },
     itemListElement: items.map((item, index) => ({
       "@type": "ListItem",
       position: index + 1,
       name: item.label,
-      ...(item.href ? { item: `${process.env.NEXT_PUBLIC_SITE_URL || "https://app.weblancia.com"}${item.href}` } : {}),
+      ...(item.href ? { item: `${process.env.NEXT_PUBLIC_SITE_URL || siteConfig.url}${item.href}` } : {}),
     })),
   }
 

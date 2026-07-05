@@ -6,23 +6,31 @@ import { AnimatedReveal } from "@/components/shared/animated-reveal"
 import { Card } from "@/components/ui/card"
 import { Accordion, AccordionItem } from "@/components/ui/accordion"
 import { SocialLinks } from "@/components/shared/social-links"
-import { FaqJsonLd } from "@/components/shared/json-ld"
+import { FaqJsonLd, ContactPageJsonLd } from "@/components/shared/json-ld"
+import { Breadcrumbs } from "@/components/layout/breadcrumbs"
 import { EnvelopeSimple, Phone, MapPin, Clock } from "@/components/icons"
 import { siteConfig } from "@/lib/constants/site"
 import { ContactForm } from "./contact-form"
-import { getActiveFAQWithIds } from "@/lib/faq/queries"
+import { prisma } from "@/lib/database/prisma"
 
 export const metadata: Metadata = {
   title: "Contact | Weblancia",
   description:
     "Contactez Weblancia pour vos projets web, e-commerce, branding et marketing digital. Une question ? Notre équipe vous répond sous 48 heures.",
+  keywords: ["Weblancia", "contact", "Casablanca", "devis", "projet digital", "accompagnement"],
   alternates: { canonical: `${siteConfig.url}/contact` },
-  openGraph: { title: "Contact | Weblancia", description: "Contactez Weblancia pour vos projets web, e-commerce, branding et marketing digital.", url: `${siteConfig.url}/contact` },
-  twitter: { card: "summary_large_image", title: "Contact | Weblancia", description: "Contactez Weblancia pour vos projets web, e-commerce, branding et marketing digital." },
+  openGraph: { title: "Contact | Weblancia", description: "Contactez Weblancia pour vos projets web, e-commerce, branding et marketing digital.", url: `${siteConfig.url}/contact`, siteName: "Weblancia", locale: "fr_FR", alternateLocale: ["en_US", "ar_SA"], images: [{ url: "/images/og/og.svg", width: 1200, height: 630 }] },
+  twitter: { card: "summary_large_image", site: "@weblancia", creator: "@weblancia", title: "Contact | Weblancia", description: "Contactez Weblancia pour vos projets web, e-commerce, branding et marketing digital.", images: ["/images/og/og.svg"] },
+  robots: { index: true, follow: true, googleBot: { index: true, follow: true, "max-image-preview": "large" } },
 }
 
+export const revalidate = 3600
+
 export default async function ContactPage() {
-  const faqItems = await getActiveFAQWithIds()
+  const faqItems = await prisma.fAQ.findMany({
+    where: { isActive: true },
+    orderBy: { displayOrder: "asc" },
+  })
 
   const contactInfo = [
     {
@@ -51,6 +59,10 @@ export default async function ContactPage() {
 
   return (
     <>
+      <ContactPageJsonLd />
+      <Container>
+        <Breadcrumbs items={[{ label: "Contact", href: "/contact" }]} />
+      </Container>
       <HeroDefault
         headline="Contactez-nous"
         subheadline="Une question ? Un projet ? Nous sommes là pour vous accompagner."
@@ -104,7 +116,7 @@ export default async function ContactPage() {
       </SectionWrapper>
       <SectionWrapper bgSecondary>
         <Container>
-          <FaqJsonLd questions={faqItems.map((item) => ({ question: item.question, answer: item.answer }))} />
+          <FaqJsonLd questions={faqItems.map((item) => ({ question: item.question, answer: item.answer }))} pageUrl={`${siteConfig.url}/contact`} />
           <AnimatedReveal>
             <h2 className="text-h2 font-semibold text-center mb-12">Questions fréquentes</h2>
             <div className="max-w-3xl mx-auto">

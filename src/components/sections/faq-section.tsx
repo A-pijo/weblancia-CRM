@@ -9,7 +9,7 @@ interface FAQSectionProps {
 }
 
 function FAQSection({ items, title = "Frequently asked questions" }: FAQSectionProps) {
-  const faqSchema = {
+  const faqSchema: Record<string, unknown> = {
     "@context": "https://schema.org",
     "@type": "FAQPage",
     mainEntity: items.map((item) => ({
