@@ -4,7 +4,7 @@ import { Container } from "@/components/shared/container"
 import { AnimatedReveal } from "@/components/shared/animated-reveal"
 import { Breadcrumbs } from "@/components/layout/breadcrumbs"
 import { CTABanner } from "@/components/sections/cta-banner"
-import { WebPageJsonLd, ServiceJsonLd } from "@/components/shared/json-ld"
+import { WebPageJsonLd, ServiceJsonLd, OrganizationJsonLd } from "@/components/shared/json-ld"
 import { siteConfig } from "@/lib/constants/site"
 import { generateIntro, generateFaqs, generateCta, generateServiceDescription } from "@/lib/semantic/templates"
 import type { Problem } from "@/lib/data/problems"
@@ -21,12 +21,19 @@ interface EntityMap {
   platform: { label: string; entities: Entity[]; getBySlug: (slug: string) => Entity | undefined }
 }
 
+interface InternalLink {
+  label: string
+  href: string
+  description?: string
+}
+
 interface ProgrammaticPageProps {
   dimension: "problem" | "technology" | "platform"
   entitySlug: string
   serviceSlug: string
   entityMap: EntityMap
   serviceName: string
+  additionalSections?: InternalLink[][]
 }
 
 const dimMeta: Record<string, { label: string; path: string }> = {
@@ -35,7 +42,7 @@ const dimMeta: Record<string, { label: string; path: string }> = {
   platform: { label: "Plateformes", path: "/plateforme" },
 }
 
-export function ProgrammaticPage({ dimension, entitySlug, serviceSlug, entityMap, serviceName }: ProgrammaticPageProps) {
+export function ProgrammaticPage({ dimension, entitySlug, serviceSlug, entityMap, serviceName, additionalSections }: ProgrammaticPageProps) {
   const dim = dimMeta[dimension]
   const dimData = entityMap[dimension]
   const entity = dimData?.getBySlug(entitySlug) ?? null
@@ -52,14 +59,27 @@ export function ProgrammaticPage({ dimension, entitySlug, serviceSlug, entityMap
     .filter((e: Entity) => e.slug !== entitySlug)
     .slice(0, 4)
 
+  const faqSchema = faqs.length > 0 ? {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "@id": `${pageUrl}#faq`,
+    mainEntity: faqs.map((faq) => ({
+      "@type": "Question",
+      name: faq.question,
+      acceptedAnswer: { "@type": "Answer", text: faq.answer },
+    })),
+  } : null
+
   return (
     <>
+      <OrganizationJsonLd />
       <WebPageJsonLd
         name={`${serviceName} pour ${entity.name} | Weblancia`}
         description={entity.metaDescription}
         url={pageUrl}
       />
       <ServiceJsonLd name={`${serviceName} pour ${entity.name}`} description={entity.metaDescription} category={serviceSlug} pageUrl={pageUrl} />
+      {faqSchema && <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }} />}
 
       <SectionWrapper>
         <Container>
@@ -114,8 +134,40 @@ export function ProgrammaticPage({ dimension, entitySlug, serviceSlug, entityMap
         </SectionWrapper>
       )}
 
+      {additionalSections?.map((links, sectionIdx) => links.length > 0 && (
+        <SectionWrapper key={sectionIdx} bgSecondary={sectionIdx % 2 === 0}>
+          <Container>
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+              {links.map((link) => (
+                <Link
+                  key={link.href}
+                  href={link.href}
+                  className="block bg-surface border border-border rounded-radius-lg p-4 text-center hover:border-accent transition-colors h-full"
+                >
+                  <p className="text-body font-semibold">{link.label}</p>
+                  {link.description && <p className="text-caption text-text-secondary">{link.description}</p>}
+                </Link>
+              ))}
+            </div>
+          </Container>
+        </SectionWrapper>
+      ))}
+
+      <SectionWrapper bgSecondary>
+        <Container>
+          <div className="flex flex-wrap gap-4 justify-center">
+            <Link href="/contact" className="inline-flex items-center gap-2 bg-accent text-white px-6 py-3 rounded-radius-md hover:bg-accent-hover transition-colors font-medium">
+              Discuter de mon projet
+            </Link>
+            <Link href="/insights" className="inline-flex items-center gap-2 border border-accent text-accent px-6 py-3 rounded-radius-md hover:bg-accent/10 transition-colors font-medium">
+              Lire nos articles
+            </Link>
+          </div>
+        </Container>
+      </SectionWrapper>
+
       {faqs.length > 0 && (
-        <SectionWrapper bgSecondary>
+        <SectionWrapper>
           <Container>
             <AnimatedReveal>
               <h2 className="text-h2 mb-6">Questions fréquentes</h2>

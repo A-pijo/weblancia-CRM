@@ -6,6 +6,8 @@ import { industries } from "@/lib/data/industries"
 import { problems } from "@/lib/data/problems"
 import { technologies } from "@/lib/data/technologies"
 import { platforms } from "@/lib/data/platforms"
+import { sectors } from "@/lib/data/sectors"
+import { comparisons } from "@/lib/data/comparisons"
 
 const baseUrl = siteConfig.url
 
@@ -79,6 +81,16 @@ const staticRoutes = [
   { url: "/consultation/refonte-site", priority: 0.6, changeFrequency: "monthly" as const },
   { url: "/consultation/marketing-digital", priority: 0.6, changeFrequency: "monthly" as const },
   { url: "/consultation/transformation-digitale", priority: 0.6, changeFrequency: "monthly" as const },
+  { url: "/guides", priority: 0.5, changeFrequency: "monthly" as const },
+  { url: "/checklists", priority: 0.5, changeFrequency: "monthly" as const },
+  { url: "/templates", priority: 0.5, changeFrequency: "monthly" as const },
+  ...sectors.flatMap((s) => [
+    { url: `/secteur/${s.slug}/web-development`, priority: 0.5, changeFrequency: "monthly" as const },
+    { url: `/secteur/${s.slug}/seo`, priority: 0.5, changeFrequency: "monthly" as const },
+    { url: `/secteur/${s.slug}/digital-marketing`, priority: 0.5, changeFrequency: "monthly" as const },
+    { url: `/secteur/${s.slug}/branding-design`, priority: 0.5, changeFrequency: "monthly" as const },
+  ]),
+  ...comparisons.map((c) => ({ url: `/compare/${c.slug}`, priority: 0.4, changeFrequency: "monthly" as const })),
 ]
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {

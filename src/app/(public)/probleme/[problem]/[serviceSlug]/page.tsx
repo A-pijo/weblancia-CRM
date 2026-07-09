@@ -2,6 +2,9 @@ import { Metadata } from "next"
 import { notFound } from "next/navigation"
 import { siteConfig } from "@/lib/constants/site"
 import { problems, getProblemBySlug, serviceSlugs } from "@/lib/data/problems"
+import { technologies } from "@/lib/data/technologies"
+import { platforms } from "@/lib/data/platforms"
+import { cities } from "@/lib/data/cities"
 import { ProgrammaticPage } from "@/components/sections/programmatic-page"
 
 type Props = { params: Promise<{ problem: string; serviceSlug: string }> }
@@ -44,6 +47,24 @@ export default async function ProblemServicePage({ params }: Props) {
   const serviceName = serviceNames[serviceSlug]
   if (!problem || !serviceName) notFound()
 
+  const additionalSections = [
+    cities.slice(0, 4).map((c) => ({
+      label: c.name,
+      href: `/ville/${c.slug}/${serviceSlug}`,
+      description: c.description,
+    })),
+    technologies.slice(0, 4).map((t) => ({
+      label: t.name,
+      href: `/technologie/${t.slug}/${serviceSlug}`,
+      description: t.description,
+    })),
+    platforms.slice(0, 4).map((p) => ({
+      label: p.name,
+      href: `/plateforme/${p.slug}/${serviceSlug}`,
+      description: p.description,
+    })),
+  ]
+
   return (
     <ProgrammaticPage
       dimension="problem"
@@ -52,9 +73,10 @@ export default async function ProblemServicePage({ params }: Props) {
       serviceName={serviceName}
       entityMap={{
         problem: { label: "Problèmes", entities: problems, getBySlug: getProblemBySlug },
-        technology: { label: "Technologies", entities: [], getBySlug: () => undefined },
-        platform: { label: "Plateformes", entities: [], getBySlug: () => undefined },
+        technology: { label: "Technologies", entities: technologies, getBySlug: () => undefined },
+        platform: { label: "Plateformes", entities: platforms, getBySlug: () => undefined },
       }}
+      additionalSections={additionalSections}
     />
   )
 }

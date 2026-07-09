@@ -37,6 +37,16 @@ export function generateIntro(dimension: string, entity: EntityInfo, serviceSlug
       `Tirez le meilleur parti de ${entity.name} grâce à notre expertise en ${svc.name.toLowerCase()}. Nous vous aidons à maximiser le potentiel de cette plateforme pour votre entreprise.`,
       `Spécialiste ${entity.name} et ${svc.name.toLowerCase()}, Weblancia vous accompagne dans l'optimisation et le développement de votre présence sur cette plateforme.`,
     ],
+    sector: [
+      `Vous travaillez dans le secteur ${entity.name} et cherchez des services ${svc.name.toLowerCase()} adaptés ? Weblancia comprend les enjeux spécifiques de votre secteur et propose des solutions digitales sur mesure pour les entreprises marocaines.`,
+      `Le secteur ${entity.name} évolue rapidement. Notre expertise en ${svc.name.toLowerCase()} vous aide à rester compétitif avec des stratégies digitales adaptées aux défis de votre industrie.`,
+      `Transformez votre présence digitale dans le secteur ${entity.name} avec nos services ${svc.name.toLowerCase()}. Weblancia vous accompagne avec des solutions concrètes et mesurables.`,
+    ],
+    city: [
+      `Vous êtes basé à ${entity.name} et cherchez une agence ${svc.name.toLowerCase()} de confiance ? Weblancia vous propose ses services adaptés aux entreprises de ${entity.name} et de toute la région.`,
+      `Besoin de services ${svc.name.toLowerCase()} à ${entity.name} ? Notre équipe intervient dans toute la région pour accompagner les entreprises locales dans leur transformation digitale.`,
+      `Weblancia étend son expertise ${svc.name.toLowerCase()} aux entreprises de ${entity.name}. Profitez de solutions digitales professionnelles sans quitter votre ville.`,
+    ],
   }
   const pool = intros[dimension] ?? intros.problem
   const idx = (entity.name.length + serviceSlug.length) % pool.length
@@ -120,6 +130,50 @@ function generateFaq(
         `${entityCap} convient parfaitement aux entreprises marocaines. La plateforme supporte le multilinguisme (français, anglais, arabe), les devises locales et s'intègre avec les solutions de paiement populaires au Maroc.`,
       ],
     ],
+    sector: [
+      [
+        `Pourquoi le secteur ${entityLow} a-t-il besoin de services ${svc.name} ?`,
+        `Le secteur ${entityLow} fait face à des défis digitaux spécifiques : concurrence accrue, attentes clients élevées et nécessité d'innovation. Notre expertise ${svc.name} vous aide à relever ces défis avec des solutions adaptées à votre secteur.`,
+      ],
+      [
+        `Quels sont les avantages du ${svc.name.toLowerCase()} pour le secteur ${entityLow} ?`,
+        `Le ${svc.name.toLowerCase()} permet aux acteurs du secteur ${entityLow} d'optimiser leur visibilité, d'attirer plus de clients et d'améliorer leur efficacité opérationnelle. Nous adaptons chaque stratégie aux spécificités de votre secteur.`,
+      ],
+      [
+        `Combien coûte une stratégie ${svc.name} pour le secteur ${entityLow} ?`,
+        `Le coût varie selon la taille de votre entreprise, vos objectifs et la complexité des solutions ${svc.name} à mettre en place. Nous proposons des formules adaptées aux PME comme aux grands groupes du secteur ${entityLow}.`,
+      ],
+      [
+        `Quels résultats attendre d'une stratégie ${svc.name} dans le secteur ${entityLow} ?`,
+        `Les résultats varient selon les objectifs : augmentation du trafic, amélioration du taux de conversion, croissance du chiffre d'affaires en ligne ou renforcement de la notoriété. Nous définissons des KPIs précis avec vous.`,
+      ],
+      [
+        `Weblancia a-t-elle de l'expérience dans le secteur ${entityLow} ?`,
+        `Oui, notre équipe a accompagné de nombreuses entreprises du secteur ${entityLow} au Maroc. Nous comprenons les enjeux spécifiques, la réglementation et les tendances de votre secteur pour vous offrir des solutions pertinentes.`,
+      ],
+    ],
+    city: [
+      [
+        `Pourquoi choisir Weblancia pour des services ${svc.name} à ${entityCap} ?`,
+        `Weblancia combine expertise technique, connaissance du marché marocain et approche personnalisée. Nous intervenons à ${entityCap} et dans toute la région pour offrir des solutions ${svc.name} de qualité aux entreprises locales.`,
+      ],
+      [
+        `Quels services ${svc.name} proposez-vous à ${entityCap} ?`,
+        `Nous proposons une gamme complète de services ${svc.name} à ${entityCap} : audit, stratégie, développement, optimisation et maintenance. Chaque prestation est adaptée aux besoins spécifiques des entreprises de ${entityCap}.`,
+      ],
+      [
+        `Quels sont les délais pour un projet ${svc.name} à ${entityCap} ?`,
+        `Les délais dépendent de l'ampleur du projet ${svc.name}. Comptez 2 à 4 semaines pour un audit et des recommandations, et 1 à 3 mois pour un déploiement complet. Nous nous adaptons à votre planning.`,
+      ],
+      [
+        `Les entreprises de ${entityCap} bénéficient-elles d'un avantage concurrentiel avec ${svc.name} ?`,
+        `Absolument. Les entreprises de ${entityCap} qui investissent dans une stratégie ${svc.name} se démarquent de leurs concurrents locaux. C'est un investissement rentable pour gagner des parts de marché.`,
+      ],
+      [
+        `Proposez-vous des rendez-vous en présentiel à ${entityCap} ?`,
+        `Oui, notre équipe se déplace à ${entityCap} pour des rendez-vous et des ateliers de travail. Nous combinons interventions sur site et suivi à distance pour une flexibilité maximale.`,
+      ],
+    ],
   }
 
   const pool = allFaqs[dimension] ?? allFaqs.problem
@@ -172,6 +226,26 @@ export function generateCta(
       {
         headline: `Vous utilisez ${entity.name} ? Nous pouvons vous aider`,
         subheadline: `Contactez nos experts ${svc.name} pour un audit gratuit de votre présence sur ${entity.name} et des recommandations personnalisées.`,
+      },
+    ],
+    sector: [
+      {
+        headline: `Prêt à développer votre projet dans le secteur ${entityLow} ?`,
+        subheadline: `Notre équipe ${svc.name} spécialisée dans le secteur ${entityLow} vous accompagne avec des solutions sur mesure.`,
+      },
+      {
+        headline: `Vous travaillez dans le secteur ${entityLow} ?`,
+        subheadline: `Contactez nos experts ${svc.name} pour un diagnostic gratuit de votre présence digitale et des recommandations adaptées à votre secteur.`,
+      },
+    ],
+    city: [
+      {
+        headline: `Besoin de services ${svc.name} à ${entity.name} ?`,
+        subheadline: `Contactez notre équipe pour discuter de votre projet ${svc.name} à ${entity.name}. Nous intervenons dans toute la région.`,
+      },
+      {
+        headline: `Vous êtes à ${entity.name} et cherchez une agence ${svc.name} ?`,
+        subheadline: `Discutons de vos besoins et découvrez comment Weblancia peut accompagner votre entreprise à ${entity.name}.`,
       },
     ],
   }
