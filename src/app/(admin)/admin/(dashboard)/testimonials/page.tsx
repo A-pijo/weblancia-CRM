@@ -4,7 +4,10 @@ import { useState, useEffect, useCallback } from "react"
 import { useRouter } from "next/navigation"
 import { PageHeader } from "@/components/admin/page-header"
 import { ActionButton } from "@/components/admin/action-button"
+import { AdminErrorState } from "@/components/admin/error-state"
+import { DataTablePlaceholder } from "@/components/admin/data-table-placeholder"
 import { TestimonialsTable } from "@/components/admin/testimonials/testimonials-table"
+import { logger } from "@/lib/logger"
 
 interface Testimonial {
   id: number
@@ -26,14 +29,24 @@ export default function AdminTestimonialsPage() {
   const [totalPages, setTotalPages] = useState(1)
   const [search, setSearch] = useState("")
   const [loading, setLoading] = useState(true)
+  const [error, setError] = useState<string | null>(null)
 
   const loadData = useCallback(async () => {
     setLoading(true)
+    setError(null)
     const params = new URLSearchParams()
     if (search) params.set("search", search)
     params.set("page", String(page))
     params.set("limit", "20")
     const res = await fetch(`/api/testimonials?${params}`)
+    if (!res.ok) {
+      const body = await res.json().catch(() => null)
+      const msg = body?.error?.message ?? "Impossible de charger les témoignages."
+      logger.error(msg, { status: res.status }, "admin")
+      setError(msg)
+      setLoading(false)
+      return
+    }
     const data = await res.json()
     setItems(data.items ?? [])
     setTotal(data.total ?? 0)
@@ -63,6 +76,19 @@ export default function AdminTestimonialsPage() {
       }
     }
     loadData()
+  }
+
+  if (loading && items.length === 0) {
+    return (
+      <div className="space-y-6">
+        <PageHeader title="Testimonials" description="Loading..." />
+        <DataTablePlaceholder columns={5} rows={8} />
+      </div>
+    )
+  }
+
+  if (error) {
+    return <AdminErrorState message={error} onRetry={loadData} fullPage />
   }
 
   return (

@@ -2,7 +2,9 @@
 
 import { useState, useEffect } from "react"
 import { PageHeader } from "@/components/admin/page-header"
+import { AdminErrorState } from "@/components/admin/error-state"
 import { cn } from "@/lib/utils/cn"
+import { logger } from "@/lib/logger"
 
 interface SettingsForm {
   companyName: string
@@ -40,19 +42,33 @@ export default function AdminSettings() {
   const [tab, setTab] = useState<(typeof TABS)[number]>("General")
   const [form, setForm] = useState<SettingsForm | null>(null)
   const [loading, setLoading] = useState(true)
+  const [error, setError] = useState<string | null>(null)
   const [saving, setSaving] = useState(false)
   const [message, setMessage] = useState<{ type: "success" | "error"; text: string } | null>(null)
 
   useEffect(() => {
-    fetch("/api/settings")
-      .then((r) => r.json())
-      .then((data) => {
+    async function load() {
+      setLoading(true)
+      setError(null)
+      try {
+        const res = await fetch("/api/settings")
+        if (!res.ok) {
+          const body = await res.json().catch(() => null)
+          throw new Error(body?.error?.message ?? "Impossible de charger les paramètres.")
+        }
+        const data = await res.json()
         if (data.success && data.settings) {
           setForm(data.settings)
         }
-      })
-      .catch(() => {})
-      .finally(() => setLoading(false))
+      } catch (e) {
+        const msg = e instanceof Error ? e.message : "Impossible de charger les paramètres."
+        logger.error(msg, e, "admin")
+        setError(msg)
+      } finally {
+        setLoading(false)
+      }
+    }
+    load()
   }, [])
 
   const update = <K extends keyof SettingsForm>(key: K, value: SettingsForm[K]) => {
@@ -91,6 +107,15 @@ export default function AdminSettings() {
         <div className="flex items-center justify-center py-20">
           <div className="animate-spin h-6 w-6 border-2 border-admin-accent border-t-transparent rounded-full" />
         </div>
+      </div>
+    )
+  }
+
+  if (error) {
+    return (
+      <div>
+        <PageHeader title="Settings" description="Manage site configuration" />
+        <AdminErrorState message={error} onRetry={() => window.location.reload()} />
       </div>
     )
   }

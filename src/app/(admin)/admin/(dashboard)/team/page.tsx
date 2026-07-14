@@ -4,8 +4,11 @@ import { useState, useEffect, useCallback } from "react"
 import { useRouter } from "next/navigation"
 import { PageHeader } from "@/components/admin/page-header"
 import { ActionButton } from "@/components/admin/action-button"
+import { AdminErrorState } from "@/components/admin/error-state"
+import { DataTablePlaceholder } from "@/components/admin/data-table-placeholder"
 import { DataTable } from "@/components/admin/data-table"
 import type { Column } from "@/components/admin/data-table"
+import { logger } from "@/lib/logger"
 
 interface TeamMemberRow {
   id: number
@@ -22,13 +25,23 @@ export default function AdminTeamPage() {
   const [page, setPage] = useState(1)
   const [totalPages, setTotalPages] = useState(1)
   const [loading, setLoading] = useState(true)
+  const [error, setError] = useState<string | null>(null)
 
   const fetchMembers = useCallback(async () => {
     setLoading(true)
+    setError(null)
     const params = new URLSearchParams()
     params.set("page", String(page))
     params.set("limit", "20")
     const res = await fetch(`/api/team?${params}`)
+    if (!res.ok) {
+      const body = await res.json().catch(() => null)
+      const msg = body?.error?.message ?? "Impossible de charger les membres."
+      logger.error(msg, { status: res.status }, "admin")
+      setError(msg)
+      setLoading(false)
+      return
+    }
     const data = await res.json()
     setMembers(data.items ?? [])
     setTotal(data.total ?? 0)
@@ -76,6 +89,19 @@ export default function AdminTeamPage() {
       ),
     },
   ]
+
+  if (loading && members.length === 0) {
+    return (
+      <div className="space-y-6">
+        <PageHeader title="Team" description="Loading..." />
+        <DataTablePlaceholder columns={4} rows={8} />
+      </div>
+    )
+  }
+
+  if (error) {
+    return <AdminErrorState message={error} onRetry={fetchMembers} fullPage />
+  }
 
   return (
     <div className="space-y-6">

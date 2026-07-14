@@ -1,7 +1,8 @@
 import { getSession } from "@/lib/auth/session"
-import { dashboardService } from "@/lib/repositories/services/dashboard.service"
 import { prisma } from "@/lib/database/prisma"
+import { dashboardService } from "@/lib/repositories/services/dashboard.service"
 import { DashboardHomeClient } from "./dashboard-client"
+import { logger } from "@/lib/logger"
 
 export default async function AdminDashboard() {
   const session = await getSession()
@@ -10,11 +11,11 @@ export default async function AdminDashboard() {
     totalProjects: rawStats.projects, activeProjects: rawStats.projects, totalServices: rawStats.services, activeServices: rawStats.services, totalBlogPosts: rawStats.blogPosts, publishedPosts: rawStats.blogPosts, draftPosts: 0, totalCourses: rawStats.courses, publishedCourses: rawStats.courses, totalLeads: rawStats.leads, unreadContacts: rawStats.contacts, totalNewsletter: rawStats.newsletterSubs, totalTestimonials: rawStats.testimonials, totalTeamMembers: rawStats.teamMembers, totalFaq: rawStats.faqCount, totalAcademyResources: 0, totalWorkshops: 0, totalMedia: rawStats.mediaCount, totalUsers: rawStats.users, totalCategories: 0, totalTags: 0, aiGeneratedPosts: 0, unreadProjectRequests: rawStats.projectRequests, unconfirmedBookCalls: rawStats.bookCalls,
   }
   const [recentPosts, recentContacts, unreadContacts, unreadProjects, unconfirmedCalls] = await Promise.all([
-    prisma.blogPost.findMany({ orderBy: { createdAt: "desc" }, take: 5, select: { id: true, title: true, createdAt: true } }),
-    prisma.contactRequest.findMany({ orderBy: { createdAt: "desc" }, take: 3, select: { id: true, name: true, createdAt: true } }),
-    prisma.contactRequest.count({ where: { isRead: false } }),
-    prisma.startProject.count({ where: { isRead: false } }),
-    prisma.bookCall.count({ where: { isConfirmed: false } }),
+    prismaFindMany(prisma.blogPost.findMany({ orderBy: { createdAt: "desc" }, take: 5, select: { id: true, title: true, createdAt: true } })),
+    prismaFindMany(prisma.contactRequest.findMany({ orderBy: { createdAt: "desc" }, take: 3, select: { id: true, name: true, createdAt: true } })),
+    prismaCount(prisma.contactRequest.count({ where: { isRead: false } })),
+    prismaCount(prisma.startProject.count({ where: { isRead: false } })),
+    prismaCount(prisma.bookCall.count({ where: { isConfirmed: false } })),
   ])
   const recentActivity = [
     ...recentPosts.map((p) => ({ id: `post-${p.id}`, user: "System", action: "published a new blog post", detail: p.title, time: timeAgo(p.createdAt) })),
@@ -58,4 +59,12 @@ function timeAgo(date: Date): string {
   if (days < 30) return `${days} day${days > 1 ? "s" : ""} ago`
   const months = Math.floor(days / 30)
   return `${months} month${months > 1 ? "s" : ""} ago`
+}
+
+async function prismaFindMany<T>(query: Promise<T[]>): Promise<T[]> {
+  try { return await query } catch (e) { logger.error("Dashboard query failed", e, "dashboard"); return [] }
+}
+
+async function prismaCount(query: Promise<number>): Promise<number> {
+  try { return await query } catch (e) { logger.error("Dashboard count failed", e, "dashboard"); return 0 }
 }

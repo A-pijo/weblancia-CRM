@@ -4,7 +4,10 @@ import { useState, useEffect, useCallback } from "react"
 import { useRouter } from "next/navigation"
 import { PageHeader } from "@/components/admin/page-header"
 import { ActionButton } from "@/components/admin/action-button"
+import { AdminErrorState } from "@/components/admin/error-state"
+import { DataTablePlaceholder } from "@/components/admin/data-table-placeholder"
 import { BlogTable } from "@/components/admin/blog/blog-table"
+import { logger } from "@/lib/logger"
 
 export default function AdminBlogPage() {
   const router = useRouter()
@@ -16,15 +19,25 @@ export default function AdminBlogPage() {
   const [search, setSearch] = useState("")
   const [categoryId, setCategoryId] = useState<number | null>(null)
   const [loading, setLoading] = useState(true)
+  const [error, setError] = useState<string | null>(null)
 
   const fetchPosts = useCallback(async () => {
     setLoading(true)
+    setError(null)
     const params = new URLSearchParams()
     if (search) params.set("search", search)
     if (categoryId) params.set("categoryId", String(categoryId))
     params.set("page", String(page))
     params.set("limit", "20")
     const res = await fetch(`/api/blog?${params}`)
+    if (!res.ok) {
+      const body = await res.json().catch(() => null)
+      const msg = body?.error?.message ?? "Impossible de charger les articles."
+      logger.error(msg, { status: res.status }, "admin")
+      setError(msg)
+      setLoading(false)
+      return
+    }
     const data = await res.json()
     setPosts(data.items ?? [])
     setTotal(data.total ?? 0)
@@ -34,6 +47,7 @@ export default function AdminBlogPage() {
 
   const fetchCategories = useCallback(async () => {
     const res = await fetch("/api/blog?limit=1")
+    if (!res.ok) return
     const data = await res.json()
     if (data.items) {
       const cats = data.items.map((p: any) => p.category)
@@ -69,6 +83,19 @@ export default function AdminBlogPage() {
       }
     }
     fetchPosts()
+  }
+
+  if (loading && posts.length === 0) {
+    return (
+      <div className="space-y-6">
+        <PageHeader title="Blog" description="Loading..." />
+        <DataTablePlaceholder columns={5} rows={8} />
+      </div>
+    )
+  }
+
+  if (error) {
+    return <AdminErrorState message={error} onRetry={fetchPosts} fullPage />
   }
 
   return (

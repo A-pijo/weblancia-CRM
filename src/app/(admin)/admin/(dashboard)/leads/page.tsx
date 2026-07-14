@@ -3,8 +3,10 @@
 import { useState, useEffect, useCallback } from "react"
 import { useRouter } from "next/navigation"
 import { PageHeader } from "@/components/admin/page-header"
+import { AdminErrorState } from "@/components/admin/error-state"
 import { cn } from "@/lib/utils/cn"
 import { LEAD_STATUSES } from "@/lib/validation/leads"
+import { logger } from "@/lib/logger"
 
 interface Lead {
   id: number; name: string; company: string | null; email: string | null; phone: string | null
@@ -30,9 +32,11 @@ export default function AdminLeadsPage() {
   const [sort, setSort] = useState("createdAt")
   const [order, setOrder] = useState<"asc" | "desc">("desc")
   const [loading, setLoading] = useState(true)
+  const [error, setError] = useState<string | null>(null)
 
   const fetchLeads = useCallback(async () => {
     setLoading(true)
+    setError(null)
     const params = new URLSearchParams()
     if (search) params.set("search", search)
     if (statusFilter) params.set("status", statusFilter)
@@ -42,6 +46,14 @@ export default function AdminLeadsPage() {
     params.set("sort", sort)
     params.set("order", order)
     const res = await fetch(`/api/leads?${params}`)
+    if (!res.ok) {
+      const body = await res.json().catch(() => null)
+      const msg = body?.error?.message ?? "Impossible de charger les leads."
+      logger.error(msg, { status: res.status }, "admin")
+      setError(msg)
+      setLoading(false)
+      return
+    }
     const data = await res.json()
     setLeads(data.items ?? [])
     setTotal(data.total ?? 0)
@@ -74,6 +86,26 @@ export default function AdminLeadsPage() {
   }
 
   const statusColors: Record<string, string> = { New: "bg-blue-500/10 text-blue-400", Contacted: "bg-yellow-500/10 text-yellow-400", Qualified: "bg-purple-500/10 text-purple-400", "Proposal Sent": "bg-cyan-500/10 text-cyan-400", Won: "bg-green-500/10 text-green-400", Lost: "bg-red-500/10 text-red-400", Spam: "bg-gray-500/10 text-gray-400" }
+
+  if (loading && leads.length === 0) {
+    return (
+      <div className="space-y-6">
+        <PageHeader title="Leads CRM" description="Loading..." />
+        <div className="animate-pulse space-y-4">
+          <div className="grid grid-cols-7 gap-3">
+            {Array.from({ length: 7 }).map((_, i) => (
+              <div key={i} className="bg-admin-surface/40 rounded-xl p-3 h-16" />
+            ))}
+          </div>
+          <div className="bg-admin-surface/40 rounded-xl h-64" />
+        </div>
+      </div>
+    )
+  }
+
+  if (error) {
+    return <AdminErrorState message={error} onRetry={fetchLeads} fullPage />
+  }
 
   return (
     <div className="space-y-6">

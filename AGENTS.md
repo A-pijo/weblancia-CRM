@@ -46,6 +46,22 @@ Audit every dimension (architecture, security, SEO, GEO, EEAT, AI visibility, pe
 - E7: Added `NEXT_PUBLIC_SITE_URL` to env schema
 - E8: `src/lib/config/site.ts` already deleted
 
+### Done - Current Session (Admin Error States + Dashboard Resilience)
+- **Unified AdminErrorState component**: `src/components/admin/error-state.tsx` — icon, French message, dev-only collapsible technical details, "Réessayer" button, "Retour au tableau de bord" button. Dark theme matching admin design system.
+- **All 12 admin CRUD pages updated**: Services, Blog, Work, Team, FAQ, Testimonials, Users, Leads, Academy, Settings, Media, SEO. Every page now:
+  - Uses `loading`/`error` state pattern
+  - Checks `!res.ok` before parsing JSON
+  - On error: logs via `logger.error()`, sets error state, renders `<AdminErrorState>` with retry
+  - Shows `<DataTablePlaceholder>` skeleton during initial load
+  - Empty state only shows when request succeeded and `items.length === 0`
+- **Dashboard stats widgets UNCHANGED**: `safeCount()`/`safeFindMany()` in `dashboard.service.ts` and `prismaFindMany()`/`prismaCount()` in `page.tsx` remain as graceful fallbacks for non-critical widgets.
+
+### Done - Current Session (TrustBar + Dashboard Resilience)
+- **TrustBar fake clients removed**: `defaultClients` array (8 fictional Moroccan companies) eliminated. Shows "Trusted by growing businesses" fallback when no real logos.
+- **Debug logs cleaned**: All `console.log("[DEBUG] ...")` and `console.error("[DEBUG] ...")` removed from prisma.ts, session.ts, admin layout/page.
+- **Dashboard error resilience**: `dashboardService.getStats()` now wraps all 14 count queries in `safeCount()` — any DB failure returns 0 instead of crashing. `getRecentActivity()` uses `safeFindMany()`. Dashboard `page.tsx` uses `prismaFindMany()`/`prismaCount()` helpers for 5 parallel queries. Logger captures errors without breaking the page.
+- **Phase I config files**: `.env.example`, `.gitattributes`, `.prettierrc`, `.nvmrc`, `.editorconfig` created.
+
 ### Done - Phase B: GEO & AI Visibility
 - B1: AI crawler blocks removed from robots.ts (GPTBot, ChatGPT-User, CCBot, Claude-Web, anthropic-ai, PerplexityBot, cohere-ai all unblocked)
 - B2: @id added to all JSON-LD components (Organization, LocalBusiness, WebSite, WebPage, CollectionPage, AboutPage, ContactPage, SearchResultsPage, BreadcrumbList, Service, ProfessionalService, BlogPosting, Article, Course, Brand, Logo, Project)

@@ -1,6 +1,8 @@
 import { PageHeader } from "@/components/admin/page-header"
 import { SectionCard } from "@/components/admin/section-card"
+import { AdminErrorState } from "@/components/admin/error-state"
 import { prisma } from "@/lib/database/prisma"
+import { logger } from "@/lib/logger"
 
 function missingTags(m: { description: string | null; ogImage: string | null } | null): string[] {
   if (!m) return ["Meta Description", "OG Image"]
@@ -19,13 +21,24 @@ const contentGroups = [
 ] as const
 
 export default async function SEOCenterPage() {
-  const [services, projects, posts, courses, resources] = await Promise.all([
-    prisma.service.findMany({ where: { isActive: true }, include: { seoMetadata: true }, orderBy: { title: "asc" } }),
-    prisma.project.findMany({ where: { isActive: true }, include: { seoMetadata: true }, orderBy: { title: "asc" } }),
-    prisma.blogPost.findMany({ where: { isPublished: true }, include: { seoMetadata: true }, orderBy: { title: "asc" } }),
-    prisma.course.findMany({ where: { isPublished: true }, include: { seoMetadata: true }, orderBy: { title: "asc" } }),
-    prisma.resource.findMany({ where: { isPublished: true }, include: { seoMetadata: true }, orderBy: { title: "asc" } }),
-  ])
+  let services, projects, posts, courses, resources
+  try {
+    [services, projects, posts, courses, resources] = await Promise.all([
+      prisma.service.findMany({ where: { isActive: true }, include: { seoMetadata: true }, orderBy: { title: "asc" } }),
+      prisma.project.findMany({ where: { isActive: true }, include: { seoMetadata: true }, orderBy: { title: "asc" } }),
+      prisma.blogPost.findMany({ where: { isPublished: true }, include: { seoMetadata: true }, orderBy: { title: "asc" } }),
+      prisma.course.findMany({ where: { isPublished: true }, include: { seoMetadata: true }, orderBy: { title: "asc" } }),
+      prisma.resource.findMany({ where: { isPublished: true }, include: { seoMetadata: true }, orderBy: { title: "asc" } }),
+    ])
+  } catch (e) {
+    logger.error("Failed to load SEO data", e, "admin")
+    return (
+      <div className="space-y-6">
+        <PageHeader title="SEO Center" description="Monitor and manage SEO metadata across your site" />
+        <AdminErrorState message="Impossible de charger les données SEO. La base de données est peut-être indisponible." />
+      </div>
+    )
+  }
 
   const allData = { services, projects, posts, courses, resources } as Record<string, { id: number; title: string; seoMetadata: { description: string | null; ogImage: string | null } | null }[]>
 

@@ -4,7 +4,10 @@ import { useState, useEffect, useCallback } from "react"
 import { useRouter } from "next/navigation"
 import { PageHeader } from "@/components/admin/page-header"
 import { ActionButton } from "@/components/admin/action-button"
+import { AdminErrorState } from "@/components/admin/error-state"
+import { DataTablePlaceholder } from "@/components/admin/data-table-placeholder"
 import { ServicesTable } from "@/components/admin/services/services-table"
+import { logger } from "@/lib/logger"
 
 interface Category {
   id: number
@@ -35,9 +38,11 @@ export default function AdminServicesPage() {
   const [search, setSearch] = useState("")
   const [categoryId, setCategoryId] = useState<number | null>(null)
   const [loading, setLoading] = useState(true)
+  const [error, setError] = useState<string | null>(null)
 
   const fetchServices = useCallback(async () => {
     setLoading(true)
+    setError(null)
     const params = new URLSearchParams()
     if (search) params.set("search", search)
     if (categoryId) params.set("categoryId", String(categoryId))
@@ -45,6 +50,14 @@ export default function AdminServicesPage() {
     params.set("limit", "20")
 
     const res = await fetch(`/api/services?${params}`)
+    if (!res.ok) {
+      const body = await res.json().catch(() => null)
+      const msg = body?.error?.message ?? "Impossible de charger les services."
+      logger.error(msg, { status: res.status }, "admin")
+      setError(msg)
+      setLoading(false)
+      return
+    }
     const data = await res.json()
     setServices(data.items ?? [])
     setTotal(data.total ?? 0)
@@ -54,6 +67,7 @@ export default function AdminServicesPage() {
 
   const fetchCategories = useCallback(async () => {
     const res = await fetch("/api/services?limit=1")
+    if (!res.ok) return
     const data = await res.json()
     if (data.items) {
       const cats = data.items.map((s: Service) => s.category)
@@ -107,6 +121,19 @@ export default function AdminServicesPage() {
       }
     }
     fetchServices()
+  }
+
+  if (loading && services.length === 0) {
+    return (
+      <div className="space-y-6">
+        <PageHeader title="Services" description="Loading..." />
+        <DataTablePlaceholder columns={5} rows={8} />
+      </div>
+    )
+  }
+
+  if (error) {
+    return <AdminErrorState message={error} onRetry={fetchServices} fullPage />
   }
 
   return (

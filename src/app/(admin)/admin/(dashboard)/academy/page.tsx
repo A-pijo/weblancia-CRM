@@ -4,8 +4,10 @@ import { useState, useEffect } from "react"
 import { useRouter } from "next/navigation"
 import { PageHeader } from "@/components/admin/page-header"
 import { ActionButton } from "@/components/admin/action-button"
+import { AdminErrorState } from "@/components/admin/error-state"
 import { StatCard } from "@/components/admin/stat-card"
 import { cn } from "@/lib/utils/cn"
+import { logger } from "@/lib/logger"
 
 export default function AdminAcademyPage() {
   const router = useRouter()
@@ -14,9 +16,12 @@ export default function AdminAcademyPage() {
   const [recentWorkshops, setRecentWorkshops] = useState<any[]>([])
   const [recentResources, setRecentResources] = useState<any[]>([])
   const [loading, setLoading] = useState(true)
+  const [error, setError] = useState<string | null>(null)
 
   useEffect(() => {
     async function load() {
+      setLoading(true)
+      setError(null)
       try {
         const [coursesRes, workshopsRes, resourcesRes, certsRes, catsRes] = await Promise.all([
           fetch("/api/academy/courses?page=1&limit=5"),
@@ -25,6 +30,13 @@ export default function AdminAcademyPage() {
           fetch("/api/academy/certificates?page=1&limit=1"),
           fetch("/api/academy/categories?page=1&limit=1"),
         ])
+        const responses = [coursesRes, workshopsRes, resourcesRes, certsRes, catsRes]
+        for (const res of responses) {
+          if (!res.ok) {
+            const body = await res.json().catch(() => null)
+            throw new Error(body?.error?.message ?? `Erreur ${res.status}`)
+          }
+        }
         const courses = await coursesRes.json()
         const workshops = await workshopsRes.json()
         const resources = await resourcesRes.json()
@@ -42,7 +54,9 @@ export default function AdminAcademyPage() {
         setRecentWorkshops(workshops.items ?? [])
         setRecentResources(resources.items ?? [])
       } catch (e) {
-        console.error(e)
+        const msg = e instanceof Error ? e.message : "Impossible de charger l'académie."
+        logger.error(msg, e, "admin")
+        setError(msg)
       } finally {
         setLoading(false)
       }
@@ -69,6 +83,8 @@ export default function AdminAcademyPage() {
 
       {loading ? (
         <div className="flex items-center justify-center py-12"><div className="animate-spin h-6 w-6 border-2 border-admin-accent border-t-transparent rounded-full" /></div>
+      ) : error ? (
+        <AdminErrorState message={error} onRetry={() => window.location.reload()} fullPage />
       ) : (
         <>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4">

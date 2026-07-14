@@ -4,7 +4,10 @@ import { useState, useEffect, useCallback } from "react"
 import { useRouter } from "next/navigation"
 import { PageHeader } from "@/components/admin/page-header"
 import { ActionButton } from "@/components/admin/action-button"
+import { AdminErrorState } from "@/components/admin/error-state"
+import { DataTablePlaceholder } from "@/components/admin/data-table-placeholder"
 import { ProjectsTable } from "@/components/admin/projects/projects-table"
+import { logger } from "@/lib/logger"
 
 export default function AdminWorkPage() {
   const router = useRouter()
@@ -16,9 +19,11 @@ export default function AdminWorkPage() {
   const [search, setSearch] = useState("")
   const [industry, setIndustry] = useState<string | null>(null)
   const [loading, setLoading] = useState(true)
+  const [error, setError] = useState<string | null>(null)
 
   const fetchProjects = useCallback(async () => {
     setLoading(true)
+    setError(null)
     const params = new URLSearchParams()
     if (search) params.set("search", search)
     if (industry) params.set("industry", industry)
@@ -26,6 +31,14 @@ export default function AdminWorkPage() {
     params.set("limit", "20")
 
     const res = await fetch(`/api/work?${params}`)
+    if (!res.ok) {
+      const body = await res.json().catch(() => null)
+      const msg = body?.error?.message ?? "Impossible de charger les projets."
+      logger.error(msg, { status: res.status }, "admin")
+      setError(msg)
+      setLoading(false)
+      return
+    }
     const data = await res.json()
     setProjects(data.items ?? [])
     setTotal(data.total ?? 0)
@@ -35,6 +48,7 @@ export default function AdminWorkPage() {
 
   const fetchIndustries = useCallback(async () => {
     const res = await fetch("/api/work?limit=100")
+    if (!res.ok) return
     const data = await res.json()
     if (data.items) {
       const inds = data.items.map((p: any) => p.industry).filter(Boolean)
@@ -87,6 +101,19 @@ export default function AdminWorkPage() {
       }
     }
     fetchProjects()
+  }
+
+  if (loading && projects.length === 0) {
+    return (
+      <div className="space-y-6">
+        <PageHeader title="Work" description="Loading..." />
+        <DataTablePlaceholder columns={5} rows={8} />
+      </div>
+    )
+  }
+
+  if (error) {
+    return <AdminErrorState message={error} onRetry={fetchProjects} fullPage />
   }
 
   return (
