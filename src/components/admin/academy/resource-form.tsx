@@ -5,6 +5,7 @@ import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { resourceSchema, type ResourceFormData } from "@/lib/validation/academy"
 import { cn } from "@/lib/utils/cn"
+import { ImagePicker } from "@/components/admin/media/image-picker"
 
 interface CategoryOption {
   id: number
@@ -55,6 +56,7 @@ export function ResourceForm({ categories, defaultValues, onSubmit, isSubmitting
   })
 
   const title = watch("title")
+  const thumbnail = watch("thumbnail")
 
   const handleTitleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const val = e.target.value
@@ -175,12 +177,12 @@ export function ResourceForm({ categories, defaultValues, onSubmit, isSubmitting
                 className="w-full h-10 px-3 bg-admin-surface/50 border border-admin-border rounded-lg text-sm text-admin-text-primary outline-none focus:border-admin-text-muted transition-colors"
                 placeholder="/uploads/resources/..." />
             </div>
-            <div className="space-y-2">
-              <label className="text-sm text-admin-text-secondary">Thumbnail URL</label>
-              <input {...register("thumbnail")}
-                className="w-full h-10 px-3 bg-admin-surface/50 border border-admin-border rounded-lg text-sm text-admin-text-primary outline-none focus:border-admin-text-muted transition-colors"
-                placeholder="/uploads/resources/thumbnails/..." />
-            </div>
+            <ImagePicker
+              value={thumbnail}
+              onChange={(url) => setValue("thumbnail", url ?? "")}
+              folder="resources"
+              label="Thumbnail"
+            />
             <div className="space-y-2">
               <label className="text-sm text-admin-text-secondary">Image URL</label>
               <input {...register("image")}

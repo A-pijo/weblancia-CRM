@@ -7,6 +7,7 @@ import { serviceSchema, type ServiceFormData } from "@/lib/validation/services"
 import { cn } from "@/lib/utils/cn"
 import { useAutoSave } from "@/lib/hooks/use-auto-save"
 import type { UseFormWatch, UseFormGetValues, UseFormSetValue } from "react-hook-form"
+import { ImagePicker } from "@/components/admin/media/image-picker"
 
 interface CategoryOption {
   id: number
@@ -76,6 +77,7 @@ export function ServiceForm({ categories, defaultValues, onSubmit, isSubmitting 
 
   const title = watch("title")
   const watchSlug = watch("slug")
+  const featuredImage = watch("featuredImage")
 
   const handleTitleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const val = e.target.value
@@ -373,14 +375,12 @@ export function ServiceForm({ categories, defaultValues, onSubmit, isSubmitting 
 
         {tab === "Media" && (
           <div className="space-y-5">
-            <div className="space-y-2">
-              <label className="text-sm text-admin-text-secondary">Featured Image URL</label>
-              <input
-                {...register("featuredImage")}
-                className="w-full h-10 px-3 bg-admin-surface/50 border border-admin-border rounded-lg text-sm text-admin-text-primary outline-none focus:border-admin-text-muted transition-colors"
-                placeholder="/uploads/services/..."
-              />
-            </div>
+            <ImagePicker
+              value={featuredImage}
+              onChange={(url) => setValue("featuredImage", url ?? "")}
+              folder="services"
+              label="Featured Image"
+            />
 
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-5">
               <div className="space-y-2">

@@ -5,6 +5,7 @@ import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { blogSchema, type BlogFormData, calculateReadingTime } from "@/lib/validation/blog"
 import { cn } from "@/lib/utils/cn"
+import { ImagePicker } from "@/components/admin/media/image-picker"
 
 interface CategoryOption {
   id: number
@@ -59,6 +60,7 @@ export function BlogForm({ categories, defaultValues, onSubmit, isSubmitting }: 
 
   const title = watch("title")
   const content = watch("content")
+  const featuredImage = watch("featuredImage")
   const tags = watch("tags") as string[] | undefined
 
   useEffect(() => {
@@ -217,12 +219,12 @@ export function BlogForm({ categories, defaultValues, onSubmit, isSubmitting }: 
               )}
             </div>
 
-            <div className="space-y-2">
-              <label className="text-sm text-admin-text-secondary">Featured Image URL</label>
-              <input {...register("featuredImage")}
-                className="w-full h-10 px-3 bg-admin-surface/50 border border-admin-border rounded-lg text-sm text-admin-text-primary outline-none focus:border-admin-text-muted transition-colors"
-                placeholder="/uploads/blog/..." />
-            </div>
+            <ImagePicker
+              value={featuredImage}
+              onChange={(url) => setValue("featuredImage", url ?? "")}
+              folder="blog"
+              label="Featured Image"
+            />
 
             <TagSection tags={tags ?? []} onAdd={handleTagAdd} onRemove={handleTagRemove} />
           </>

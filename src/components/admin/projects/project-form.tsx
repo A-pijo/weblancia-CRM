@@ -5,6 +5,7 @@ import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { projectSchema, type ProjectFormData } from "@/lib/validation/project"
 import { cn } from "@/lib/utils/cn"
+import { ImagePicker } from "@/components/admin/media/image-picker"
 
 interface ProjectFormProps {
   defaultValues?: Partial<ProjectFormData>
@@ -63,6 +64,7 @@ export function ProjectForm({ defaultValues, onSubmit, isSubmitting }: ProjectFo
   })
 
   const title = watch("title")
+  const featuredImage = watch("featuredImage")
 
   const handleTitleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const val = e.target.value
@@ -376,14 +378,12 @@ export function ProjectForm({ defaultValues, onSubmit, isSubmitting }: ProjectFo
 
         {tab === "Media" && (
           <div className="space-y-5">
-            <div className="space-y-2">
-              <label className="text-sm text-admin-text-secondary">Featured Image URL</label>
-              <input
-                {...register("featuredImage")}
-                className="w-full h-10 px-3 bg-admin-surface/50 border border-admin-border rounded-lg text-sm text-admin-text-primary outline-none focus:border-admin-text-muted transition-colors"
-                placeholder="/uploads/projects/..."
-              />
-            </div>
+            <ImagePicker
+              value={featuredImage}
+              onChange={(url) => setValue("featuredImage", url ?? "")}
+              folder="projects"
+              label="Featured Image"
+            />
 
             <div className="space-y-2">
               <label className="text-sm text-admin-text-secondary">Client Logo URL</label>

@@ -5,6 +5,7 @@ import { useForm, useFieldArray } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { courseSchema, type CourseFormData } from "@/lib/validation/academy"
 import { cn } from "@/lib/utils/cn"
+import { ImagePicker } from "@/components/admin/media/image-picker"
 
 interface CategoryOption {
   id: number
@@ -76,6 +77,7 @@ export function CourseForm({ categories, defaultValues, onSubmit, isSubmitting }
 
   const title = watch("title")
   const content = watch("fullDescription")
+  const thumbnail = watch("thumbnail")
   const requirements = watch("requirements") as string[] | undefined
   const learningOutcomes = watch("learningOutcomes") as string[] | undefined
   const downloadableResources = watch("downloadableResources") as string[] | undefined
@@ -364,12 +366,12 @@ export function CourseForm({ categories, defaultValues, onSubmit, isSubmitting }
 
         {tab === "Media" && (
           <>
-            <div className="space-y-2">
-              <label className="text-sm text-admin-text-secondary">Thumbnail URL</label>
-              <input {...register("thumbnail")}
-                className="w-full h-10 px-3 bg-admin-surface/50 border border-admin-border rounded-lg text-sm text-admin-text-primary outline-none focus:border-admin-text-muted transition-colors"
-                placeholder="/uploads/courses/..." />
-            </div>
+            <ImagePicker
+              value={thumbnail}
+              onChange={(url) => setValue("thumbnail", url ?? "")}
+              folder="courses"
+              label="Thumbnail"
+            />
 
             <div className="space-y-2">
               <label className="text-sm text-admin-text-secondary">Gallery</label>
