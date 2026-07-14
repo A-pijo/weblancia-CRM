@@ -1,5 +1,7 @@
 "use client"
 
+/* eslint-disable @next/next/no-img-element -- dynamic user-uploaded media URLs */
+
 import { useState, useRef, useCallback } from "react"
 
 interface ImagePickerProps {

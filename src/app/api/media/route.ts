@@ -52,4 +52,4 @@ export const POST = apiRoute(async (ctx) => {
   }
 
   return created({ items: results, errors })
-}, { auth: true, admin: true })
+}, { auth: true, admin: true, csrf: false })
