@@ -40,10 +40,11 @@ export interface UploadResult {
   height: number | null
   alt: string
   category: string | null
+  folderId?: number | null
   thumbnailUrl?: string
 }
 
-export async function uploadFile(file: File, category = "general"): Promise<UploadResult> {
+export async function uploadFile(file: File, category = "general", folderId?: number | null): Promise<UploadResult> {
   if (!ALLOWED_MIMES.includes(file.type)) {
     throw new Error(`Type de fichier non autorisé : ${file.type}`)
   }
@@ -80,6 +81,7 @@ export async function uploadFile(file: File, category = "general"): Promise<Uplo
     height: processed.dimensions.height,
     alt: baseName,
     category: cat,
+    folderId: folderId ?? null,
   }
 }
 
@@ -102,12 +104,13 @@ export async function getMediaList(params: {
   search?: string
   category?: string
   mimeType?: string
+  folderId?: number | null
   sort?: string
   order?: "asc" | "desc"
   page?: number
   limit?: number
 }) {
-  const { search, category, mimeType, sort = "createdAt", order = "desc", page = 1, limit = 24 } = params
+  const { search, category, mimeType, folderId, sort = "createdAt", order = "desc", page = 1, limit = 24 } = params
 
   const where: Record<string, unknown> = {}
 
@@ -120,6 +123,9 @@ export async function getMediaList(params: {
   }
   if (category) where.category = category
   if (mimeType) where.mimeType = { startsWith: mimeType }
+  if (folderId !== undefined) {
+    where.folderId = folderId ?? null
+  }
 
   const skip = (page - 1) * limit
   const orderBy = { [sort]: order }

@@ -6,6 +6,29 @@ export class MediaRepository extends BaseRepository<MediaDelegate> {
   constructor() { super(prisma.media, "media") }
 }
 
+type MediaFolderDelegate = typeof prisma.mediaFolder
+export class MediaFolderRepository extends BaseRepository<MediaFolderDelegate> {
+  constructor() { super(prisma.mediaFolder, "mediaFolder") }
+
+  async findTree(): Promise<Array<Record<string, unknown>>> {
+    const folders = await this.model.findMany({
+      orderBy: { name: "asc" },
+      include: { _count: { select: { media: true, children: true } } },
+    })
+    return folders.map((f) => ({
+      ...f,
+      fileCount: (f as unknown as { _count: { media: number; children: number } })._count.media,
+      childFolderCount: (f as unknown as { _count: { media: number; children: number } })._count.children,
+    }))
+  }
+
+  async deleteWithContents(id: number): Promise<void> {
+    await prisma.media.updateMany({ where: { folderId: id }, data: { folderId: null } })
+    await this.model.deleteMany({ where: { parentId: id } })
+    await this.delete(id)
+  }
+}
+
 type SettingDelegate = typeof prisma.setting
 export class SettingRepository extends BaseRepository<SettingDelegate> {
   constructor() { super(prisma.setting, "setting") }

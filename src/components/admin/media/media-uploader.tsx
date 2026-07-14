@@ -34,9 +34,10 @@ function validateFiles(files: File[]): { valid: File[]; errors: { name: string; 
 interface MediaUploaderProps {
   onUploadComplete?: () => void
   category?: string
+  folderId?: number | null
 }
 
-export function MediaUploader({ onUploadComplete, category = "general" }: MediaUploaderProps) {
+export function MediaUploader({ onUploadComplete, category = "general", folderId }: MediaUploaderProps) {
   const [queue, setQueue] = useState<UploadFileItem[]>([])
   const [uploading, setUploading] = useState(false)
 
@@ -68,7 +69,7 @@ export function MediaUploader({ onUploadComplete, category = "general" }: MediaU
     if (valid.length) {
       uploadFiles(newItems)
     }
-  }, [category])
+  }, [category, folderId])
 
   const uploadFiles = async (items: UploadFileItem[]) => {
     setUploading(true)
@@ -82,6 +83,7 @@ export function MediaUploader({ onUploadComplete, category = "general" }: MediaU
         const formData = new FormData()
         formData.append("files", item.file)
         formData.append("category", category)
+        if (folderId) formData.append("folderId", String(folderId))
 
         const xhr = new XMLHttpRequest()
 

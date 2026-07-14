@@ -13,6 +13,7 @@ const mediaUpdateSchema = z.object({
   caption: z.string().optional(),
   category: z.string().max(100).optional(),
   filename: z.string().max(255).optional(),
+  folderId: z.number().int().positive().nullable().optional(),
 }).strict()
 
 export const GET = apiRoute(async (ctx) => {

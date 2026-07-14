@@ -534,23 +534,40 @@ model NewsletterSubscriber {
 
 // ── Media ───────────────────────────────────────────────────
 
+model MediaFolder {
+  id        Int           @id @default(autoincrement())
+  name      String        @db.VarChar(255)
+  slug      String        @unique @db.VarChar(255)
+  parentId  Int?
+  parent    MediaFolder?  @relation("MediaFolderTree", fields: [parentId], references: [id])
+  children  MediaFolder[] @relation("MediaFolderTree")
+  media     Media[]
+  createdAt DateTime      @default(now())
+  updatedAt DateTime      @updatedAt
+
+  @@index([parentId])
+}
+
 model Media {
-  id        Int      @id @default(autoincrement())
-  url       String   @db.VarChar(500)
-  filename  String   @db.VarChar(255)
-  mimeType  String?  @db.VarChar(100)
+  id        Int          @id @default(autoincrement())
+  url       String       @db.VarChar(500)
+  filename  String       @db.VarChar(255)
+  mimeType  String?      @db.VarChar(100)
   size      Int?
   width     Int?
   height    Int?
-  alt       String?  @db.VarChar(200)
-  title     String?  @db.VarChar(255)
-  caption   String?  @db.Text
-  category  String?  @db.VarChar(100)
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  alt       String?      @db.VarChar(200)
+  title     String?      @db.VarChar(255)
+  caption   String?      @db.Text
+  category  String?      @db.VarChar(100)
+  folderId  Int?
+  folder    MediaFolder? @relation(fields: [folderId], references: [id], onDelete: SetNull)
+  createdAt DateTime     @default(now())
+  updatedAt DateTime     @updatedAt
 
   @@index([mimeType])
   @@index([category])
+  @@index([folderId])
 }
 
 // ── SEO ─────────────────────────────────────────────────────
