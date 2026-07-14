@@ -16,8 +16,8 @@ export class AcademyService {
   // Categories
   async listCategories(params: { page?: number; limit?: number }) { return academyCategoryRepo.findPaginated({ orderBy: { displayOrder: "asc" }, page: params.page, limit: params.limit }) }
   async getCategoryById(id: number) { const c = await academyCategoryRepo.findById(id); if (!c) throw new NotFoundError("Categorie introuvable"); return c }
-  async createCategory(data: any) { return academyCategoryRepo.create(data) }
-  async updateCategory(id: number, data: any) { await this.getCategoryById(id); return academyCategoryRepo.update(id, data) }
+  async createCategory(data: Record<string, unknown>) { return academyCategoryRepo.create(data) }
+  async updateCategory(id: number, data: Record<string, unknown>) { await this.getCategoryById(id); return academyCategoryRepo.update(id, data) }
   async softDeleteCategory(id: number) { await this.getCategoryById(id); return academyCategoryRepo.update(id, { displayOrder: 9999 }) }
   async permanentlyDeleteCategory(id: number) { await this.getCategoryById(id); return academyCategoryRepo.delete(id) }
 
@@ -32,8 +32,8 @@ export class AcademyService {
     return courseRepo.findPaginated({ where, orderBy: { createdAt: "desc" }, page: params.page, limit: params.limit, include: { category: true } })
   }
   async getCourseById(id: number) { const c = await courseRepo.findById(id); if (!c) throw new NotFoundError("Cours introuvable"); return c }
-  async createCourse(data: any) { return courseRepo.create(data) }
-  async updateCourse(id: number, data: any) { await this.getCourseById(id); return courseRepo.update(id, data) }
+  async createCourse(data: Record<string, unknown>) { return courseRepo.create(data) }
+  async updateCourse(id: number, data: Record<string, unknown>) { await this.getCourseById(id); return courseRepo.update(id, data) }
   async deleteCourse(id: number) { await this.getCourseById(id); return courseRepo.softDelete(id) }
   async permanentlyDeleteCourse(id: number) { await this.getCourseById(id); return courseRepo.delete(id) }
   async duplicateCourse(id: number) { const d = await courseRepo.duplicate(id); if (!d) throw new NotFoundError("Cours introuvable"); return d }
@@ -49,8 +49,8 @@ export class AcademyService {
     return workshopRepo.findPaginated({ where, orderBy: { date: "asc" }, page: params.page, limit: params.limit, include: { category: true } })
   }
   async getWorkshopById(id: number) { const w = await workshopRepo.findById(id); if (!w) throw new NotFoundError("Atelier introuvable"); return w }
-  async createWorkshop(data: any) { return workshopRepo.create(data) }
-  async updateWorkshop(id: number, data: any) { await this.getWorkshopById(id); return workshopRepo.update(id, data) }
+  async createWorkshop(data: Record<string, unknown>) { return workshopRepo.create(data) }
+  async updateWorkshop(id: number, data: Record<string, unknown>) { await this.getWorkshopById(id); return workshopRepo.update(id, data) }
   async deleteWorkshop(id: number) { await this.getWorkshopById(id); return workshopRepo.softDelete(id) }
   async permanentlyDeleteWorkshop(id: number) { await this.getWorkshopById(id); return workshopRepo.delete(id) }
   async toggleWorkshopStatus(id: number) { const w = await this.getWorkshopById(id); return workshopRepo.toggleStatus(id, !w.isPublished) }
@@ -59,8 +59,8 @@ export class AcademyService {
   // Sessions
   async listSessions(courseId: number) { return sessionRepo.findByCourse(courseId) }
   async getSessionById(id: number) { const s = await sessionRepo.findById(id); if (!s) throw new NotFoundError("Session introuvable"); return s }
-  async createSession(data: any) { return sessionRepo.create(data) }
-  async updateSession(id: number, data: any) { await this.getSessionById(id); return sessionRepo.update(id, data) }
+  async createSession(data: Record<string, unknown>) { return sessionRepo.create(data) }
+  async updateSession(id: number, data: Record<string, unknown>) { await this.getSessionById(id); return sessionRepo.update(id, data) }
   async deleteSession(id: number) { await this.getSessionById(id); return sessionRepo.delete(id) }
 
   // Resources
@@ -73,8 +73,8 @@ export class AcademyService {
     return resourceRepo.findPaginated({ where, orderBy: { createdAt: "desc" }, page: params.page, limit: params.limit, include: { category: true } })
   }
   async getResourceById(id: number) { const r = await resourceRepo.findById(id); if (!r) throw new NotFoundError("Ressource introuvable"); return r }
-  async createResource(data: any) { return resourceRepo.create(data) }
-  async updateResource(id: number, data: any) { await this.getResourceById(id); return resourceRepo.update(id, data) }
+  async createResource(data: Record<string, unknown>) { return resourceRepo.create(data) }
+  async updateResource(id: number, data: Record<string, unknown>) { await this.getResourceById(id); return resourceRepo.update(id, data) }
   async deleteResource(id: number) { await this.getResourceById(id); return resourceRepo.softDelete(id) }
   async permanentlyDeleteResource(id: number) { await this.getResourceById(id); return resourceRepo.delete(id) }
   async toggleResourceStatus(id: number) { const r = await this.getResourceById(id); return resourceRepo.toggleStatus(id, !r.isPublished) }
@@ -89,8 +89,8 @@ export class AcademyService {
     return certificateRepo.findPaginated({ where, orderBy: { createdAt: "desc" }, page: params.page, limit: params.limit, include: { category: true } })
   }
   async getCertificateById(id: number) { const c = await certificateRepo.findById(id); if (!c) throw new NotFoundError("Certificat introuvable"); return c }
-  async createCertificate(data: any) { return certificateRepo.create(data) }
-  async updateCertificate(id: number, data: any) { await this.getCertificateById(id); return certificateRepo.update(id, data) }
+  async createCertificate(data: Record<string, unknown>) { return certificateRepo.create(data) }
+  async updateCertificate(id: number, data: Record<string, unknown>) { await this.getCertificateById(id); return certificateRepo.update(id, data) }
   async deleteCertificate(id: number) { await this.getCertificateById(id); return certificateRepo.softDelete(id) }
   async permanentlyDeleteCertificate(id: number) { await this.getCertificateById(id); return certificateRepo.delete(id) }
   async toggleCertificateStatus(id: number) { const c = await this.getCertificateById(id); return certificateRepo.toggleStatus(id, !c.isPublished) }
@@ -104,7 +104,7 @@ export class AcademyService {
     return registrationRepo.findPaginated({ where, orderBy: { createdAt: "desc" }, page: params.page, limit: params.limit, include: { course: true } })
   }
   async getRegistrationById(id: number) { const r = await registrationRepo.findById(id); if (!r) throw new NotFoundError("Inscription introuvable"); return r }
-  async createRegistration(data: any) { return registrationRepo.create(data) }
+  async createRegistration(data: Record<string, unknown>) { return registrationRepo.create(data) }
   async updateRegistrationStatus(id: number, status: string) { await this.getRegistrationById(id); return registrationRepo.updateStatus(id, status) }
   async deleteRegistration(id: number) { await this.getRegistrationById(id); return registrationRepo.delete(id) }
 }

@@ -9,6 +9,7 @@ import {
   LocalBusinessJsonLd,
   WebSiteJsonLd,
 } from "@/components/shared/json-ld"
+import { WhatsAppFloat } from "@/components/shared/whatsapp-float"
 import {
   GoogleAnalytics,
   MicrosoftClarity,
@@ -33,6 +34,7 @@ export default async function PublicLayout({
         <main id="main-content" className="flex-1 pb-16 lg:pb-0">{children}</main>
         <Footer />
         <StickyCTA />
+        <WhatsAppFloat />
         <GoogleAnalytics nonce={nonce} />
         <MicrosoftClarity nonce={nonce} />
       </CookieConsentWrapper>

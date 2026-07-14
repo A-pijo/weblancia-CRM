@@ -22,7 +22,8 @@ export class CourseRepository extends BaseRepository<CourseDelegate> {
     const original = await this.model.findUnique({ where: { id } })
     if (!original) return null
     const { id: _id, createdAt: _c, updatedAt: _u, ...data } = original
-    return this.model.create({ data: { ...data, title: `${data.title} (copie)`, slug: `${data.slug}-copy-${Date.now()}`, isPublished: false } as any })
+    const rest = data as Record<string, unknown>
+    return this.model.create({ data: { ...rest, title: `${String(rest.title)} (copie)`, slug: `${String(rest.slug)}-copy-${Date.now()}`, isPublished: false } })
   }
 }
 
@@ -37,7 +38,8 @@ export class WorkshopRepository extends BaseRepository<WorkshopDelegate> {
     const original = await this.model.findUnique({ where: { id } })
     if (!original) return null
     const { id: _id, createdAt: _c, updatedAt: _u, ...data } = original
-    return this.model.create({ data: { ...data, title: `${data.title} (copie)`, slug: `${data.slug}-copy-${Date.now()}`, isPublished: false } as any })
+    const rest = data as Record<string, unknown>
+    return this.model.create({ data: { ...rest, title: `${String(rest.title)} (copie)`, slug: `${String(rest.slug)}-copy-${Date.now()}`, isPublished: false } })
   }
 }
 
@@ -59,7 +61,8 @@ export class ResourceRepository extends BaseRepository<ResourceDelegate> {
     const original = await this.model.findUnique({ where: { id } })
     if (!original) return null
     const { id: _id, createdAt: _c, updatedAt: _u, ...data } = original
-    return this.model.create({ data: { ...data, title: `${data.title} (copie)`, slug: `${data.slug}-copy-${Date.now()}`, isPublished: false } as any })
+    const rest = data as Record<string, unknown>
+    return this.model.create({ data: { ...rest, title: `${String(rest.title)} (copie)`, slug: `${String(rest.slug)}-copy-${Date.now()}`, isPublished: false } })
   }
 }
 
@@ -73,7 +76,8 @@ export class CertificateRepository extends BaseRepository<CertificateDelegate> {
     const original = await this.model.findUnique({ where: { id } })
     if (!original) return null
     const { id: _id, createdAt: _c, updatedAt: _u, ...data } = original
-    return this.model.create({ data: { ...data, title: `${data.title} (copie)`, slug: `${data.slug}-copy-${Date.now()}`, isPublished: false } as any })
+    const rest = data as Record<string, unknown>
+    return this.model.create({ data: { ...rest, title: `${String(rest.title)} (copie)`, slug: `${String(rest.slug)}-copy-${Date.now()}`, isPublished: false } })
   }
 }
 

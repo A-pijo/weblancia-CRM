@@ -8,6 +8,10 @@ interface UseFormSubmissionOptions {
   whatsappMessage?: string
 }
 
+interface WindowWithDataLayer extends Window {
+  dataLayer?: Record<string, unknown>[]
+}
+
 export function useFormSubmission({ apiEndpoint, redirectWhatsApp = false, whatsappMessage = "" }: UseFormSubmissionOptions) {
   const [state, setState] = useState<"idle" | "loading" | "success" | "error">("idle")
   const [errorMessage, setErrorMessage] = useState("")
@@ -33,6 +37,13 @@ export function useFormSubmission({ apiEndpoint, redirectWhatsApp = false, whats
         }
 
         setState("success")
+
+        if (typeof window !== "undefined") {
+          const w = window as WindowWithDataLayer
+          if (w.dataLayer) {
+            w.dataLayer.push({ event: "formSubmission", formEndpoint: apiEndpoint })
+          }
+        }
 
         if (redirectWhatsApp && process.env.NEXT_PUBLIC_WHATSAPP_ENABLED === "true") {
           const encodedMessage = encodeURIComponent(whatsappMessage)

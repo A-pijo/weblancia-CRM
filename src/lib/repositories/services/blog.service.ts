@@ -30,7 +30,7 @@ export class BlogService {
     return post
   }
 
-  async create(data: any) {
+  async create(data: { title: string; slug?: string; categoryId?: number } & Record<string, unknown>) {
     const slug = data.slug || data.title.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "")
     const { categoryId, ...rest } = data
     const category = categoryId ? { connect: { id: categoryId } } : undefined

@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react"
 import Link from "next/link"
-import { useRouter } from "next/navigation"
+import { usePathname, useRouter } from "next/navigation"
 import { motion, AnimatePresence } from "framer-motion"
 import { X, CaretDown, CaretRight } from "@/components/icons"
 import { cn } from "@/lib/utils/cn"
@@ -94,6 +94,7 @@ function SubmenuAccordion({ title, columns, onItemClick }: { title: string; colu
 
 export function MobileNav({ isOpen, onClose }: MobileNavProps) {
   const router = useRouter()
+  const pathname = usePathname()
   const { t } = useLocale()
 
   useEffect(() => {
@@ -168,15 +169,19 @@ export function MobileNav({ isOpen, onClose }: MobileNavProps) {
                   if (link.label === "Academy") {
                     return <SubmenuAccordion key="Academy" title="Academy" columns={academyMegaMenu} onItemClick={onClose} />
                   }
+                  const isActive = pathname === link.href || pathname.startsWith(link.href + "/")
                   return (
                     <Link
                       key={link.label}
                       href={link.href}
-                      className="flex items-center justify-between py-3 text-h5 text-text-primary hover:text-accent transition-colors duration-200"
+                      className={cn(
+                        "flex items-center justify-between py-3 text-h5 transition-colors duration-200",
+                        isActive ? "text-accent" : "text-text-primary hover:text-accent",
+                      )}
                       onClick={onClose}
                     >
                       {t(navLabelKey[link.label] ?? link.label)}
-                      <CaretRight size={20} className="text-text-tertiary" />
+                      <CaretRight size={20} className={cn(isActive ? "text-accent" : "text-text-tertiary")} />
                     </Link>
                   )
                 })}

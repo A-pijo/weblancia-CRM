@@ -1,18 +1,19 @@
 import { prisma } from "@/lib/database/prisma"
 import { Prisma } from "@/generated/prisma/client"
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 type PrismaModel = {
-  findUnique: (args: any) => any
-  findMany: (args: any) => any
-  findFirst: (args: any) => any
-  create: (args: any) => any
-  update: (args: any) => any
-  delete: (args: any) => any
-  count: (args: any) => any
-  upsert: (args: any) => any
-  createMany: (args: any) => any
-  updateMany: (args: any) => any
-  deleteMany: (args: any) => any
+  findUnique: (...args: any[]) => any
+  findMany: (...args: any[]) => any
+  findFirst: (...args: any[]) => any
+  create: (...args: any[]) => any
+  update: (...args: any[]) => any
+  delete: (...args: any[]) => any
+  count: (...args: any[]) => any
+  upsert: (...args: any[]) => any
+  createMany: (...args: any[]) => any
+  updateMany: (...args: any[]) => any
+  deleteMany: (...args: any[]) => any
 }
 
 export interface PaginationParams {
@@ -42,10 +43,10 @@ export class BaseRepository<TDelegate extends PrismaModel> {
   }
 
   async findMany(params?: {
-    where?: any
-    orderBy?: any
-    include?: any
-    select?: any
+    where?: Record<string, unknown>
+    orderBy?: Record<string, unknown>
+    include?: Record<string, unknown>
+    select?: Record<string, unknown>
     skip?: number
     take?: number
   }): Promise<Prisma.Result<TDelegate, any, "findMany">> {
@@ -53,10 +54,10 @@ export class BaseRepository<TDelegate extends PrismaModel> {
   }
 
   async findPaginated(params: PaginationParams & {
-    where?: any
-    orderBy?: any
-    include?: any
-    select?: any
+    where?: Record<string, unknown>
+    orderBy?: Record<string, unknown>
+    include?: Record<string, unknown>
+    select?: Record<string, unknown>
   }): Promise<PaginatedResult<Prisma.Result<TDelegate, any, "findMany">[0]>> {
     const page = Math.max(1, params.page || 1)
     const limit = Math.min(100, Math.max(1, params.limit || 10))
@@ -70,11 +71,11 @@ export class BaseRepository<TDelegate extends PrismaModel> {
     return { items, total, page, limit, totalPages: Math.ceil(total / limit) }
   }
 
-  async create(data: any): Promise<Prisma.Result<TDelegate, any, "create">> {
+  async create(data: Record<string, unknown>): Promise<Prisma.Result<TDelegate, any, "create">> {
     return this.model.create({ data })
   }
 
-  async update(id: number | string, data: any): Promise<Prisma.Result<TDelegate, any, "update">> {
+  async update(id: number | string, data: Record<string, unknown>): Promise<Prisma.Result<TDelegate, any, "update">> {
     return this.model.update({ where: { id: Number(id) }, data })
   }
 
@@ -82,16 +83,16 @@ export class BaseRepository<TDelegate extends PrismaModel> {
     return this.model.delete({ where: { id: Number(id) } })
   }
 
-  async count(where?: any): Promise<number> {
+  async count(where?: Record<string, unknown>): Promise<number> {
     return this.model.count({ where })
   }
 
-  async exists(where: any): Promise<boolean> {
+  async exists(where: Record<string, unknown>): Promise<boolean> {
     const count = await this.model.count({ where })
     return count > 0
   }
 
-  async upsert(where: any, create: any, update: any): Promise<Prisma.Result<TDelegate, any, "upsert">> {
+  async upsert(where: Record<string, unknown>, create: Record<string, unknown>, update: Record<string, unknown>): Promise<Prisma.Result<TDelegate, any, "upsert">> {
     return this.model.upsert({ where, create, update })
   }
 }

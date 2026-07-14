@@ -5,6 +5,8 @@ import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { serviceSchema, type ServiceFormData } from "@/lib/validation/services"
 import { cn } from "@/lib/utils/cn"
+import { useAutoSave } from "@/lib/hooks/use-auto-save"
+import type { UseFormWatch, UseFormGetValues, UseFormSetValue } from "react-hook-form"
 
 interface CategoryOption {
   id: number
@@ -32,8 +34,9 @@ function generateSlug(title: string): string {
 export function ServiceForm({ categories, defaultValues, onSubmit, isSubmitting }: ServiceFormProps) {
   const [tab, setTab] = useState<(typeof TABS)[number]>("General")
   const [slugManuallyEdited, setSlugManuallyEdited] = useState(false)
+  const [draftKey] = useState(() => `service-draft-${Date.now()}`)
 
-  const { register, handleSubmit, formState: { errors }, setValue, watch } = useForm<ServiceFormData>({
+  const { register, handleSubmit, formState: { errors }, setValue, watch, getValues } = useForm<ServiceFormData>({
     resolver: zodResolver(serviceSchema),
     defaultValues: {
       title: "",
@@ -62,6 +65,13 @@ export function ServiceForm({ categories, defaultValues, onSubmit, isSubmitting 
       outcome: "",
       ...defaultValues,
     },
+  })
+
+  const autoSave = useAutoSave<ServiceFormData>({
+    draftKey,
+    watch,
+    getValues,
+    setValue,
   })
 
   const title = watch("title")
@@ -424,7 +434,24 @@ export function ServiceForm({ categories, defaultValues, onSubmit, isSubmitting 
         )}
       </div>
 
-      <div className="flex justify-end gap-3 pt-4 border-t border-admin-border/50">
+      <div className="flex items-center justify-between pt-4 border-t border-admin-border/50">
+        <div className="flex items-center gap-3">
+          {autoSave.saved && (
+            <span className="text-xs text-admin-text-tertiary flex items-center gap-1.5">
+              <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12" /></svg>
+              Brouillon enregistré
+            </span>
+          )}
+          {!defaultValues && autoSave.hasDraft && (
+            <button
+              type="button"
+              onClick={autoSave.restoreDraft}
+              className="text-xs text-admin-accent hover:text-admin-accent-hover transition-colors"
+            >
+              Restaurer le brouillon
+            </button>
+          )}
+        </div>
         <button
           type="submit"
           disabled={isSubmitting}

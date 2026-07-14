@@ -8,6 +8,7 @@ import { ServicesGrid } from "@/components/sections/services-grid"
 import { StatsCounter } from "@/components/sections/stats-counter"
 import { ProcessTimeline } from "@/components/sections/process-timeline"
 import { TestimonialCarousel } from "@/components/sections/testimonial-carousel"
+import { FAQSection } from "@/components/sections/faq-section"
 import { CTABanner } from "@/components/sections/cta-banner"
 import { prisma } from "@/lib/database/prisma"
 import { siteConfig } from "@/lib/constants/site"
@@ -196,6 +197,16 @@ export default async function HomePage() {
         </section>
       )}
 
+      <FAQSection
+        title="Budget & accompagnement"
+        items={[
+          { question: "Combien coûte un site web ?", answer: "Nos projets débutent à partir de 15 000 DH pour un site vitrine et peuvent aller jusqu'à 100 000+ DH pour une plateforme sur-mesure. Le prix dépend du type de projet, des fonctionnalités et des délais. Nous établissons un devis personnalisé après avoir compris vos besoins." },
+          { question: "Proposez-vous des formules d'abonnement ?", answer: "Oui, nous proposons des formules de maintenance et d'hébergement à partir de 500 DH/mois, incluant les mises à jour, la sécurité et le support technique." },
+          { question: "Quels sont les délais de réalisation ?", answer: "Un site vitrine est livré en 2 à 4 semaines, un e-commerce en 4 à 8 semaines, et une application sur-mesure en 8 à 16 semaines selon la complexité." },
+          { question: "Acceptez-vous les paiements échelonnés ?", answer: "Oui, nous proposons un paiement en plusieurs phases : 30% à la signature, 40% à la validation de la maquette, et 30% à la livraison finale." },
+          { question: "Le devis est-il gratuit ?", answer: "Oui, le devis est totalement gratuit et sans engagement. Nous analysons votre projet et vous proposons une solution adaptée à votre budget." },
+        ]}
+      />
       <CTABanner
         headline="Prêt à lancer votre projet digital ?"
         subheadline="Discutons de vos objectifs et trouvons ensemble la solution idéale."

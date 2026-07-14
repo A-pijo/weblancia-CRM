@@ -16,7 +16,7 @@ export const startProjectSchema = z.object({
   phone: z.string().optional(),
   company: z.string().optional(),
   projectType: z.string().min(1, "Veuillez sélectionner un type de projet"),
-  budget: z.string().min(1, "Veuillez sélectionner un budget"),
+  budget: z.string().optional(),
   timeline: z.string().min(1, "Veuillez sélectionner un délai"),
   description: z.string().min(20, "Décrivez votre projet en au moins 20 caractères").max(10000),
   source: z.string().optional(),
