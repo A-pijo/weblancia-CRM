@@ -33,8 +33,8 @@ export async function rateLimit(params: {
       await prisma.$executeRawUnsafe(
         `DELETE FROM "RateLimit" WHERE "createdAt" < NOW() - INTERVAL '10 minutes'`,
       )
-    } catch {
-      // cleanup failure is non-critical
+    } catch (e) {
+      // cleanup is best-effort
     }
   }
 

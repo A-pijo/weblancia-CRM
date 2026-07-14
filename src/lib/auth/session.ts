@@ -4,17 +4,23 @@ import { prisma } from "@/lib/database/prisma"
 import { AUTH, type SessionPayload } from "./config"
 
 function getSecret(): Uint8Array {
-  return new TextEncoder().encode(AUTH.jwtSecret)
+  const secret = AUTH.jwtSecret
+  return new TextEncoder().encode(secret)
 }
 
 export async function signToken(payload: SessionPayload, rememberMe: boolean): Promise<string> {
-  return new SignJWT({ ...payload })
-    .setProtectedHeader({ alg: AUTH.jwtAlgorithm })
-    .setIssuedAt()
-    .setIssuer(AUTH.jwtIssuer)
-    .setAudience(AUTH.jwtAudience)
-    .setExpirationTime(rememberMe ? AUTH.expiresLong : AUTH.expiresShort)
-    .sign(getSecret())
+  try {
+    const token = await new SignJWT({ ...payload })
+      .setProtectedHeader({ alg: AUTH.jwtAlgorithm })
+      .setIssuedAt()
+      .setIssuer(AUTH.jwtIssuer)
+      .setAudience(AUTH.jwtAudience)
+      .setExpirationTime(rememberMe ? AUTH.expiresLong : AUTH.expiresShort)
+      .sign(getSecret())
+    return token
+  } catch (err) {
+    throw err
+  }
 }
 
 export async function verifyToken(token: string): Promise<SessionPayload | null> {
@@ -23,15 +29,18 @@ export async function verifyToken(token: string): Promise<SessionPayload | null>
       issuer: AUTH.jwtIssuer,
       audience: AUTH.jwtAudience,
     })
-    return payload as unknown as SessionPayload
-  } catch {
+    const sp = payload as unknown as SessionPayload
+    return sp
+  } catch (err) {
     return null
   }
 }
 
 export async function verifyTokenWithRevocationCheck(token: string): Promise<SessionPayload | null> {
   const payload = await verifyToken(token)
-  if (!payload) return null
+  if (!payload) {
+    return null
+  }
 
   if (payload.version !== undefined) {
     try {
@@ -39,9 +48,13 @@ export async function verifyTokenWithRevocationCheck(token: string): Promise<Ses
         where: { id: payload.userId },
         select: { tokenVersion: true, isActive: true },
       })
-      if (!user || !user.isActive) return null
-      if (user.tokenVersion !== payload.version) return null
-    } catch {
+      if (!user || !user.isActive) {
+        return null
+      }
+      if (user.tokenVersion !== payload.version) {
+        return null
+      }
+    } catch (err) {
       return null
     }
   }
@@ -50,30 +63,46 @@ export async function verifyTokenWithRevocationCheck(token: string): Promise<Ses
 }
 
 export async function setSessionCookie(token: string, rememberMe: boolean): Promise<void> {
-  const cookieStore = await cookies()
-  cookieStore.set(AUTH.sessionCookieName, token, {
-    httpOnly: true,
-    secure: process.env.NODE_ENV === "production",
-    sameSite: "lax",
-    maxAge: rememberMe ? AUTH.expiresLongMs / 1000 : AUTH.expiresShortMs / 1000,
-    path: "/",
-  })
+  try {
+    const cookieStore = await cookies()
+    const maxAge = rememberMe ? AUTH.expiresLongMs / 1000 : AUTH.expiresShortMs / 1000
+    cookieStore.set(AUTH.sessionCookieName, token, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "lax",
+      maxAge,
+      path: "/",
+    })
+  } catch (err) {
+    throw err
+  }
 }
 
 export async function removeSessionCookie(): Promise<void> {
-  const cookieStore = await cookies()
-  cookieStore.set(AUTH.sessionCookieName, "", {
-    httpOnly: true,
-    secure: process.env.NODE_ENV === "production",
-    sameSite: "lax",
-    maxAge: 0,
-    path: "/",
-  })
+  try {
+    const cookieStore = await cookies()
+    cookieStore.set(AUTH.sessionCookieName, "", {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "lax",
+      maxAge: 0,
+      path: "/",
+    })
+  } catch (err) {
+    throw err
+  }
 }
 
 export async function getSession(): Promise<SessionPayload | null> {
-  const cookieStore = await cookies()
-  const token = cookieStore.get(AUTH.sessionCookieName)?.value
-  if (!token) return null
-  return verifyTokenWithRevocationCheck(token)
+  try {
+    const cookieStore = await cookies()
+    const token = cookieStore.get(AUTH.sessionCookieName)?.value
+    if (!token) {
+      return null
+    }
+    const result = await verifyTokenWithRevocationCheck(token)
+    return result
+  } catch (err) {
+    return null
+  }
 }

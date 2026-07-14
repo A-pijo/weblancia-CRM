@@ -5,11 +5,20 @@ import { logger } from "@/lib/logger"
 const globalForPrisma = globalThis as unknown as { __prisma?: PrismaClient }
 
 function createPrismaClient(): PrismaClient {
-  const adapter = new PrismaPg({ connectionString: process.env.DATABASE_URL })
-  return new PrismaClient({
-    adapter,
-    log: process.env.NODE_ENV === "development" ? ["warn", "error"] : ["error"],
-  })
+  const dbUrl = process.env.DATABASE_URL
+  try {
+    const adapter = new PrismaPg({ connectionString: dbUrl })
+    const client = new PrismaClient({
+      adapter,
+      log: process.env.NODE_ENV === "development" ? ["warn", "error"] : ["error"],
+    })
+    return client
+  } catch (err) {
+    if (err instanceof Error && err.stack) {
+      logger.error("PrismaClient construction failed", err, "database")
+    }
+    throw err
+  }
 }
 
 export const prisma: PrismaClient =
@@ -23,7 +32,7 @@ export async function isDbAvailable(): Promise<boolean> {
   try {
     await prisma.$queryRaw`SELECT 1`
     return true
-  } catch {
+  } catch (err) {
     return false
   }
 }

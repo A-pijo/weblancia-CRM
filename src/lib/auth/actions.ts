@@ -43,10 +43,16 @@ export async function login(_prev: unknown, formData: FormData) {
 
   const { email, password, rememberMe } = parsed.data
 
-  const user = await prisma.user.findUnique({
-    where: { email },
-    include: { role: true },
-  })
+  // 1) DB lookup
+  let user
+  try {
+    user = await prisma.user.findUnique({
+      where: { email },
+      include: { role: true },
+    })
+  } catch (err) {
+    return { error: "Erreur de connexion. Veuillez réessayer." }
+  }
 
   if (!user) {
     await createAuditLog({
@@ -71,7 +77,13 @@ export async function login(_prev: unknown, formData: FormData) {
     return { error: "Email ou mot de passe incorrect." }
   }
 
-  const valid = await verifyPassword(password, user.password)
+  // 2) Password verification
+  let valid: boolean
+  try {
+    valid = await verifyPassword(password, user.password)
+  } catch (err) {
+    return { error: "Erreur de connexion. Veuillez réessayer." }
+  }
   if (!valid) {
     await createAuditLog({
       action: "LOGIN_FAILED",
@@ -84,14 +96,24 @@ export async function login(_prev: unknown, formData: FormData) {
     return { error: "Email ou mot de passe incorrect." }
   }
 
+  // 3) JWT creation
   const roleName = user.role.name as Role
-  const token = await signToken(
-    { userId: user.id, email: user.email, name: user.name, role: roleName, version: user.tokenVersion },
-    rememberMe,
-  )
+  const tokenPayload = { userId: user.id, email: user.email, name: user.name, role: roleName, version: user.tokenVersion }
+  let token: string
+  try {
+    token = await signToken(tokenPayload, rememberMe)
+  } catch (err) {
+    return { error: "Erreur de connexion. Veuillez réessayer." }
+  }
 
-  await setSessionCookie(token, rememberMe)
+  // 4) Cookie
+  try {
+    await setSessionCookie(token, rememberMe)
+  } catch (err) {
+    return { error: "Erreur de connexion. Veuillez réessayer." }
+  }
 
+  // 5) Audit
   await createAuditLog({
     action: "LOGIN_SUCCESS",
     entity: "USER",

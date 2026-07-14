@@ -11,14 +11,17 @@ const JWT_SECRET = new TextEncoder().encode(jwtSecretString)
 
 async function getSession(request: NextRequest) {
   const token = request.cookies.get("session")?.value
-  if (!token) return null
+  if (!token) {
+    return null
+  }
   try {
     const { payload } = await jwtVerify(token, JWT_SECRET, {
       issuer: "weblancia",
       audience: "weblancia-admin",
     })
-    return payload as { userId: number; email: string; name: string; role: string }
-  } catch {
+    const sp = payload as { userId: number; email: string; name: string; role: string }
+    return sp
+  } catch (err) {
     return null
   }
 }

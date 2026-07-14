@@ -6,7 +6,13 @@ import { logger } from "@/lib/logger"
 
 export default async function AdminDashboard() {
   const session = await getSession()
-  const rawStats = await dashboardService.getStats()
+
+  let rawStats
+  try {
+    rawStats = await dashboardService.getStats()
+  } catch (err) {
+    rawStats = { projects: 0, services: 0, blogPosts: 0, courses: 0, leads: 0, testimonials: 0, teamMembers: 0, faqCount: 0, mediaCount: 0, users: 0, contacts: 0, bookCalls: 0, projectRequests: 0, newsletterSubs: 0 }
+  }
   const stats = {
     totalProjects: rawStats.projects, activeProjects: rawStats.projects, totalServices: rawStats.services, activeServices: rawStats.services, totalBlogPosts: rawStats.blogPosts, publishedPosts: rawStats.blogPosts, draftPosts: 0, totalCourses: rawStats.courses, publishedCourses: rawStats.courses, totalLeads: rawStats.leads, unreadContacts: rawStats.contacts, totalNewsletter: rawStats.newsletterSubs, totalTestimonials: rawStats.testimonials, totalTeamMembers: rawStats.teamMembers, totalFaq: rawStats.faqCount, totalAcademyResources: 0, totalWorkshops: 0, totalMedia: rawStats.mediaCount, totalUsers: rawStats.users, totalCategories: 0, totalTags: 0, aiGeneratedPosts: 0, unreadProjectRequests: rawStats.projectRequests, unconfirmedBookCalls: rawStats.bookCalls,
   }

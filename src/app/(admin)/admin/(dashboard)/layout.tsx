@@ -13,7 +13,9 @@ export const metadata: Metadata = {
 
 export default async function AdminDashboardLayout({ children }: { children: ReactNode }) {
   const session = await getSession()
-  if (!session) redirect("/admin/login")
+  if (!session) {
+    redirect("/admin/login")
+  }
 
   return (
     <DashboardLayout>
