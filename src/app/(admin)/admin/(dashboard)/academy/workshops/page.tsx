@@ -28,16 +28,16 @@ export default function AdminWorkshopsPage() {
     params.set("limit", "20")
     const res = await fetch(`/api/academy/workshops?${params}`)
     const data = await res.json()
-    setItems(data.items ?? [])
-    setTotal(data.total ?? 0)
-    setTotalPages(data.totalPages ?? 1)
+    setItems(data.data?.items ?? [])
+    setTotal(data.data?.total ?? 0)
+    setTotalPages(data.data?.totalPages ?? 1)
     setLoading(false)
   }, [search, categoryId, status, page])
 
   const fetchCategories = useCallback(async () => {
     const res = await fetch("/api/academy/categories?limit=100")
     const data = await res.json()
-    setCategories(data.items ?? [])
+    setCategories(data.data?.items ?? [])
   }, [])
 
   useEffect(() => { fetchItems() }, [fetchItems])

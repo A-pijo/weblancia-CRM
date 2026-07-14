@@ -59,9 +59,9 @@ export default function AdminServicesPage() {
       return
     }
     const data = await res.json()
-    setServices(data.items ?? [])
-    setTotal(data.total ?? 0)
-    setTotalPages(data.totalPages ?? 1)
+    setServices(data.data?.items ?? [])
+    setTotal(data.data?.total ?? 0)
+    setTotalPages(data.data?.totalPages ?? 1)
     setLoading(false)
   }, [search, categoryId, page])
 
@@ -69,8 +69,8 @@ export default function AdminServicesPage() {
     const res = await fetch("/api/services?limit=1")
     if (!res.ok) return
     const data = await res.json()
-    if (data.items) {
-      const cats = data.items.map((s: Service) => s.category)
+    if (data.data?.items) {
+      const cats = data.data.items.map((s: Service) => s.category)
       const unique = cats.filter((c: Category, i: number, a: Category[]) => a.findIndex((x: Category) => x.id === c.id) === i)
       setCategories(unique)
     }

@@ -22,31 +22,31 @@ export default function EditWorkshopPage() {
       ])
       const item = await itemRes.json()
       const catData = await catRes.json()
-      setCategories(catData.items ?? [])
+      setCategories(catData.data?.items ?? [])
 
       setDefaultValues({
-        title: item.title,
-        slug: item.slug,
-        description: item.description ?? "",
-        instructor: item.instructor ?? "",
-        academyCategoryId: item.academyCategoryId ?? undefined,
-        date: item.date ? item.date.split("T")[0] : "",
-        time: item.time ?? "",
-        duration: item.duration ?? "",
-        seats: item.seats ?? undefined,
-        location: item.location ?? "",
-        type: item.type ?? "Online",
-        price: item.price ?? undefined,
-        registrationDeadline: item.registrationDeadline ? item.registrationDeadline.split("T")[0] : "",
-        status: item.status ?? "Upcoming",
-        isPublished: item.isPublished ?? false,
-        focusKeyword: item.focusKeyword ?? "",
-        canonicalUrl: item.canonicalUrl ?? "",
-        robots: item.robots ?? "index, follow",
-        ogTitle: item.ogTitle ?? "",
-        ogDescription: item.ogDescription ?? "",
-        ogImage: item.ogImage ?? "",
-        twitterCard: item.twitterCard ?? "summary_large_image",
+        title: item.data?.title ?? "",
+        slug: item.data?.slug ?? "",
+        description: item.data?.description ?? "",
+        instructor: item.data?.instructor ?? "",
+        academyCategoryId: item.data?.academyCategoryId ?? undefined,
+        date: item.data?.date ? item.data.date.split("T")[0] : "",
+        time: item.data?.time ?? "",
+        duration: item.data?.duration ?? "",
+        seats: item.data?.seats ?? undefined,
+        location: item.data?.location ?? "",
+        type: item.data?.type ?? "Online",
+        price: item.data?.price ?? undefined,
+        registrationDeadline: item.data?.registrationDeadline ? item.data.registrationDeadline.split("T")[0] : "",
+        status: item.data?.status ?? "Upcoming",
+        isPublished: item.data?.isPublished ?? false,
+        focusKeyword: item.data?.focusKeyword ?? "",
+        canonicalUrl: item.data?.canonicalUrl ?? "",
+        robots: item.data?.robots ?? "index, follow",
+        ogTitle: item.data?.ogTitle ?? "",
+        ogDescription: item.data?.ogDescription ?? "",
+        ogImage: item.data?.ogImage ?? "",
+        twitterCard: item.data?.twitterCard ?? "summary_large_image",
       })
       setLoading(false)
     }

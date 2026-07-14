@@ -57,8 +57,8 @@ export default function AdminSettings() {
           throw new Error(body?.error?.message ?? "Impossible de charger les paramètres.")
         }
         const data = await res.json()
-        if (data.success && data.settings) {
-          setForm(data.settings)
+        if (data.success && data.data) {
+          setForm(data.data)
         }
       } catch (e) {
         const msg = e instanceof Error ? e.message : "Impossible de charger les paramètres."
@@ -88,7 +88,7 @@ export default function AdminSettings() {
       const data = await res.json()
       if (data.success) {
         setMessage({ type: "success", text: "Settings saved successfully." })
-        setForm(data.settings)
+        setForm(data.data)
       } else {
         setMessage({ type: "error", text: data.error ?? "Failed to save settings" })
       }

@@ -17,13 +17,14 @@ export default function EditCategoryPage() {
     async function load() {
       const res = await fetch(`/api/academy/categories/${params.id}`)
       const item = await res.json()
+      const d = item.data ?? item
 
       setDefaultValues({
-        title: item.title,
-        slug: item.slug,
-        description: item.description ?? "",
-        icon: item.icon ?? "",
-        displayOrder: item.displayOrder ?? 0,
+        title: d.title ?? "",
+        slug: d.slug ?? "",
+        description: d.description ?? "",
+        icon: d.icon ?? "",
+        displayOrder: d.displayOrder ?? 0,
       })
       setLoading(false)
     }

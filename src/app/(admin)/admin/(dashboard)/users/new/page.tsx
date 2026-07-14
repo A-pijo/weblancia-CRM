@@ -14,7 +14,7 @@ export default function NewUserPage() {
   const [submitting, setSubmitting] = useState(false)
 
   useEffect(() => {
-    fetch("/api/users?roles=true").then((r) => r.json()).then(setRoles)
+    fetch("/api/users?roles=true").then((r) => r.json()).then(data => setRoles(data.data ?? []))
   }, [])
 
   const handleSubmit = async (data: UserFormData) => {

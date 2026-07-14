@@ -40,9 +40,9 @@ export default function AdminWorkPage() {
       return
     }
     const data = await res.json()
-    setProjects(data.items ?? [])
-    setTotal(data.total ?? 0)
-    setTotalPages(data.totalPages ?? 1)
+    setProjects(data.data?.items ?? [])
+    setTotal(data.data?.total ?? 0)
+    setTotalPages(data.data?.totalPages ?? 1)
     setLoading(false)
   }, [search, industry, page])
 
@@ -50,8 +50,8 @@ export default function AdminWorkPage() {
     const res = await fetch("/api/work?limit=100")
     if (!res.ok) return
     const data = await res.json()
-    if (data.items) {
-      const inds = data.items.map((p: any) => p.industry).filter(Boolean)
+    if (data.data?.items) {
+      const inds = data.data.items.map((p: any) => p.industry).filter(Boolean)
       setIndustries([...new Set<string>(inds)] as string[])
     }
   }, [])

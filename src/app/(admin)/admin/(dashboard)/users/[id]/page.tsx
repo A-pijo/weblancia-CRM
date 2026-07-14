@@ -23,8 +23,8 @@ export default function EditUserPage() {
         fetch("/api/users?roles=true").then((r) => r.json()),
       ])
       const u = await userRes.json()
-      setRoles(rolesData)
-      setDefaultValues({ name: u.name, email: u.email, password: "", roleId: u.roleId, isActive: u.isActive })
+      setRoles(rolesData.data ?? [])
+      setDefaultValues({ name: u.data?.name ?? "", email: u.data?.email ?? "", password: "", roleId: u.data?.roleId, isActive: u.data?.isActive })
       setLoading(false)
     }
     load()

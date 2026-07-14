@@ -30,7 +30,7 @@ export default async function ContactPage() {
   const faqItems = await prisma.fAQ.findMany({
     where: { isActive: true },
     orderBy: { displayOrder: "asc" },
-  })
+  }).catch(() => [])
 
   const contactInfo = [
     {

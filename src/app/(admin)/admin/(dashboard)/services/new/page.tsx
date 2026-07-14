@@ -20,8 +20,8 @@ export default function NewServicePage() {
     fetch("/api/services?limit=1")
       .then((r) => r.json())
       .then((data) => {
-        if (data.items) {
-          const cats = data.items.map((s: { category: Category }) => s.category)
+        if (data.data?.items) {
+          const cats = data.data.items.map((s: { category: Category }) => s.category)
           const unique = cats.filter((c: Category, i: number, a: Category[]) => a.findIndex((x: Category) => x.id === c.id) === i)
           setCategories(unique)
         }

@@ -31,14 +31,14 @@ export default function AdminCourseSessionsPage() {
   const fetchSessions = useCallback(async () => {
     const res = await fetch(`/api/academy/sessions?courseId=${courseId}`)
     const data = await res.json()
-    setSessions(data.items ?? [])
+    setSessions(data.data?.items ?? [])
   }, [courseId])
 
   const fetchCourse = useCallback(async () => {
     const res = await fetch(`/api/academy/courses/${courseId}`)
     if (res.ok) {
       const data = await res.json()
-      setCourse(data)
+      setCourse(data.data)
     }
   }, [courseId])
 

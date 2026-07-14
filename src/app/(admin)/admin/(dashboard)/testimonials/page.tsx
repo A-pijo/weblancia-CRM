@@ -48,9 +48,9 @@ export default function AdminTestimonialsPage() {
       return
     }
     const data = await res.json()
-    setItems(data.items ?? [])
-    setTotal(data.total ?? 0)
-    setTotalPages(data.totalPages ?? 1)
+    setItems(data.data?.items ?? [])
+    setTotal(data.data?.total ?? 0)
+    setTotalPages(data.data?.totalPages ?? 1)
     setLoading(false)
   }, [search, page])
 

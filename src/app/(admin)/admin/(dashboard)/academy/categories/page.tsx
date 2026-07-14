@@ -23,9 +23,9 @@ export default function AdminCategoriesPage() {
     params.set("limit", "20")
     const res = await fetch(`/api/academy/categories?${params}`)
     const data = await res.json()
-    setItems(data.items ?? [])
-    setTotal(data.total ?? 0)
-    setTotalPages(data.totalPages ?? 1)
+    setItems(data.data?.items ?? [])
+    setTotal(data.data?.total ?? 0)
+    setTotalPages(data.data?.totalPages ?? 1)
     setLoading(false)
   }, [search, page])
 

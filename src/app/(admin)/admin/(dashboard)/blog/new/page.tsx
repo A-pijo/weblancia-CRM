@@ -13,8 +13,8 @@ export default function NewBlogPage() {
 
   useEffect(() => {
     fetch("/api/blog?limit=1").then((r) => r.json()).then((data) => {
-      if (data.items) {
-        const cats = data.items.map((p: any) => p.category)
+      if (data.data?.items) {
+        const cats = data.data.items.map((p: any) => p.category)
         const unique = cats.filter((c: any, i: number, a: any[]) => a.findIndex((x: any) => x.id === c.id) === i)
         setCategories(unique)
       }

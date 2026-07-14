@@ -16,7 +16,7 @@ export default function EditFAQPage() {
       .then((r) => r.json())
       .then((data) => {
         if (data.error) { router.push("/admin/faq"); return }
-        setDefaultValues(data)
+        setDefaultValues(data.data ?? data)
         setLoading(false)
       })
   }, [params.id, router])

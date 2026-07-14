@@ -69,7 +69,7 @@ export function MediaListView({ items: initialItems, folderId, folders = [] }: M
     if (folderId) params.set("folderId", String(folderId))
     const res = await fetch(`/api/media?${params.toString()}`)
     const data = await res.json()
-    setItems(data.items ?? [])
+    setItems(data.data?.items ?? [])
   }, [folderId])
 
   const handleDelete = useCallback(async (id: number) => {

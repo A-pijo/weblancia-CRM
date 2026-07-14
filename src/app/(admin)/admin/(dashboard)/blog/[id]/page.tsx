@@ -22,32 +22,32 @@ export default function EditBlogPage() {
       ])
       const post = await postRes.json()
       const catData = await catRes.json()
-      if (catData.items) {
-        const cats = catData.items.map((p: any) => p.category)
+      if (catData.data?.items) {
+        const cats = catData.data.items.map((p: any) => p.category)
         const unique = cats.filter((c: any, i: number, a: any[]) => a.findIndex((x: any) => x.id === c.id) === i)
         setCategories(unique)
       }
 
       setDefaultValues({
-        title: post.title,
-        slug: post.slug,
-        excerpt: post.excerpt ?? "",
-        content: post.content ?? "",
-        categoryId: post.categoryId,
-        author: post.author ?? "",
-        publishedAt: post.publishedAt ? post.publishedAt.split("T")[0] : "",
-        isPublished: post.isPublished,
-        isFeatured: post.isFeatured,
-        readingTime: post.readingTime ?? undefined,
-        tags: post.tags ?? [],
-        featuredImage: post.featuredImage ?? "",
-        focusKeyword: post.focusKeyword ?? "",
-        canonicalUrl: post.canonicalUrl ?? "",
-        robots: post.robots ?? "index, follow",
-        ogTitle: post.ogTitle ?? "",
-        ogDescription: post.ogDescription ?? "",
-        ogImage: post.ogImage ?? "",
-        twitterCard: post.twitterCard ?? "summary_large_image",
+        title: post.data?.title ?? "",
+        slug: post.data?.slug ?? "",
+        excerpt: post.data?.excerpt ?? "",
+        content: post.data?.content ?? "",
+        categoryId: post.data?.categoryId,
+        author: post.data?.author ?? "",
+        publishedAt: post.data?.publishedAt ? post.data.publishedAt.split("T")[0] : "",
+        isPublished: post.data?.isPublished,
+        isFeatured: post.data?.isFeatured,
+        readingTime: post.data?.readingTime ?? undefined,
+        tags: post.data?.tags ?? [],
+        featuredImage: post.data?.featuredImage ?? "",
+        focusKeyword: post.data?.focusKeyword ?? "",
+        canonicalUrl: post.data?.canonicalUrl ?? "",
+        robots: post.data?.robots ?? "index, follow",
+        ogTitle: post.data?.ogTitle ?? "",
+        ogDescription: post.data?.ogDescription ?? "",
+        ogImage: post.data?.ogImage ?? "",
+        twitterCard: post.data?.twitterCard ?? "summary_large_image",
       })
       setLoading(false)
     }

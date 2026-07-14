@@ -55,9 +55,9 @@ export default function AdminLeadsPage() {
       return
     }
     const data = await res.json()
-    setLeads(data.items ?? [])
-    setTotal(data.total ?? 0)
-    setTotalPages(data.totalPages ?? 1)
+    setLeads(data.data?.items ?? [])
+    setTotal(data.data?.total ?? 0)
+    setTotalPages(data.data?.totalPages ?? 1)
     setLoading(false)
   }, [search, statusFilter, sourceFilter, page, sort, order])
 

@@ -97,7 +97,8 @@ export async function deleteFile(url: string): Promise<void> {
 }
 
 export function createMediaRecord(data: UploadResult) {
-  return prisma.media.create({ data })
+  const { thumbnailUrl: _thumbnailUrl, ...dbData } = data
+  return prisma.media.create({ data: dbData })
 }
 
 export async function getMediaList(params: {

@@ -39,9 +39,9 @@ export default function AdminBlogPage() {
       return
     }
     const data = await res.json()
-    setPosts(data.items ?? [])
-    setTotal(data.total ?? 0)
-    setTotalPages(data.totalPages ?? 1)
+    setPosts(data.data?.items ?? [])
+    setTotal(data.data?.total ?? 0)
+    setTotalPages(data.data?.totalPages ?? 1)
     setLoading(false)
   }, [search, categoryId, page])
 
@@ -49,8 +49,8 @@ export default function AdminBlogPage() {
     const res = await fetch("/api/blog?limit=1")
     if (!res.ok) return
     const data = await res.json()
-    if (data.items) {
-      const cats = data.items.map((p: any) => p.category)
+    if (data.data?.items) {
+      const cats = data.data.items.map((p: any) => p.category)
       const unique = cats.filter((c: any, i: number, a: any[]) => a.findIndex((x: any) => x.id === c.id) === i)
       setCategories(unique)
     }

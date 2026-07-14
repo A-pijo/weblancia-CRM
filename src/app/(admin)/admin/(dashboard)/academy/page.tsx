@@ -44,15 +44,15 @@ export default function AdminAcademyPage() {
         const cats = await catsRes.json()
 
         setCounts({
-          courses: courses.total ?? 0,
-          workshops: workshops.total ?? 0,
-          resources: resources.total ?? 0,
-          certificates: certs.total ?? 0,
-          categories: cats.total ?? 0,
+          courses: courses.data?.total ?? 0,
+          workshops: workshops.data?.total ?? 0,
+          resources: resources.data?.total ?? 0,
+          certificates: certs.data?.total ?? 0,
+          categories: cats.data?.total ?? 0,
         })
-        setRecentCourses(courses.items ?? [])
-        setRecentWorkshops(workshops.items ?? [])
-        setRecentResources(resources.items ?? [])
+        setRecentCourses(courses.data?.items ?? [])
+        setRecentWorkshops(workshops.data?.items ?? [])
+        setRecentResources(resources.data?.items ?? [])
       } catch (e) {
         const msg = e instanceof Error ? e.message : "Impossible de charger l'académie."
         logger.error(msg, e, "admin")

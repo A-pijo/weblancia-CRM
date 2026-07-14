@@ -43,9 +43,9 @@ export default function AdminTeamPage() {
       return
     }
     const data = await res.json()
-    setMembers(data.items ?? [])
-    setTotal(data.total ?? 0)
-    setTotalPages(data.totalPages ?? 1)
+    setMembers(data.data?.items ?? [])
+    setTotal(data.data?.total ?? 0)
+    setTotalPages(data.data?.totalPages ?? 1)
     setLoading(false)
   }, [page])
 

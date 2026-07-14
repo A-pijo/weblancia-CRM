@@ -13,7 +13,7 @@ export default function NewCoursePage() {
 
   useEffect(() => {
     fetch("/api/academy/categories?limit=100").then((r) => r.json()).then((data) => {
-      setCategories(data.items ?? [])
+      setCategories(data.data?.items ?? [])
     })
   }, [])
 

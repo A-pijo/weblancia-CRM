@@ -34,8 +34,8 @@ export default function LeadDetailPage() {
         fetch(`/api/leads/${params.id}`),
         fetch("/api/users").then((r) => r.json()).catch(() => ({ items: [] })),
       ])
-      if (leadRes.ok) setLead(await leadRes.json())
-      const u = usersRes.items ?? usersRes
+      if (leadRes.ok) setLead((await leadRes.json()).data)
+      const u = usersRes.data?.items ?? usersRes.items ?? usersRes
       setUsers(Array.isArray(u) ? u : [])
       setLoading(false)
     }
@@ -46,7 +46,8 @@ export default function LeadDetailPage() {
     const res = await fetch(`/api/leads/${params.id}`, { method: "PATCH", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ _action: "status", status }) })
     if (res.ok) {
       const updated = await res.json()
-      setLead((prev) => prev ? { ...prev, status: updated.status } : prev)
+      const d = updated.data ?? updated
+      setLead((prev) => prev ? { ...prev, status: d.status } : prev)
       refreshTimeline()
     }
   }
@@ -68,7 +69,7 @@ export default function LeadDetailPage() {
       setNewNote("")
       refreshTimeline()
       const leadRes = await fetch(`/api/leads/${params.id}`)
-      if (leadRes.ok) setLead(await leadRes.json())
+      if (leadRes.ok) setLead((await leadRes.json()).data)
     }
   }
 
@@ -76,7 +77,8 @@ export default function LeadDetailPage() {
     const res = await fetch(`/api/leads/${params.id}`)
     if (res.ok) {
       const updated = await res.json()
-      setLead((prev) => prev ? { ...prev, timeline: updated.timeline } : prev)
+      const d = updated.data ?? updated
+      setLead((prev) => prev ? { ...prev, timeline: d.timeline } : prev)
     }
   }
 

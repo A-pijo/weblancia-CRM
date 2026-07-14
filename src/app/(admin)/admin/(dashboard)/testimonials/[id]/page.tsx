@@ -17,10 +17,11 @@ export default function EditTestimonialPage() {
     async function load() {
       const res = await fetch(`/api/testimonials/${params.id}`)
       const t = await res.json()
+      const d = t.data ?? t
       setDefaultValues({
-        name: t.name, role: t.role ?? "", company: t.company ?? "",
-        content: t.content, rating: t.rating ?? null, avatar: t.avatar ?? "",
-        displayOrder: t.displayOrder ?? 0, isActive: t.isActive ?? true,
+        name: d.name ?? "", role: d.role ?? "", company: d.company ?? "",
+        content: d.content ?? "", rating: d.rating ?? null, avatar: d.avatar ?? "",
+        displayOrder: d.displayOrder ?? 0, isActive: d.isActive ?? true,
       })
       setLoading(false)
     }

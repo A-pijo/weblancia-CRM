@@ -30,37 +30,37 @@ export default function EditServicePage() {
       const service = await svcRes.json()
       const catData = await catRes.json()
 
-      if (catData.items) {
-        const cats = catData.items.map((s: { category: Category }) => s.category)
+      if (catData.data?.items) {
+        const cats = catData.data.items.map((s: { category: Category }) => s.category)
         const unique = cats.filter((c: Category, i: number, a: Category[]) => a.findIndex((x: Category) => x.id === c.id) === i)
         setCategories(unique)
       }
 
       setDefaultValues({
-        title: service.title,
-        slug: service.slug,
-        description: service.description ?? "",
-        fullDescription: service.fullDescription ?? "",
-        icon: service.icon ?? "",
-        categoryId: service.categoryId,
-        isFeatured: service.isFeatured ?? false,
-        isActive: service.isActive ?? true,
-        displayOrder: service.displayOrder ?? 0,
-        startingPrice: service.startingPrice ?? null,
-        currency: service.currency ?? "MAD",
-        ctaText: service.ctaText ?? "",
-        deliverables: service.deliverables ?? [],
-        benefits: service.benefits ?? [],
-        process: service.process ?? [],
-        technologies: service.technologies ?? [],
-        faqs: service.faqs ?? [],
-        relatedServices: service.relatedServices ?? [],
-        featuredImage: service.featuredImage ?? "",
-        galleryImages: service.galleryImages ?? [],
-        clientCount: service.clientCount ?? null,
-        projectCount: service.projectCount ?? null,
-        satisfactionRate: service.satisfactionRate ?? null,
-        outcome: service.outcome ?? "",
+        title: service.data?.title ?? "",
+        slug: service.data?.slug ?? "",
+        description: service.data?.description ?? "",
+        fullDescription: service.data?.fullDescription ?? "",
+        icon: service.data?.icon ?? "",
+        categoryId: service.data?.categoryId,
+        isFeatured: service.data?.isFeatured ?? false,
+        isActive: service.data?.isActive ?? true,
+        displayOrder: service.data?.displayOrder ?? 0,
+        startingPrice: service.data?.startingPrice ?? null,
+        currency: service.data?.currency ?? "MAD",
+        ctaText: service.data?.ctaText ?? "",
+        deliverables: service.data?.deliverables ?? [],
+        benefits: service.data?.benefits ?? [],
+        process: service.data?.process ?? [],
+        technologies: service.data?.technologies ?? [],
+        faqs: service.data?.faqs ?? [],
+        relatedServices: service.data?.relatedServices ?? [],
+        featuredImage: service.data?.featuredImage ?? "",
+        galleryImages: service.data?.galleryImages ?? [],
+        clientCount: service.data?.clientCount ?? null,
+        projectCount: service.data?.projectCount ?? null,
+        satisfactionRate: service.data?.satisfactionRate ?? null,
+        outcome: service.data?.outcome ?? "",
       })
       setLoading(false)
     }

@@ -22,26 +22,26 @@ export default function EditResourcePage() {
       ])
       const item = await itemRes.json()
       const catData = await catRes.json()
-      setCategories(catData.items ?? [])
+      setCategories(catData.data?.items ?? [])
 
       setDefaultValues({
-        title: item.title,
-        slug: item.slug,
-        description: item.description ?? "",
-        academyCategoryId: item.academyCategoryId ?? undefined,
-        type: item.type ?? "PDF",
-        file: item.file ?? "",
-        thumbnail: item.thumbnail ?? "",
-        image: item.image ?? "",
-        isFree: item.isFree ?? true,
-        isPublished: item.isPublished ?? false,
-        focusKeyword: item.focusKeyword ?? "",
-        canonicalUrl: item.canonicalUrl ?? "",
-        robots: item.robots ?? "index, follow",
-        ogTitle: item.ogTitle ?? "",
-        ogDescription: item.ogDescription ?? "",
-        ogImage: item.ogImage ?? "",
-        twitterCard: item.twitterCard ?? "summary_large_image",
+        title: item.data?.title ?? "",
+        slug: item.data?.slug ?? "",
+        description: item.data?.description ?? "",
+        academyCategoryId: item.data?.academyCategoryId ?? undefined,
+        type: item.data?.type ?? "PDF",
+        file: item.data?.file ?? "",
+        thumbnail: item.data?.thumbnail ?? "",
+        image: item.data?.image ?? "",
+        isFree: item.data?.isFree ?? true,
+        isPublished: item.data?.isPublished ?? false,
+        focusKeyword: item.data?.focusKeyword ?? "",
+        canonicalUrl: item.data?.canonicalUrl ?? "",
+        robots: item.data?.robots ?? "index, follow",
+        ogTitle: item.data?.ogTitle ?? "",
+        ogDescription: item.data?.ogDescription ?? "",
+        ogImage: item.data?.ogImage ?? "",
+        twitterCard: item.data?.twitterCard ?? "summary_large_image",
       })
       setLoading(false)
     }
