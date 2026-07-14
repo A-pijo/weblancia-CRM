@@ -1,17 +1,14 @@
-import { NextResponse } from "next/server"
-import { updateLeadStatus } from "@/lib/leads/queries"
-import { leadStatusSchema } from "@/lib/validations/leads"
-import { getSession } from "@/lib/auth/session"
+import { leadService } from "@/lib/repositories/services/lead.service"
+import { leadStatusSchema } from "@/lib/validation/leads"
+import { apiRoute, apiBody } from "@/lib/security/api-handler"
+import { success } from "@/lib/security/response"
 
-export async function PATCH(req: Request, { params }: { params: Promise<{ id: string }> }) {
-  const session = await getSession()
-  if (!session) return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
-  const { id } = await params
-  const body = await req.json()
-  const parsed = leadStatusSchema.safeParse(body)
-  if (!parsed.success) {
-    return NextResponse.json({ error: parsed.error.flatten() }, { status: 400 })
-  }
-  const updated = await updateLeadStatus(Number(id), parsed.data.status, session.userId)
-  return NextResponse.json(updated)
-}
+export const PATCH = apiRoute(
+  async (ctx) => {
+    const body = await apiBody(leadStatusSchema)(ctx.request)
+    if (body.error) return body.error
+    const updated = await leadService.updateStatus(Number(ctx.params.id), body.data.status, ctx.auth.session.userId)
+    return success(updated)
+  },
+  { auth: true, admin: true },
+)

@@ -4,7 +4,7 @@ import { useState, useEffect } from "react"
 import { useRouter, useParams } from "next/navigation"
 import { PageHeader } from "@/components/admin/page-header"
 import { ProjectForm } from "@/components/admin/projects/project-form"
-import type { ProjectFormData } from "@/lib/validations/project"
+import type { ProjectFormData } from "@/lib/validation/project"
 
 export default function EditProjectPage() {
   const router = useRouter()

@@ -196,7 +196,7 @@ export function SearchPageClient() {
           {recentSearches.length > 0 && (
             <div>
               <div className="flex items-center justify-between mb-3">
-                <h3 className="text-caption text-text-tertiary font-medium flex items-center gap-1.5">
+                <h3 className="text-h3 text-text-tertiary font-medium flex items-center gap-1.5">
                   <Clock size={14} />
                   Recherches récentes
                 </h3>
@@ -219,7 +219,7 @@ export function SearchPageClient() {
           )}
           {popularSearches.length > 0 && (
             <div>
-              <h3 className="text-caption text-text-tertiary font-medium mb-3 flex items-center gap-1.5">
+              <h3 className="text-h3 text-text-tertiary font-medium mb-3 flex items-center gap-1.5">
                 <ChartBar size={14} />
                 Recherches populaires
               </h3>

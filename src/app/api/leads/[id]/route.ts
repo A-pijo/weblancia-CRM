@@ -1,44 +1,51 @@
-import { NextResponse } from "next/server"
-import { getLeadById, updateLead, deleteLead } from "@/lib/leads/queries"
-import { leadSchema } from "@/lib/validations/leads"
-import { getSession } from "@/lib/auth/session"
+import { z } from "zod"
+import { leadService } from "@/lib/repositories/services/lead.service"
+import { leadSchema } from "@/lib/validation/leads"
+import { apiRoute, apiBody } from "@/lib/security/api-handler"
+import { success, notFound, badRequest } from "@/lib/security/response"
+import { NotFoundError } from "@/lib/errors"
 
-export async function GET(_req: Request, { params }: { params: Promise<{ id: string }> }) {
-  const session = await getSession()
-  if (!session) return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
-  const { id } = await params
-  const lead = await getLeadById(Number(id))
-  if (!lead) return NextResponse.json({ error: "Not found" }, { status: 404 })
-  return NextResponse.json(lead)
-}
+const leadUpdateSchema = leadSchema.partial().extend({
+  _action: z.enum(["status", "assign"]).optional(),
+  status: z.enum(["New", "Contacted", "Qualified", "Proposal Sent", "Won", "Lost", "Spam"]).optional(),
+  assignedToId: z.number().int().optional(),
+}).strict()
 
-export async function PATCH(req: Request, { params }: { params: Promise<{ id: string }> }) {
-  const session = await getSession()
-  if (!session) return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
-  const { id } = await params
-  const body = await req.json()
-  if (body._action === "status") {
-    const { updateLeadStatus } = await import("@/lib/leads/queries")
-    const updated = await updateLeadStatus(Number(id), body.status, session.userId)
-    return NextResponse.json(updated)
+export const GET = apiRoute(async (ctx) => {
+  try {
+    const lead = await leadService.getById(Number(ctx.params.id))
+    return success(lead)
+  } catch (error) {
+    if (error instanceof NotFoundError) return notFound()
+    throw error
   }
-  if (body._action === "assign") {
-    const { assignLead } = await import("@/lib/leads/queries")
-    const updated = await assignLead(Number(id), body.assignedToId ?? null, session.userId)
-    return NextResponse.json(updated)
-  }
-  const parsed = leadSchema.partial().safeParse(body)
-  if (!parsed.success) {
-    return NextResponse.json({ error: parsed.error.flatten() }, { status: 400 })
-  }
-  const updated = await updateLead(Number(id), parsed.data as unknown as Record<string, unknown>)
-  return NextResponse.json(updated)
-}
+}, { auth: true, admin: true })
 
-export async function DELETE(_req: Request, { params }: { params: Promise<{ id: string }> }) {
-  const session = await getSession()
-  if (!session) return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
-  const { id } = await params
-  await deleteLead(Number(id))
-  return NextResponse.json({ success: true })
-}
+export const PATCH = apiRoute(async (ctx) => {
+  const body = await apiBody(leadUpdateSchema)(ctx.request)
+  if (body.error) return body.error
+
+  if (body.data._action === "status" && body.data.status) {
+    const updated = await leadService.updateStatus(Number(ctx.params.id), body.data.status, ctx.auth.session.userId)
+    return success(updated)
+  }
+
+  if (body.data._action === "assign" && body.data.assignedToId) {
+    const updated = await leadService.assign(Number(ctx.params.id), body.data.assignedToId, ctx.auth.session.userId)
+    return success(updated)
+  }
+
+  const updated = await leadService.update(Number(ctx.params.id), body.data)
+  return success(updated)
+}, {
+  auth: true, admin: true,
+  audit: { action: "UPDATE", entity: "LEAD", getDescription: (c) => `Lead #${c.params.id} mis à jour`, getEntityId: (c) => c.params.id },
+})
+
+export const DELETE = apiRoute(async (ctx) => {
+  await leadService.delete(Number(ctx.params.id))
+  return success({ message: "Lead supprimé" })
+}, {
+  auth: true, admin: true,
+  audit: { action: "DELETE", entity: "LEAD", getDescription: (c) => `Lead #${c.params.id} supprimé`, getEntityId: (c) => c.params.id },
+})

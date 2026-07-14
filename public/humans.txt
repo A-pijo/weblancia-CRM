@@ -1,0 +1,15 @@
+# Weblancia — Humans Behind the Agency
+
+## Team
+Weblancia is built by a remote-first team of developers, designers, and strategists based in Morocco.
+
+## Technology
+- Next.js 16, React 19, TypeScript
+- Prisma, PostgreSQL
+- Tailwind CSS v4
+- Hosted on Node.js infrastructure
+
+## Contact
+- Website: https://app.weblancia.com
+- Email: contact@weblancia.com
+- Location: Fès, Morocco

@@ -4,7 +4,7 @@ import { useState, useEffect } from "react"
 import { useRouter, useParams } from "next/navigation"
 import { PageHeader } from "@/components/admin/page-header"
 import { CategoryForm } from "@/components/admin/academy/category-form"
-import type { AcademyCategoryFormData } from "@/lib/validations/academy"
+import type { AcademyCategoryFormData } from "@/lib/validation/academy"
 
 export default function EditCategoryPage() {
   const router = useRouter()

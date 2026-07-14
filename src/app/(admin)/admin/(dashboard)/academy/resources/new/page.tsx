@@ -4,7 +4,7 @@ import { useState, useEffect } from "react"
 import { useRouter } from "next/navigation"
 import { PageHeader } from "@/components/admin/page-header"
 import { ResourceForm } from "@/components/admin/academy/resource-form"
-import type { ResourceFormData } from "@/lib/validations/academy"
+import type { ResourceFormData } from "@/lib/validation/academy"
 
 export default function NewResourcePage() {
   const router = useRouter()

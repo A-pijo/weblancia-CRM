@@ -3,7 +3,7 @@
 import { useState, useEffect, useCallback, useRef } from "react"
 import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
-import { workshopSchema, type WorkshopFormData } from "@/lib/validations/academy"
+import { workshopSchema, type WorkshopFormData } from "@/lib/validation/academy"
 import { cn } from "@/lib/utils/cn"
 
 interface CategoryOption {

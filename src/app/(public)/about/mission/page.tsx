@@ -1,4 +1,5 @@
 import { Metadata } from "next"
+import { WebPageJsonLd } from "@/components/shared/json-ld"
 import { HeroDefault } from "@/components/sections/hero/hero-default"
 import { SectionWrapper } from "@/components/shared/section-wrapper"
 import { Container } from "@/components/shared/container"
@@ -11,12 +12,19 @@ import { CheckCircle, MapPin, Lightning } from "@/components/icons"
 export const metadata: Metadata = {
   title: "Notre Mission | Weblancia",
   description: "Découvrez la mission de Weblancia : démocratiser l'accès à des solutions digitales de qualité pour toutes les entreprises.",
+  keywords: ["Weblancia", "mission", "valeurs", "agence digitale", "Casablanca"],
   alternates: { canonical: `${siteConfig.url}/about/mission` },
   openGraph: {
     title: "Notre Mission | Weblancia",
     description: "Découvrez la mission de Weblancia : démocratiser l'accès à des solutions digitales de qualité pour toutes les entreprises.",
     url: `${siteConfig.url}/about/mission`,
+    siteName: "Weblancia",
+    locale: "fr_FR",
+    alternateLocale: ["en_US", "ar_SA"],
+    images: [{ url: "/images/og/og.svg", width: 1200, height: 630 }],
   },
+  twitter: { card: "summary_large_image", site: "@weblancia", creator: "@weblancia", title: "Notre Mission | Weblancia", description: "Découvrez la mission de Weblancia.", images: ["/images/og/og.svg"] },
+  robots: { index: true, follow: true, googleBot: { index: true, follow: true, "max-image-preview": "large" } },
 }
 
 const pillars = [
@@ -52,6 +60,7 @@ const pillars = [
 export default function MissionPage() {
   return (
     <>
+      <WebPageJsonLd name="Notre Mission | Weblancia" description="Découvrez la mission de Weblancia : démocratiser l'accès à des solutions digitales de qualité pour toutes les entreprises." url={`${siteConfig.url}/about/mission`} />
       <HeroDefault
         headline="Notre Mission"
         subheadline="Démocratiser l'accès à des solutions digitales de qualité pour toutes les entreprises."
@@ -89,7 +98,7 @@ export default function MissionPage() {
                   <div className="w-16 h-16 rounded-full bg-accent-light flex items-center justify-center mx-auto mb-6">
                     <pillar.icon size={28} className="text-accent" />
                   </div>
-                  <h3 className="text-h4 font-semibold mb-4">{pillar.title}</h3>
+                  <h3 className="text-h3 font-semibold mb-4">{pillar.title}</h3>
                   <ul className="space-y-3 text-left">
                     {pillar.items.map((item) => (
                       <li key={item} className="text-body-sm text-text-secondary flex items-start gap-2">

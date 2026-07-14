@@ -2,50 +2,59 @@ import { Metadata } from "next"
 import Image from "next/image"
 import Link from "next/link"
 import { notFound } from "next/navigation"
+import { ArticleJsonLd } from "@/components/shared/json-ld"
 import { SectionWrapper } from "@/components/shared/section-wrapper"
 import { Container } from "@/components/shared/container"
 import { AnimatedReveal } from "@/components/shared/animated-reveal"
 import { Badge } from "@/components/ui/badge"
 import { Clock, CalendarBlank, ArrowRight } from "@/components/icons"
-import { getResourceBySlug, getPublishedResources } from "@/lib/academy/resources/queries"
+import { prisma } from "@/lib/database/prisma"
 import { siteConfig } from "@/lib/constants/site"
 
 type Props = { params: Promise<{ slug: string }> }
 
-export async function generateStaticParams() {
-  const resources = await getPublishedResources().catch(() => [])
-  return resources.map((r) => ({ slug: r.slug }))
-}
-
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params
-  const resource = await getResourceBySlug(slug).catch(() => null)
+  const resource = await prisma.resource.findUnique({ where: { slug }, include: { category: true } }).catch(() => null)
   if (!resource) return { title: "Ressource non trouvée | Weblancia Academy" }
   return {
     title: `${resource.title} | Weblancia Academy`,
     description: resource.description ?? undefined,
+    keywords: `Weblancia, ${resource.title}, ressource, ${resource.category?.title ?? "formation"}, academy, Casablanca`,
     alternates: { canonical: `${siteConfig.url}/academy/resources/${resource.slug}` },
     openGraph: {
       title: resource.title,
       description: resource.description ?? undefined,
       url: `${siteConfig.url}/academy/resources/${resource.slug}`,
+      siteName: "Weblancia",
+      locale: "fr_FR",
+      alternateLocale: ["en_US", "ar_SA"],
+      images: resource.image ? [{ url: resource.image, width: 1200, height: 630 }] : [{ url: "/images/og/og.svg", width: 1200, height: 630 }],
     },
     twitter: {
       card: "summary_large_image",
+      site: "@weblancia",
+      creator: "@weblancia",
       title: resource.title,
       description: resource.description ?? undefined,
+      images: resource.image ? [resource.image] : ["/images/og/og.svg"],
     },
+    robots: { index: true, follow: true, googleBot: { index: true, follow: true, "max-image-preview": "large" } },
   }
 }
 
+export const revalidate = 3600
+
 export default async function ResourceDetailPage({ params }: Props) {
   const { slug } = await params
-  const resource = await getResourceBySlug(slug).catch(() => null)
+  const resource = await prisma.resource.findUnique({ where: { slug }, include: { category: true } }).catch(() => null)
   if (!resource) notFound()
 
   return (
-    <SectionWrapper>
-      <Container>
+    <>
+      <ArticleJsonLd title={resource.title} description={resource.description ?? ""} url={`${siteConfig.url}/academy/resources/${resource.slug}`} image={resource.image ? `${siteConfig.url}${resource.image}` : undefined} datePublished={resource.createdAt.toISOString()} author="Weblancia" />
+      <SectionWrapper>
+        <Container>
         <AnimatedReveal>
           <Link href="/academy/resources" className="text-body-sm text-accent hover:text-accent-hover mb-4 inline-flex items-center gap-1">
             <ArrowRight size={16} className="rotate-180" /> Toutes les ressources
@@ -76,5 +85,6 @@ export default async function ResourceDetailPage({ params }: Props) {
         </AnimatedReveal>
       </Container>
     </SectionWrapper>
+    </>
   )
 }

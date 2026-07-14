@@ -12,9 +12,12 @@ export default function RegisterPage() {
   const [success, setSuccess] = useState(false)
   const [loading, setLoading] = useState(false)
 
+  const [hpWebsite, setHpWebsite] = useState("")
+
   async function handleSubmit(e: FormEvent) {
     e.preventDefault()
     setError("")
+    if (hpWebsite) return
     setLoading(true)
     try {
       const res = await fetch("/api/auth/register", {
@@ -40,7 +43,7 @@ export default function RegisterPage() {
       <section className="py-20">
         <Container>
           <div className="max-w-md mx-auto text-center space-y-4">
-            <h1 className="text-h2 text-text-primary">Account Created</h1>
+            <h1 className="text-h1 text-text-primary">Account Created</h1>
             <p className="text-body text-text-secondary">Your account has been created. An administrator will activate it shortly. You will receive an email notification.</p>
             <Link href="/" className="text-accent hover:underline text-body-sm">Return to home</Link>
           </div>
@@ -53,10 +56,14 @@ export default function RegisterPage() {
     <section className="py-20">
       <Container>
         <div className="max-w-md mx-auto">
-          <h1 className="text-h2 text-text-primary mb-2">Create Account</h1>
+          <h1 className="text-h1 text-text-primary mb-2">Create Account</h1>
           <p className="text-body-sm text-text-secondary mb-8">Register to access the admin panel.</p>
 
           <form onSubmit={handleSubmit} className="space-y-4">
+            <div aria-hidden="true" style={{ position: "absolute", left: "-9999px" }}>
+              <label htmlFor="website">Website</label>
+              <input id="website" type="text" value={hpWebsite} onChange={(e) => setHpWebsite(e.target.value)} tabIndex={-1} autoComplete="off" />
+            </div>
             <div>
               <label htmlFor="name" className="block text-caption text-text-primary mb-1">Name</label>
               <input id="name" type="text" value={name} onChange={(e) => setName(e.target.value)} required className="w-full h-12 px-4 rounded-radius-md bg-surface border border-border text-text-primary placeholder:text-text-tertiary focus:outline-none focus:border-accent text-body-sm" />

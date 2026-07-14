@@ -1,25 +1,32 @@
 import { Metadata } from "next"
 import Image from "next/image"
+import { CollectionPageJsonLd } from "@/components/shared/json-ld"
 import { SectionWrapper } from "@/components/shared/section-wrapper"
 import { Container } from "@/components/shared/container"
 import { AnimatedReveal } from "@/components/shared/animated-reveal"
 import { CTABanner } from "@/components/sections/cta-banner"
 import { SectionHeader } from "@/components/shared/section-header"
 import { siteConfig } from "@/lib/constants/site"
-import { getPublishedCertificates } from "@/lib/academy/certificates/queries"
-import { getAcademyCategories } from "@/lib/academy/categories/queries"
+import { prisma } from "@/lib/database/prisma"
 import { CheckCircle, Clock } from "@/components/icons"
 import { Badge } from "@/components/ui/badge"
 
 export const metadata: Metadata = {
   title: "Certificats | Weblancia Academy",
   description: "Obtenez vos certificats de formation Weblancia Academy et valorisez vos compétences digitales.",
+  keywords: ["Weblancia", "academy", "certificats", "certification", "formation", "compétences digitales"],
   alternates: { canonical: `${siteConfig.url}/academy/certificates` },
   openGraph: {
     title: "Certificats | Weblancia Academy",
     description: "Obtenez vos certificats de formation Weblancia Academy et valorisez vos compétences digitales.",
     url: `${siteConfig.url}/academy/certificates`,
+    siteName: "Weblancia",
+    locale: "fr_FR",
+    alternateLocale: ["en_US", "ar_SA"],
+    images: [{ url: "/images/og/og.svg", width: 1200, height: 630 }],
   },
+  twitter: { card: "summary_large_image", site: "@weblancia", creator: "@weblancia", title: "Certificats | Weblancia Academy", description: "Obtenez vos certificats de formation Weblancia Academy.", images: ["/images/og/og.svg"] },
+  robots: { index: true, follow: true, googleBot: { index: true, follow: true, "max-image-preview": "large" } },
 }
 
 const certSteps = [
@@ -41,11 +48,14 @@ const levelColors: Record<string, string> = {
   Advanced: "danger",
 }
 
+export const revalidate = 3600
+
 export default async function CertificatesPage() {
-  const certificates = await getPublishedCertificates().catch(() => [])
+  const certificates = await prisma.certificate.findMany({ where: { isPublished: true }, include: { category: true }, orderBy: { createdAt: "desc" } }).catch(() => [])
 
   return (
     <>
+      <CollectionPageJsonLd name="Certificats | Weblancia Academy" description="Obtenez vos certificats de formation Weblancia Academy et valorisez vos compétences digitales." url={`${siteConfig.url}/academy/certificates`} numberOfItems={certificates.length} />
       <SectionWrapper>
         <Container>
           <AnimatedReveal>

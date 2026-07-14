@@ -3,7 +3,7 @@
 import { useState } from "react"
 import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
-import { serviceSchema, type ServiceFormData } from "@/lib/validations/services"
+import { serviceSchema, type ServiceFormData } from "@/lib/validation/services"
 import { cn } from "@/lib/utils/cn"
 
 interface CategoryOption {

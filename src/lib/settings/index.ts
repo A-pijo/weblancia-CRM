@@ -1,4 +1,5 @@
-import { db } from "@/lib/db"
+import { prisma } from "@/lib/database/prisma"
+import { siteConfig } from "@/lib/constants/site"
 
 export interface SiteSettings {
   companyName: string
@@ -30,7 +31,7 @@ export const defaultSettings: SiteSettings = {
   companyTagline: "Premium Digital Agency",
   companyDescription:
     "Web design, development, SEO & branding agency based in Fès, Morocco. We craft digital experiences that drive results.",
-  siteUrl: "https://app.weblancia.com",
+  siteUrl: siteConfig.url,
   logoUrl: "",
   email: "contact@weblancia.com",
   emailAcademy: "academy@weblancia.ma",
@@ -64,7 +65,7 @@ function settingsToRecord(rows: { key: string; value: string }[]): Record<string
 
 export async function loadSiteSettings(): Promise<SiteSettings> {
   try {
-    const rows = await db.setting.findMany({
+    const rows = await prisma.setting.findMany({
       where: { group: "site" },
       select: { key: true, value: true },
     })
@@ -94,7 +95,7 @@ export async function getAllSettings(): Promise<SiteSettings> {
 
 export async function getSetting(key: keyof SiteSettings): Promise<string | undefined> {
   try {
-    const row = await db.setting.findUnique({
+    const row = await prisma.setting.findUnique({
       where: { key },
       select: { value: true },
     })
@@ -111,7 +112,7 @@ export async function upsertSettings(data: Partial<SiteSettings>): Promise<SiteS
     const value = data[key]
     if (value === undefined || value === null) continue
 
-    await db.setting.upsert({
+    await prisma.setting.upsert({
       where: { key },
       create: { key, value: String(value), group: "site" },
       update: { value: String(value) },

@@ -1,48 +1,79 @@
-import { NextResponse } from "next/server"
 import { revalidatePath } from "next/cache"
-import { getBlogPostById, updateBlogPost, softDeleteBlogPost, permanentlyDeleteBlogPost, duplicateBlogPost, toggleBlogPostStatus } from "@/lib/blog/queries"
-import { blogSchema } from "@/lib/validations/blog"
+import { z } from "zod"
+import { blogService } from "@/lib/repositories/services/blog.service"
+import { blogPostUpdateSchema } from "@/lib/repositories/dto/blog.dto"
+import { apiRoute, apiBody } from "@/lib/security/api-handler"
+import { success, created, notFound, badRequest } from "@/lib/security/response"
+import { createAuditLog } from "@/lib/security/audit"
+import { NotFoundError } from "@/lib/errors"
 
-export async function GET(_req: Request, { params }: { params: Promise<{ id: string }> }) {
-  const { id } = await params
-  const post = await getBlogPostById(Number(id))
-  if (!post) return NextResponse.json({ error: "Not found" }, { status: 404 })
-  return NextResponse.json(post)
-}
+const blogDeleteSchema = z.object({ permanent: z.literal(true).optional() }).strict()
 
-export async function PATCH(req: Request, { params }: { params: Promise<{ id: string }> }) {
-  const { id } = await params
-  const body = await req.json()
+export const GET = apiRoute(async (ctx) => {
+  try {
+    const post = await blogService.getById(Number(ctx.params.id))
+    return success(post)
+  } catch (error) {
+    if (error instanceof NotFoundError) return notFound()
+    throw error
+  }
+})
 
-  if (body._action === "duplicate") {
-    const dup = await duplicateBlogPost(Number(id))
+export const PATCH = apiRoute(async (ctx) => {
+  const id = Number(ctx.params.id)
+  const body = await apiBody(blogPostUpdateSchema)(ctx.request)
+  if (body.error) return body.error
+
+  if (body.data._action === "duplicate") {
+    const dup = await blogService.duplicate(id)
+    createAuditLog({
+      action: "CREATE", entity: "BLOG_POST", entityId: dup.id,
+      description: `Duplication de l'article de blog #${id}`, userId: ctx.auth.session.userId, request: ctx.request,
+    })
     try { revalidatePath("/insights"); revalidatePath("/sitemap.xml") } catch {}
-    return NextResponse.json(dup)
+    return created(dup)
   }
 
-  if (body._action === "toggle") {
-    const updated = await toggleBlogPostStatus(Number(id), body.isPublished)
+  if (body.data._action === "toggle") {
+    const updated = await blogService.toggleStatus(id)
+    createAuditLog({
+      action: "UPDATE", entity: "BLOG_POST", entityId: id,
+      description: updated.isPublished ? "Publication de l'article de blog" : "Depubliage de l'article de blog",
+      userId: ctx.auth.session.userId, request: ctx.request,
+    })
     try { revalidatePath("/insights"); revalidatePath("/sitemap.xml") } catch {}
-    return NextResponse.json(updated)
+    return success(updated)
   }
 
-  const parsed = blogSchema.partial().safeParse(body)
-  if (!parsed.success) {
-    return NextResponse.json({ error: parsed.error.flatten() }, { status: 400 })
-  }
-  const updated = await updateBlogPost(Number(id), parsed.data as unknown as Record<string, unknown>)
+  const updated = await blogService.update(id, body.data)
+  createAuditLog({
+    action: "UPDATE", entity: "BLOG_POST", entityId: id,
+    description: `Mise a jour de l'article de blog #${id}`, userId: ctx.auth.session.userId, request: ctx.request,
+  })
   try { revalidatePath("/insights"); revalidatePath("/sitemap.xml") } catch {}
-  return NextResponse.json(updated)
-}
+  return success(updated)
+}, { auth: true, admin: true })
 
-export async function DELETE(req: Request, { params }: { params: Promise<{ id: string }> }) {
-  const { id } = await params
-  const body = await req.json().catch(() => ({}))
-  if (body.permanent) {
-    await permanentlyDeleteBlogPost(Number(id))
+export const DELETE = apiRoute(async (ctx) => {
+  const id = Number(ctx.params.id)
+  const raw = await ctx.request.json().catch(() => ({}))
+  const parsed = blogDeleteSchema.safeParse(raw)
+  if (!parsed.success) return badRequest("Données invalides", parsed.error.flatten().fieldErrors)
+
+  if (parsed.data.permanent) {
+    await blogService.permanentlyDelete(id)
+    createAuditLog({
+      action: "DELETE", entity: "BLOG_POST", entityId: id,
+      description: `Suppression definitive de l'article de blog #${id}`, userId: ctx.auth.session.userId, request: ctx.request,
+    })
   } else {
-    await softDeleteBlogPost(Number(id))
+    await blogService.delete(id)
+    createAuditLog({
+      action: "DELETE", entity: "BLOG_POST", entityId: id,
+      description: `Suppression (soft) de l'article de blog #${id}`, userId: ctx.auth.session.userId, request: ctx.request,
+    })
   }
+
   try { revalidatePath("/insights"); revalidatePath("/sitemap.xml") } catch {}
-  return NextResponse.json({ success: true })
-}
+  return success({ success: true })
+}, { auth: true, admin: true })

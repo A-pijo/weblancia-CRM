@@ -1,0 +1,31 @@
+# Auto-detect text files and normalize line endings
+* text=auto eol=lf
+
+# Binary files
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.ico binary
+*.webp binary
+*.avif binary
+*.woff binary
+*.woff2 binary
+*.eot binary
+*.ttf binary
+*.otf binary
+*.zip binary
+*.tar binary
+*.gz binary
+*.svg text
+
+# Git diff
+*.ts text diff=typescript
+*.tsx text diff=typescript
+*.js text diff=javascript
+*.jsx text diff=javascript
+*.css text diff=css
+*.json text diff=json
+*.md text diff=markdown
+*.yml text diff=yaml
+*.yaml text diff=yaml

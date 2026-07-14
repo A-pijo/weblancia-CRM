@@ -14,8 +14,9 @@ function ServicesGrid({ items }: ServicesGridProps) {
     <section className="py-12 md:py-16 lg:py-24 bg-bg-secondary">
       <div className="max-w-7xl mx-auto px-5 sm:px-8 lg:px-12">
         <SectionHeader
-          title="Our Services"
-          description="From strategy to execution, we help businesses build a powerful digital presence."
+          label="Nos expertises"
+          title="Des solutions digitales sur mesure"
+          description="De la stratégie à l'exécution, nous accompagnons les entreprises ambitieuses dans leur transformation digitale."
           align="center"
         />
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">

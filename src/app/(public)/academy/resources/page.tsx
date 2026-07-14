@@ -1,5 +1,6 @@
 import { Metadata } from "next"
 import Link from "next/link"
+import { CollectionPageJsonLd } from "@/components/shared/json-ld"
 import { SectionWrapper } from "@/components/shared/section-wrapper"
 import { Container } from "@/components/shared/container"
 import { AnimatedReveal } from "@/components/shared/animated-reveal"
@@ -7,25 +8,35 @@ import { CTABanner } from "@/components/sections/cta-banner"
 import { SectionHeader } from "@/components/shared/section-header"
 import { Badge } from "@/components/ui/badge"
 import { siteConfig } from "@/lib/constants/site"
-import { getPublishedResources } from "@/lib/academy/resources/queries"
+import { prisma } from "@/lib/database/prisma"
 import { ArrowRight, CalendarBlank } from "@/components/icons"
 
 export const metadata: Metadata = {
   title: "Ressources | Weblancia Academy",
   description: "Accédez à nos ressources gratuites : templates, guides, cheatsheets et outils pour votre apprentissage.",
+  keywords: ["Weblancia", "academy", "ressources", "templates", "guides", "cheatsheets", "gratuit"],
   alternates: { canonical: `${siteConfig.url}/academy/resources` },
   openGraph: {
     title: "Ressources | Weblancia Academy",
     description: "Accédez à nos ressources gratuites : templates, guides, cheatsheets et outils pour votre apprentissage.",
     url: `${siteConfig.url}/academy/resources`,
+    siteName: "Weblancia",
+    locale: "fr_FR",
+    alternateLocale: ["en_US", "ar_SA"],
+    images: [{ url: "/images/og/og.svg", width: 1200, height: 630 }],
   },
+  twitter: { card: "summary_large_image", site: "@weblancia", creator: "@weblancia", title: "Ressources | Weblancia Academy", description: "Accédez à nos ressources gratuites pour votre apprentissage.", images: ["/images/og/og.svg"] },
+  robots: { index: true, follow: true, googleBot: { index: true, follow: true, "max-image-preview": "large" } },
 }
 
+export const revalidate = 3600
+
 export default async function ResourcesPage() {
-  const resources = await getPublishedResources().catch(() => [])
+  const resources = await prisma.resource.findMany({ where: { isPublished: true }, include: { category: true }, orderBy: { createdAt: "desc" } }).catch(() => [])
 
   return (
     <>
+      <CollectionPageJsonLd name="Ressources | Weblancia Academy" description="Accédez à nos ressources gratuites : templates, guides, cheatsheets et outils pour votre apprentissage." url={`${siteConfig.url}/academy/resources`} numberOfItems={resources.length} />
       <SectionWrapper>
         <Container>
           <AnimatedReveal>

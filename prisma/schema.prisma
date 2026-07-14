@@ -20,14 +20,15 @@ model Role {
 }
 
 model User {
-  id        Int      @id @default(autoincrement())
-  email     String   @unique @db.VarChar(255)
-  password  String   @db.VarChar(255)
-  name      String   @db.VarChar(100)
-  roleId    Int
-  isActive  Boolean  @default(true)
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id           Int      @id @default(autoincrement())
+  email        String   @unique @db.VarChar(255)
+  password     String   @db.VarChar(255)
+  name         String   @db.VarChar(100)
+  roleId       Int
+  isActive     Boolean  @default(true)
+  tokenVersion Int      @default(0)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
 
   role   Role @relation(fields: [roleId], references: [id], onDelete: Restrict)
   leads  Lead[]
@@ -144,6 +145,7 @@ model Project {
   @@index([isFeatured])
   @@index([isActive])
   @@index([displayOrder])
+  @@index([isActive, isFeatured, displayOrder])
 }
 
 model ProjectImage {
@@ -207,9 +209,8 @@ model BlogPost {
   seoMetadata SeoMetadata? @relation(fields: [seoMetadataId], references: [id], onDelete: SetNull)
 
   @@index([categoryId])
-  @@index([publishedAt])
-  @@index([isPublished])
-  @@index([isFeatured])
+  @@index([isPublished, publishedAt])
+  @@index([isPublished, isFeatured, publishedAt])
 }
 
 // ── Testimonials ────────────────────────────────────────────
@@ -308,7 +309,8 @@ model Course {
   registrations CourseRegistration[]
   sessions      CourseSession[]
 
-  @@index([isPublished])
+  @@index([isPublished, isFeatured])
+  @@index([isPublished, academyCategoryId])
   @@index([isFeatured])
   @@index([academyCategoryId])
   @@index([level])
@@ -589,6 +591,38 @@ model TeamMember {
   isActive     Boolean  @default(true)
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
+}
+
+// ── Audit Log ──────────────────────────────────────────────
+
+model AuditLog {
+  id          Int      @id @default(autoincrement())
+  action      String   @db.VarChar(50)
+  entity      String   @db.VarChar(50)
+  entityId    String?  @db.VarChar(50)
+  description String   @db.Text
+  userId      Int?
+  metadata    Json?
+  ip          String?  @db.VarChar(50)
+  userAgent   String?  @db.Text
+  createdAt   DateTime @default(now())
+
+  @@index([action])
+  @@index([entity])
+  @@index([userId])
+  @@index([createdAt])
+  @@index([entity, entityId])
+}
+
+// ── Rate Limit ─────────────────────────────────────────────
+
+model RateLimit {
+  id        Int      @id @default(autoincrement())
+  key       String   @db.VarChar(255)
+  createdAt DateTime @default(now())
+
+  @@index([key, createdAt])
+  @@index([createdAt])
 }
 
 // ── Settings ────────────────────────────────────────────────

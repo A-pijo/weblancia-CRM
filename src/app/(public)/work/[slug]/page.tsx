@@ -6,43 +6,72 @@ import { SectionWrapper } from "@/components/shared/section-wrapper"
 import { Container } from "@/components/shared/container"
 import { AnimatedReveal } from "@/components/shared/animated-reveal"
 import { Badge } from "@/components/ui/badge"
-import { ArrowRight, ChartBar } from "@/components/icons"
+import { ArrowRight } from "@/components/icons"
 import { Breadcrumbs } from "@/components/layout/breadcrumbs"
 import { ProjectJsonLd } from "@/components/shared/json-ld"
-import { getProjectBySlug, getRelatedProjects, getAdjacentProjects } from "@/lib/projects/queries"
+import { prisma } from "@/lib/database/prisma"
 import { siteConfig } from "@/lib/constants/site"
 
 type Props = { params: Promise<{ slug: string }> }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params
-  const project = await getProjectBySlug(slug)
+  const project = await prisma.project.findUnique({
+    where: { slug },
+    include: { images: { orderBy: { displayOrder: "asc" } } },
+  })
   if (!project) return { title: "Projet non trouvé | Weblancia" }
   return {
     title: `${project.title} | Weblancia`,
     description: project.description ?? undefined,
+    keywords: `Weblancia, ${project.title}, ${project.industry ?? "projet digital"}, réalisation, portfolio, Casablanca`,
     alternates: { canonical: `${siteConfig.url}/work/${project.slug}` },
     openGraph: {
       title: project.title,
       description: project.description ?? undefined,
       url: `${siteConfig.url}/work/${project.slug}`,
-      images: project.featuredImage ? [{ url: project.featuredImage }] : undefined,
+      siteName: "Weblancia",
+      locale: "fr_FR",
+      alternateLocale: ["en_US", "ar_SA"],
+      type: "article",
+      images: project.featuredImage ? [{ url: project.featuredImage, width: 1200, height: 630 }] : [{ url: "/images/og/og.svg", width: 1200, height: 630 }],
     },
     twitter: {
       card: "summary_large_image",
+      site: "@weblancia",
+      creator: "@weblancia",
       title: project.title,
       description: project.description ?? undefined,
+      images: project.featuredImage ? [project.featuredImage] : ["/images/og/og.svg"],
     },
+    robots: { index: true, follow: true, googleBot: { index: true, follow: true, "max-image-preview": "large" } },
   }
 }
 
+export const revalidate = 3600
+
 export default async function WorkDetailPage({ params }: Props) {
   const { slug } = await params
-  const project = await getProjectBySlug(slug)
+  const project = await prisma.project.findUnique({
+    where: { slug },
+    include: { images: { orderBy: { displayOrder: "asc" } } },
+  })
   if (!project) notFound()
 
-  const related = await getRelatedProjects(project.id)
-  const { prev, next } = await getAdjacentProjects(project.id)
+  const related = await prisma.project.findMany({
+    where: { isActive: true, industry: project.industry ?? undefined, id: { not: project.id } },
+    orderBy: { displayOrder: "asc" },
+    take: 3,
+  })
+  const { prev, next } = await (async () => {
+    const currentOrder = project.displayOrder
+    if (currentOrder == null) return { prev: null, next: null }
+    const [prev, next] = await Promise.all([
+      prisma.project.findFirst({ where: { displayOrder: { lt: currentOrder }, isActive: true }, orderBy: { displayOrder: "desc" } }),
+      prisma.project.findFirst({ where: { displayOrder: { gt: currentOrder }, isActive: true }, orderBy: { displayOrder: "asc" } }),
+    ])
+    return { prev, next }
+  })()
 
   const testimonial = project.clientTestimonial as { quote?: string; author?: string; role?: string } | null
   const results = project.results as { label: string; value: string }[] | null
@@ -74,7 +103,7 @@ export default async function WorkDetailPage({ params }: Props) {
                   <div className="grid grid-cols-2 gap-3 sm:gap-4 mb-8">
                     {results.map((kpi, i) => (
                       <div key={i} className="p-4 bg-success-bg rounded-radius-lg">
-                        <p className="text-h3 font-bold text-success">{kpi.value}</p>
+                        <p className="text-h2 font-bold text-success">{kpi.value}</p>
                         <p className="text-caption text-success">{kpi.label}</p>
                       </div>
                     ))}
@@ -114,13 +143,13 @@ export default async function WorkDetailPage({ params }: Props) {
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
               {project.challenge && (
                 <AnimatedReveal>
-                  <h2 className="text-h3 font-semibold mb-4">Challenge</h2>
+                  <h2 className="text-h2 font-semibold mb-4">Challenge</h2>
                   <p className="text-body text-text-secondary whitespace-pre-line">{project.challenge}</p>
                 </AnimatedReveal>
               )}
               {project.solution && (
                 <AnimatedReveal>
-                  <h2 className="text-h3 font-semibold mb-4">Solution</h2>
+                  <h2 className="text-h2 font-semibold mb-4">Solution</h2>
                   <p className="text-body text-text-secondary whitespace-pre-line">{project.solution}</p>
                 </AnimatedReveal>
               )}
@@ -134,7 +163,7 @@ export default async function WorkDetailPage({ params }: Props) {
         <SectionWrapper>
           <Container>
             <AnimatedReveal>
-              <h2 className="text-h3 font-semibold mb-8 text-center">Gallery</h2>
+              <h2 className="text-h2 font-semibold mb-8 text-center">Gallery</h2>
             </AnimatedReveal>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {project.images.map((img, i) => (
@@ -154,7 +183,7 @@ export default async function WorkDetailPage({ params }: Props) {
         <SectionWrapper bgSecondary>
           <Container>
             <AnimatedReveal>
-              <h2 className="text-h3 font-semibold mb-6 text-center">Services Provided</h2>
+              <h2 className="text-h2 font-semibold mb-6 text-center">Services Provided</h2>
             </AnimatedReveal>
             <div className="flex flex-wrap justify-center gap-3">
               {servicesProvided.map((svc) => (
@@ -170,7 +199,7 @@ export default async function WorkDetailPage({ params }: Props) {
         <SectionWrapper>
           <Container>
             <AnimatedReveal>
-              <h2 className="text-h3 font-semibold mb-6">Case Study</h2>
+              <h2 className="text-h2 font-semibold mb-6">Case Study</h2>
               <div className="prose prose-invert max-w-none whitespace-pre-line text-body text-text-secondary">
                 {project.fullCaseStudy}
               </div>
@@ -208,7 +237,7 @@ export default async function WorkDetailPage({ params }: Props) {
         <SectionWrapper>
           <Container>
             <AnimatedReveal>
-              <h2 className="text-h3 font-semibold mb-6 text-center">Related Projects</h2>
+              <h2 className="text-h2 font-semibold mb-6 text-center">Related Projects</h2>
             </AnimatedReveal>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
               {related.map((rel, i) => (
@@ -235,7 +264,7 @@ export default async function WorkDetailPage({ params }: Props) {
       <SectionWrapper>
         <Container>
           <div className="text-center py-12">
-            <h2 className="text-h3 font-semibold mb-4">Intéressé par un projet similaire ?</h2>
+            <h2 className="text-h2 font-semibold mb-4">Intéressé par un projet similaire ?</h2>
             <Link href="/start-project" className="inline-flex items-center gap-2 bg-accent text-white px-6 py-3 rounded-radius-md font-medium hover:bg-accent-hover transition-colors">
               Démarrer votre projet <ArrowRight size={16} />
             </Link>

@@ -1,0 +1,18 @@
+# Existing Backlinks for app.weblancia.com
+# Note: A comprehensive backlink analysis requires Ahrefs, Majestic, or Semrush API.
+# The following are common platforms where Weblancia is likely present based on the codebase analysis.
+
+platform,url,type,status,notes
+GitHub (repository),github.com/weblancia,Code Repository,CONFIRMED,Source code repository visible in project
+Google Search Console,search.google.com/search-console,SEO Tool,CONFIRMED,Configured in project
+Google Analytics,analytics.google.com,Analytics,CONFIRMED,Configured in project
+Google Business Profile,business.google.com,Local Listing,PENDING,Requires verification - recommended
+LinkedIn,linkedin.com/company/weblancia,Social Profile,PENDING,Verify company page exists
+Facebook,facebook.com/weblancia,Social Profile,PENDING,Verify business page exists
+Instagram,instagram.com/weblancia,Social Profile,PENDING,Verify profile exists
+Twitter/X,twitter.com/weblancia,Social Profile,PENDING,Verify handle exists
+
+# Note: To get accurate existing backlink data, run:
+# ahrefs.com - Site Explorer: app.weblancia.com
+# semrush.com - Backlink Analytics: app.weblancia.com
+# majestic.com - Site Explorer: app.weblancia.com

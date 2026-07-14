@@ -4,22 +4,31 @@ import { Container } from "@/components/shared/container"
 import { AnimatedReveal } from "@/components/shared/animated-reveal"
 import { SearchPageClient } from "./search-page-client"
 import { siteConfig } from "@/lib/constants/site"
+import { SearchResultsPageJsonLd } from "@/components/shared/json-ld"
 
 export const metadata: Metadata = {
   title: "Recherche | Weblancia",
   description: "Recherchez des projets, services, articles et formations sur Weblancia.",
+  keywords: ["Weblancia", "recherche", "projets", "services", "blog", "formations"],
   alternates: { canonical: `${siteConfig.url}/search` },
   openGraph: {
     title: "Recherche | Weblancia",
     description: "Recherchez des projets, services, articles et formations sur Weblancia.",
     url: `${siteConfig.url}/search`,
+    siteName: "Weblancia",
+    locale: "fr_FR",
+    alternateLocale: ["en_US", "ar_SA"],
+    images: [{ url: "/images/og/og.svg", width: 1200, height: 630 }],
   },
+  twitter: { card: "summary_large_image", site: "@weblancia", creator: "@weblancia", title: "Recherche | Weblancia", description: "Recherchez des projets, services, articles et formations sur Weblancia.", images: ["/images/og/og.svg"] },
+  robots: { index: true, follow: true, googleBot: { index: true, follow: true, "max-image-preview": "large" } },
 }
 
 export default function SearchPage() {
   return (
     <SectionWrapper>
       <Container>
+        <SearchResultsPageJsonLd />
         <AnimatedReveal>
           <h1 className="text-h1 mb-4">Recherche</h1>
           <p className="text-body text-text-secondary max-w-2xl mb-8">

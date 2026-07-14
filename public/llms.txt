@@ -1,0 +1,50 @@
+# Weblancia — Premium Digital Agency
+
+## About
+Weblancia is a premium digital agency based in Fès, Morocco, specializing in web development, UI/UX design, SEO, branding, and digital marketing for ambitious businesses across French and English markets.
+
+## Key Facts
+- Founded: 2018
+- Headquarters: Fès, Morocco
+- Services: Web Development, UI/UX Design, SEO, Branding, Digital Marketing, Consulting, E-commerce, Mobile Development
+- Website: https://app.weblancia.com
+- Contact: contact@weblancia.com
+- Academy: academy@weblancia.ma
+- Phone: +212 6 64 83 68 41
+- Social: LinkedIn (https://linkedin.com/company/weblancia), Twitter (@weblancia), Instagram (@weblancia), YouTube (@weblancia)
+- Business Hours: Monday - Friday, 9:00 - 18:00
+- Service Areas: Morocco (Casablanca, Rabat, Marrakech, Fès) and international
+
+## Services
+- **Web Development**: Custom websites, e-commerce platforms, web applications using Next.js, React, TypeScript, Node.js, PostgreSQL
+- **UI/UX Design**: User experience research, wireframing, prototyping, visual design, accessibility audits
+- **SEO**: Technical SEO, content strategy, local SEO, link building, Core Web Vitals optimization
+- **Branding**: Brand identity, logo design, brand guidelines, visual systems, brand strategy
+- **Digital Marketing**: Social media strategy, content marketing, email marketing, paid advertising
+- **Consulting**: Digital strategy, technology advisory, digital transformation, IT consulting
+- **E-commerce**: Shopify, WooCommerce, custom e-commerce solutions, payment integration
+- **Mobile Development**: Cross-platform mobile apps, React Native, Progressive Web Apps
+
+## Academy
+Weblancia Academy offers courses, workshops, certificates and resources in web development, design, and digital marketing. Located at https://app.weblancia.com/academy
+
+## Content
+- Blog: https://app.weblancia.com/insights — articles on web development, design, SEO, and digital strategy
+- Case Studies: https://app.weblancia.com/work — portfolio of client projects
+- Academy: https://app.weblancia.com/academy — educational resources (courses, workshops, certificates)
+- Services: https://app.weblancia.com/services — full service catalog
+- Sitemap: https://app.weblancia.com/sitemap — complete site index
+
+## Related Links
+- Consultation: https://app.weblancia.com/consultation — book a personalized strategy session
+- Careers: https://app.weblancia.com/about/careers — join our team
+- Contact: https://app.weblancia.com/contact — get in touch
+- Legal: https://app.weblancia.com/legal — terms, privacy policy, cookie policy
+
+## FAQs
+- What does Weblancia do? A premium digital agency offering end-to-end web development, design, SEO, and marketing services.
+- Where is Weblancia based? Fès, Morocco, serving clients globally.
+- What technologies does Weblancia use? Next.js, React, TypeScript, Prisma, PostgreSQL, Tailwind CSS, Node.js.
+- How to contact Weblancia? Email contact@weblancia.com or call +212 6 64 83 68 41.
+- Does Weblancia offer training? Yes, via Weblancia Academy at https://app.weblancia.com/academy
+- What industries does Weblancia serve? E-commerce, SaaS, education, healthcare, finance, and more.

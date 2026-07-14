@@ -2,13 +2,16 @@
 
 import { motion } from "framer-motion"
 import Link from "next/link"
+import dynamic from "next/dynamic"
 import { StatCard } from "@/components/admin/stat-card"
 import { SectionCard } from "@/components/admin/section-card"
 import { ActivityCard } from "@/components/admin/activity-card"
-import { RevenueAreaChart, TrafficLineChart } from "@/components/admin/charts/area-chart"
-import { ProjectsBarChart } from "@/components/admin/charts/bar-chart"
-import { ProjectStatusPieChart } from "@/components/admin/charts/pie-chart"
-import type { DashboardStats, RecentActivityItem, PendingTask } from "@/lib/dashboard/queries"
+import type { DashboardStats, RecentActivityItem, PendingTask } from "@/types/dashboard"
+
+const RevenueAreaChart = dynamic(() => import("@/components/admin/charts/area-chart").then((m) => m.RevenueAreaChart), { ssr: false })
+const TrafficLineChart = dynamic(() => import("@/components/admin/charts/area-chart").then((m) => m.TrafficLineChart), { ssr: false })
+const ProjectsBarChart = dynamic(() => import("@/components/admin/charts/bar-chart").then((m) => m.ProjectsBarChart), { ssr: false })
+const ProjectStatusPieChart = dynamic(() => import("@/components/admin/charts/pie-chart").then((m) => m.ProjectStatusPieChart), { ssr: false })
 
 interface DashboardHomeClientProps {
   greeting: string

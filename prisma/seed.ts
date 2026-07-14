@@ -64,6 +64,11 @@ async function main() {
         { name: "SuperAdmin", description: "Full access to all features" },
         { name: "Admin", description: "Can manage all content, cannot manage SuperAdmin accounts" },
         { name: "Editor", description: "Can manage services, blog, portfolio, academy, testimonials, FAQ" },
+        { name: "Author", description: "Can create and edit content" },
+        { name: "Support", description: "Can manage leads and support tickets" },
+        { name: "Instructor", description: "Can manage academy courses and workshops" },
+        { name: "Client", description: "Limited access to own resources" },
+        { name: "Guest", description: "No admin access" },
       ],
     })
     console.log("Roles created")
@@ -79,7 +84,7 @@ async function main() {
       where: { email: "admin@weblancia.com" },
       data: { password, name: "Super Admin", isActive: true, roleId: superAdminRole!.id },
     })
-    console.log("Admin account updated: admin@weblancia.com / Admin123!")
+    console.log("Admin account updated")
   } else {
     await db.user.create({
       data: {
@@ -90,7 +95,7 @@ async function main() {
         isActive: true,
       },
     })
-    console.log("Admin account created: admin@weblancia.com / Admin123!")
+    console.log("Admin account created")
   }
 
   const existingCategories = await db.serviceCategory.findMany()

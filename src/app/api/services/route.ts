@@ -1,35 +1,29 @@
-import { NextResponse } from "next/server"
-import { getServices, createService, getServiceCategories } from "@/lib/services/queries"
-import { serviceSchema } from "@/lib/validations/services"
+import { serviceService } from "@/lib/repositories/services/service.service"
+import { apiRoute, apiBody } from "@/lib/security/api-handler"
+import { success, created, badRequest } from "@/lib/security/response"
+import { createAuditLog } from "@/lib/security/audit"
+import { serviceSchema } from "@/lib/validation/services"
 
-export async function GET(req: Request) {
-  const { searchParams } = new URL(req.url)
-
-  const result = await getServices({
+export const GET = apiRoute(async (ctx) => {
+  const { searchParams } = new URL(ctx.request.url)
+  const result = await serviceService.list({
     search: searchParams.get("search") ?? undefined,
-    categoryId: searchParams.get("categoryId") ? Number(searchParams.get("categoryId")) : undefined,
-    isActive: searchParams.has("isActive") ? searchParams.get("isActive") === "true" : undefined,
-    isFeatured: searchParams.has("isFeatured") ? searchParams.get("isFeatured") === "true" : undefined,
-    sort: searchParams.get("sort") ?? undefined,
-    order: (searchParams.get("order") as "asc" | "desc") ?? undefined,
+    category: searchParams.get("category") ?? undefined,
     page: searchParams.get("page") ? Number(searchParams.get("page")) : undefined,
     limit: searchParams.get("limit") ? Number(searchParams.get("limit")) : undefined,
   })
+  return success(result)
+}, { rateLimit: { max: 30 } })
 
-  return NextResponse.json(result)
-}
+export const POST = apiRoute(async (ctx) => {
+  const body = await apiBody(serviceSchema.strict())(ctx.request)
+  if (body.error) return body.error
+  const service = await serviceService.create(body.data)
 
-export async function POST(req: Request) {
-  try {
-    const body = await req.json()
-    const parsed = serviceSchema.safeParse(body)
-    if (!parsed.success) {
-      return NextResponse.json({ error: parsed.error.flatten() }, { status: 400 })
-    }
-    const service = await createService(parsed.data as unknown as Record<string, unknown>)
-    return NextResponse.json(service, { status: 201 })
-  } catch (e) {
-    const message = e instanceof Error ? e.message : "Internal error"
-    return NextResponse.json({ error: message }, { status: 500 })
-  }
-}
+  createAuditLog({
+    action: "CREATE", entity: "SERVICE", entityId: service.id,
+    description: `Service "${service.title}" created`, userId: ctx.auth.session.userId, request: ctx.request,
+  })
+
+  return created(service)
+}, { auth: true, admin: true })

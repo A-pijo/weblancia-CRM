@@ -1,4 +1,6 @@
 import type { Metadata } from "next"
+import { WebPageJsonLd } from "@/components/shared/json-ld"
+import type { TeamMember } from "@/types/team"
 import { HeroDefault } from "@/components/sections/hero/hero-default"
 import { SectionWrapper } from "@/components/shared/section-wrapper"
 import { Container } from "@/components/shared/container"
@@ -6,20 +8,28 @@ import { AnimatedReveal } from "@/components/shared/animated-reveal"
 import { CTABanner } from "@/components/sections/cta-banner"
 import { SectionHeader } from "@/components/shared/section-header"
 import { TeamCard } from "@/components/cards/team-card"
-import type { TeamMember } from "@/types/team"
 import { siteConfig } from "@/lib/constants/site"
-import { getActiveTeamMembers } from "@/lib/team/queries"
+import { prisma } from "@/lib/database/prisma"
 
 export const metadata: Metadata = {
   title: "Notre Équipe | Weblancia",
   description: "Rencontrez l'équipe de Weblancia : des experts passionnés par le digital et l'innovation.",
+  keywords: ["Weblancia", "équipe", "experts", "Casablanca", "développement web", "marketing digital"],
   alternates: { canonical: `${siteConfig.url}/about/team` },
   openGraph: {
     title: "Notre Équipe | Weblancia",
     description: "Rencontrez l'équipe de Weblancia : des experts passionnés par le digital et l'innovation.",
     url: `${siteConfig.url}/about/team`,
+    siteName: "Weblancia",
+    locale: "fr_FR",
+    alternateLocale: ["en_US", "ar_SA"],
+    images: [{ url: "/images/og/og.svg", width: 1200, height: 630 }],
   },
+  twitter: { card: "summary_large_image", site: "@weblancia", creator: "@weblancia", title: "Notre Équipe | Weblancia", description: "Rencontrez l'équipe de Weblancia : des experts passionnés par le digital et l'innovation.", images: ["/images/og/og.svg"] },
+  robots: { index: true, follow: true, googleBot: { index: true, follow: true, "max-image-preview": "large" } },
 }
+
+export const revalidate = 3600
 
 const values = [
   { title: "Excellence", description: "Nous visons la qualité maximale dans chaque projet, de la conception à la livraison." },
@@ -29,10 +39,25 @@ const values = [
 ]
 
 export default async function TeamPage() {
-  const teamMembers: TeamMember[] = await getActiveTeamMembers()
+  const dbMembers = await prisma.teamMember.findMany({
+    where: { isActive: true },
+    orderBy: { displayOrder: "asc" },
+  })
+  const teamMembers: TeamMember[] = dbMembers.map((r) => ({
+    id: r.id,
+    name: r.name,
+    role: r.role,
+    bio: r.bio ?? "",
+    photo: r.image ?? undefined,
+    social: {
+      linkedin: r.linkedin ?? undefined,
+      twitter: r.twitter ?? undefined,
+    },
+  }))
 
   return (
     <>
+      <WebPageJsonLd name="Notre Équipe | Weblancia" description="Rencontrez l'équipe de Weblancia : des experts passionnés par le digital et l'innovation." url={`${siteConfig.url}/about/team`} />
       <HeroDefault
         headline="Notre Équipe"
         subheadline="Des experts passionnés par le digital et l'innovation, mobilisés pour votre réussite."

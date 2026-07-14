@@ -79,9 +79,14 @@ function StatsCounter({ items }: StatsCounterProps) {
     <section className="py-12 md:py-16 lg:py-24 bg-bg">
       <Container>
         <AnimatedReveal>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-8 md:gap-12">
+          <div className="relative grid grid-cols-2 md:grid-cols-4 gap-8 md:gap-0">
             {items.map((stat, index) => (
-              <StatItem key={stat.label} stat={stat} index={index} />
+              <div key={stat.label} className="relative md:px-8">
+                {index > 0 && (
+                  <div className="hidden md:block absolute left-0 top-1/2 -translate-y-1/2 w-px h-12 bg-border" />
+                )}
+                <StatItem stat={stat} index={index} />
+              </div>
             ))}
           </div>
         </AnimatedReveal>

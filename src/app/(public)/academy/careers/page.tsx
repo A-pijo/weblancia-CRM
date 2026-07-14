@@ -1,25 +1,34 @@
 import { Metadata } from "next"
+import { WebPageJsonLd } from "@/components/shared/json-ld"
 import { SectionWrapper } from "@/components/shared/section-wrapper"
 import { Container } from "@/components/shared/container"
 import { AnimatedReveal } from "@/components/shared/animated-reveal"
 import { CTABanner } from "@/components/sections/cta-banner"
 import { SectionHeader } from "@/components/shared/section-header"
 import { siteConfig } from "@/lib/constants/site"
-import { getPublishedCourses } from "@/lib/academy/courses/queries"
-import { getPublishedCertificates } from "@/lib/academy/certificates/queries"
+import { prisma } from "@/lib/database/prisma"
 import { BookOpen, CheckCircle, ArrowRight } from "@/components/icons"
 import Link from "next/link"
 
 export const metadata: Metadata = {
   title: "Carrières | Weblancia Academy",
   description: "Accompagnement carrière : coaching, offres d'emploi et conseils pour booster votre parcours dans le digital.",
+  keywords: ["Weblancia", "academy", "carrières", "emploi", "coaching", "conseils", "digital"],
   alternates: { canonical: `${siteConfig.url}/academy/careers` },
   openGraph: {
     title: "Carrières | Weblancia Academy",
     description: "Accompagnement carrière : coaching, offres d'emploi et conseils pour booster votre parcours dans le digital.",
     url: `${siteConfig.url}/academy/careers`,
+    siteName: "Weblancia",
+    locale: "fr_FR",
+    alternateLocale: ["en_US", "ar_SA"],
+    images: [{ url: "/images/og/og.svg", width: 1200, height: 630 }],
   },
+  twitter: { card: "summary_large_image", site: "@weblancia", creator: "@weblancia", title: "Carrières | Weblancia Academy", description: "Accompagnement carrière pour booster votre parcours dans le digital.", images: ["/images/og/og.svg"] },
+  robots: { index: true, follow: true, googleBot: { index: true, follow: true, "max-image-preview": "large" } },
 }
+
+export const revalidate = 3600
 
 const services = [
   { title: "Coaching personnalisé", description: "Séances individuelles avec un expert pour définir votre projet professionnel et construire votre plan de carrière." },
@@ -37,12 +46,13 @@ const steps = [
 
 export default async function CareersPage() {
   const [courses, certificates] = await Promise.all([
-    getPublishedCourses(6).catch(() => []),
-    getPublishedCertificates(6).catch(() => []),
+    prisma.course.findMany({ where: { isPublished: true }, include: { category: true }, orderBy: { createdAt: "desc" }, take: 6 }).catch(() => []),
+    prisma.certificate.findMany({ where: { isPublished: true }, include: { category: true }, orderBy: { createdAt: "desc" }, take: 6 }).catch(() => []),
   ])
 
   return (
     <>
+      <WebPageJsonLd name="Carrières | Weblancia Academy" description="Accompagnement carrière : coaching, offres d'emploi et conseils pour booster votre parcours dans le digital." url={`${siteConfig.url}/academy/careers`} />
       <SectionWrapper>
         <Container>
           <AnimatedReveal>

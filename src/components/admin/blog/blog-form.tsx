@@ -3,7 +3,7 @@
 import { useState, useEffect, useCallback, useRef } from "react"
 import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
-import { blogSchema, type BlogFormData, calculateReadingTime } from "@/lib/validations/blog"
+import { blogSchema, type BlogFormData, calculateReadingTime } from "@/lib/validation/blog"
 import { cn } from "@/lib/utils/cn"
 
 interface CategoryOption {

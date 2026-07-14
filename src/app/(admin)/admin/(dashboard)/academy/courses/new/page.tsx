@@ -4,7 +4,7 @@ import { useState, useEffect } from "react"
 import { useRouter } from "next/navigation"
 import { PageHeader } from "@/components/admin/page-header"
 import { CourseForm } from "@/components/admin/academy/course-form"
-import type { CourseFormData } from "@/lib/validations/academy"
+import type { CourseFormData } from "@/lib/validation/academy"
 
 export default function NewCoursePage() {
   const router = useRouter()

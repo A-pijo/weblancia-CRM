@@ -2,7 +2,7 @@
 
 import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
-import { testimonialSchema, type TestimonialFormData } from "@/lib/validations/testimonials"
+import { testimonialSchema, type TestimonialFormData } from "@/lib/validation/testimonials"
 
 interface TestimonialFormProps {
   defaultValues?: Partial<TestimonialFormData>

@@ -1,43 +1,75 @@
-import { NextResponse } from "next/server"
-import { getServiceById, updateService, softDeleteService, permanentlyDeleteService, duplicateService, toggleServiceStatus } from "@/lib/services/queries"
-import { serviceSchema } from "@/lib/validations/services"
+import { serviceService } from "@/lib/repositories/services/service.service"
+import { apiRoute, apiBody } from "@/lib/security/api-handler"
+import { success, notFound } from "@/lib/security/response"
+import { createAuditLog } from "@/lib/security/audit"
+import { NotFoundError } from "@/lib/errors"
+import { serviceSchema } from "@/lib/validation/services"
+import { z } from "zod"
 
-export async function GET(_req: Request, { params }: { params: Promise<{ id: string }> }) {
-  const { id } = await params
-  const service = await getServiceById(Number(id))
-  if (!service) return NextResponse.json({ error: "Not found" }, { status: 404 })
-  return NextResponse.json(service)
-}
+const serviceUpdateSchema = serviceSchema
+  .partial()
+  .extend({ _action: z.enum(["duplicate", "toggle"]).optional() })
+  .strict()
 
-export async function PATCH(req: Request, { params }: { params: Promise<{ id: string }> }) {
-  const { id } = await params
-  const body = await req.json()
+const serviceDeleteSchema = z.object({
+  permanent: z.literal(true).optional(),
+}).strict()
 
-  if (body._action === "duplicate") {
-    const dup = await duplicateService(Number(id))
-    return NextResponse.json(dup)
+export const GET = apiRoute(async (ctx) => {
+  try {
+    const service = await serviceService.getById(Number(ctx.params.id))
+    return success(service)
+  } catch (error) {
+    if (error instanceof NotFoundError) return notFound()
+    throw error
+  }
+})
+
+export const PATCH = apiRoute(async (ctx) => {
+  const id = Number(ctx.params.id)
+  const body = await apiBody(serviceUpdateSchema)(ctx.request)
+  if (body.error) return body.error
+
+  if (body.data._action === "duplicate") {
+    const dup = await serviceService.duplicate(id)
+    createAuditLog({
+      action: "CREATE", entity: "SERVICE", entityId: dup.id,
+      description: `Service #${id} duplicated as "${dup.title}"`, userId: ctx.auth.session.userId, request: ctx.request,
+    })
+    return success(dup)
   }
 
-  if (body._action === "toggle") {
-    const updated = await toggleServiceStatus(Number(id), body.isActive)
-    return NextResponse.json(updated)
+  if (body.data._action === "toggle") {
+    const updated = await serviceService.toggleStatus(id)
+    createAuditLog({
+      action: "UPDATE", entity: "SERVICE", entityId: id,
+      description: `Service #${id} status toggled to ${updated.isActive}`, userId: ctx.auth.session.userId, request: ctx.request,
+    })
+    return success(updated)
   }
 
-  const parsed = serviceSchema.partial().safeParse(body)
-  if (!parsed.success) {
-    return NextResponse.json({ error: parsed.error.flatten() }, { status: 400 })
-  }
-  const updated = await updateService(Number(id), parsed.data as unknown as Record<string, unknown>)
-  return NextResponse.json(updated)
-}
+  const { _action: _a, ...updateData } = body.data
+  const updated = await serviceService.update(id, updateData)
+  createAuditLog({
+    action: "UPDATE", entity: "SERVICE", entityId: id,
+    description: `Service #${id} updated`, userId: ctx.auth.session.userId, request: ctx.request,
+  })
+  return success(updated)
+}, { auth: true, admin: true })
 
-export async function DELETE(req: Request, { params }: { params: Promise<{ id: string }> }) {
-  const { id } = await params
-  const body = await req.json().catch(() => ({}))
-  if (body.permanent) {
-    await permanentlyDeleteService(Number(id))
+export const DELETE = apiRoute(async (ctx) => {
+  const id = Number(ctx.params.id)
+  const body = await apiBody(serviceDeleteSchema)(ctx.request)
+  if (body.error) return body.error
+
+  if (body.data.permanent) {
+    await serviceService.permanentlyDelete(id)
   } else {
-    await softDeleteService(Number(id))
+    await serviceService.delete(id)
   }
-  return NextResponse.json({ success: true })
-}
+  createAuditLog({
+    action: "DELETE", entity: "SERVICE", entityId: id,
+    description: `Service #${id} ${body.data.permanent ? "permanently deleted" : "soft deleted"}`, userId: ctx.auth.session.userId, request: ctx.request,
+  })
+  return success({ success: true })
+}, { auth: true, admin: true })

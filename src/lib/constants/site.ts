@@ -2,7 +2,7 @@ export const siteConfig = {
   name: "Weblancia",
   tagline: "Premium Digital Agency",
   description: "Web design, development, SEO & branding agency based in Fès, Morocco. We craft digital experiences that drive results.",
-  url: "https://app.weblancia.com",
+  url: process.env.SITE_URL || "https://app.weblancia.com",
   locale: "fr_FR",
   locales: ["fr", "en", "ar"],
   defaultLocale: "fr",

@@ -6,28 +6,48 @@ import { Container } from "@/components/shared/container"
 import { AnimatedReveal } from "@/components/shared/animated-reveal"
 import { CTABanner } from "@/components/sections/cta-banner"
 import { siteConfig } from "@/lib/constants/site"
-import { getPublishedCourses } from "@/lib/academy/courses/queries"
-import { getAcademyCategories } from "@/lib/academy/categories/queries"
-import { getPublishedWorkshops } from "@/lib/academy/workshops/queries"
+import { prisma } from "@/lib/database/prisma"
 import { ArrowRight, Clock, CalendarBlank, Monitor } from "@/components/icons"
+import { CollectionPageJsonLd } from "@/components/shared/json-ld"
 
 export const metadata: Metadata = {
   title: "Academy | Weblancia",
   description: "Formez-vous aux métiers du digital avec Weblancia Academy : cours, ateliers, ressources et certifications.",
+  keywords: ["Weblancia", "academy", "formation", "cours en ligne", "ateliers", "certification", "compétences digitales", "Casablanca"],
   alternates: { canonical: `${siteConfig.url}/academy` },
-  openGraph: { title: "Academy | Weblancia", description: "Formez-vous aux métiers du digital avec Weblancia Academy : cours, ateliers, ressources et certifications.", url: `${siteConfig.url}/academy` },
-  twitter: { card: "summary_large_image", title: "Academy | Weblancia", description: "Formez-vous aux métiers du digital avec Weblancia Academy : cours, ateliers, ressources et certifications." },
+  openGraph: {
+    title: "Academy | Weblancia",
+    description: "Formez-vous aux métiers du digital avec Weblancia Academy : cours, ateliers, ressources et certifications.",
+    url: `${siteConfig.url}/academy`,
+    siteName: "Weblancia",
+    locale: "fr_FR",
+    alternateLocale: ["en_US", "ar_SA"],
+    type: "website",
+    images: [{ url: "/images/og/og.svg", width: 1200, height: 630 }],
+  },
+  twitter: {
+    card: "summary_large_image",
+    site: "@weblancia",
+    creator: "@weblancia",
+    title: "Academy | Weblancia",
+    description: "Formez-vous aux métiers du digital avec Weblancia Academy : cours, ateliers, ressources et certifications.",
+    images: ["/images/og/og.svg"],
+  },
+  robots: { index: true, follow: true, googleBot: { index: true, follow: true, "max-image-preview": "large" } },
 }
+
+export const revalidate = 3600
 
 export default async function AcademyPage() {
   const [courses, categories, workshops] = await Promise.all([
-    getPublishedCourses(4).catch(() => []),
-    getAcademyCategories().catch(() => []),
-    getPublishedWorkshops(3).catch(() => []),
+    prisma.course.findMany({ where: { isPublished: true }, include: { category: true }, orderBy: { createdAt: "desc" }, take: 4 }).catch(() => []),
+    prisma.academyCategory.findMany({ orderBy: { displayOrder: "asc" } }).catch(() => []),
+    prisma.workshop.findMany({ where: { isPublished: true }, include: { category: true }, orderBy: { date: "asc" }, take: 3 }).catch(() => []),
   ])
 
   return (
     <>
+      <CollectionPageJsonLd name="Academy | Weblancia" description="Formez-vous aux métiers du digital avec Weblancia Academy" url={`${siteConfig.url}/academy`} numberOfItems={courses.length + workshops.length} />
       <HeroDefault
         headline="Academy"
         subheadline="Formez-vous aux competences digitales les plus recherchees. Cours, ateliers pratiques et ressources pour accelerer votre carriere."

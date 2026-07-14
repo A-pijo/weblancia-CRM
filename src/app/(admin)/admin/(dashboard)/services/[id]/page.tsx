@@ -4,7 +4,7 @@ import { useState, useEffect } from "react"
 import { useRouter, useParams } from "next/navigation"
 import { PageHeader } from "@/components/admin/page-header"
 import { ServiceForm } from "@/components/admin/services/service-form"
-import type { ServiceFormData } from "@/lib/validations/services"
+import type { ServiceFormData } from "@/lib/validation/services"
 import { SectionCard } from "@/components/admin/section-card"
 
 interface Category {

@@ -3,7 +3,7 @@
 import { useState, useEffect, useCallback, useRef } from "react"
 import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
-import { academyCategorySchema, type AcademyCategoryFormData } from "@/lib/validations/academy"
+import { academyCategorySchema, type AcademyCategoryFormData } from "@/lib/validation/academy"
 
 interface CategoryFormProps {
   defaultValues?: Partial<AcademyCategoryFormData>

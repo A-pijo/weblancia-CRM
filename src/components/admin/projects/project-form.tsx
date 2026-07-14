@@ -3,7 +3,7 @@
 import { useState } from "react"
 import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
-import { projectSchema, type ProjectFormData } from "@/lib/validations/project"
+import { projectSchema, type ProjectFormData } from "@/lib/validation/project"
 import { cn } from "@/lib/utils/cn"
 
 interface ProjectFormProps {

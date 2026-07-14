@@ -1,14 +1,8 @@
-import { NextResponse } from "next/server"
-import { globalSearch } from "@/lib/search/engine"
+import { searchService } from "@/lib/repositories/services/search.service"
+import { apiRoute } from "@/lib/security/api-handler"
+import { success } from "@/lib/security/response"
 
-export async function GET(req: Request) {
-  const { searchParams } = new URL(req.url)
-  const q = searchParams.get("q")
-
-  if (q) {
-    const results = await globalSearch(q)
-    return NextResponse.json({ items: results })
-  }
-
-  return NextResponse.json({ items: [] })
-}
+export const GET = apiRoute(async (ctx) => {
+  const q = ctx.request.nextUrl.searchParams.get("q")
+  return success({ items: q ? await searchService.globalSearch(q) : [] })
+}, { rateLimit: { max: 30, by: "ip" } })

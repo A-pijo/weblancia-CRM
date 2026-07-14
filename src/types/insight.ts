@@ -4,6 +4,7 @@ export interface Insight {
   description: string
   category: string
   author: string
+  authorSlug?: string
   date: string
   readTime: string
   image?: string

@@ -48,7 +48,7 @@ export function MegaMenu({ items, isOpen, onClose }: MegaMenuProps) {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
             {items.map((column) => (
               <div key={column.title}>
-                <h3 className="text-caption font-semibold text-text-secondary mb-3">
+                <h3 className="text-h3 font-semibold text-text-secondary mb-3">
                   {column.title}
                 </h3>
                 <ul className="space-y-1.5">

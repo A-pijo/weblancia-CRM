@@ -14,12 +14,14 @@ function NewsletterSignup({
   buttonLabel = "Subscribe",
 }: NewsletterSignupProps) {
   const [email, setEmail] = useState("")
+  const [hpUrl, setHpUrl] = useState("")
   const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">("idle")
   const [error, setError] = useState("")
 
   async function handleSubmit(e: FormEvent) {
     e.preventDefault()
     setError("")
+    if (hpUrl) return
 
     if (!email.trim() || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
       setError("Please enter a valid email address")
@@ -63,6 +65,10 @@ function NewsletterSignup({
       <Container>
         <div className="max-w-md mx-auto">
           <form onSubmit={handleSubmit} className="flex flex-col sm:flex-row gap-3">
+            <div aria-hidden="true" style={{ position: "absolute", left: "-9999px" }}>
+              <label htmlFor="hp_url">URL</label>
+              <input id="hp_url" type="text" value={hpUrl} onChange={(e) => setHpUrl(e.target.value)} tabIndex={-1} autoComplete="off" />
+            </div>
             <div className="flex-1">
               <input
                 type="email"

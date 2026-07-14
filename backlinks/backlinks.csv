@@ -1,0 +1,385 @@
+name,url,submission_url,da_estimate,organic_traffic_estimate,link_type,free_paid,category,country,language,approval_time,difficulty_score,authority_score,relevance_score,expected_seo_value,priority,notes
+Product Hunt,producthunt.com,producthunt.com/posts/new,92,5000000,nofollow,free,startup,USA,en,"1-3 days",40,92,70,89,Critical,Top launch platform; launch-day traffic spikes
+BetaList,betalist.com,betalist.com/submit,75,150000,dofollow,free,startup,USA,en,"1-4 weeks",50,75,75,70,High,Best for pre-launch waitlist; paid queue-skip
+Crunchbase,crunchbase.com,crunchbase.com/startup,92,10000000,dofollow,free,startup,USA,en,"1-7 days",20,92,85,92,Critical,Essential for investors; dofollow backlink
+G2,g2.com,g2.com/authorize,91,80000000,nofollow,freemium,saas,USA,en,"1-3 days",30,91,80,86,Critical,Top B2B review platform; 100M+ buyers/yr
+Capterra,capterra.com,capterra.com/vendors,91,12000000,nofollow,freemium,saas,USA,en,"3-7 days",30,91,80,82,Critical,Gartner-owned; syndicates to GetApp + SA
+Indie Hackers,indiehackers.com,indiehackers.com/contribute,81,500000,dofollow,free,startup,USA,en,"1-3 days",20,81,70,75,Critical,Bootstrapped founder community
+AlternativeTo,alternativeto.net,alternativeto.net/submit/,79,3000000,nofollow,free,saas,USA,en,"1-3 days",20,79,75,76,Critical,High-intent alternative searchers
+SaaSHub,saashub.com,saashub.com/register,79,200000,dofollow,free,saas,USA,en,"1-3 days",20,79,80,77,Critical,SaaS-specific; evergreen dofollow
+SourceForge,sourceforge.net,sourceforge.net/user/registration,92,22000000,dofollow,free,saas,USA,en,"1-3 days",30,92,70,83,Critical,Open-source software directory
+GetApp,getapp.com,getapp.com/vendors (via Gartner),84,3000000,dofollow,freemium,saas,USA,en,"3-7 days",30,84,70,62,High,Gartner; submit once via portal
+AngelList/Wellfound,angel.co,angel.co/startups/new,85,2000000,dofollow,free,startup,USA,en,"1-3 days",30,85,75,74,Critical,Hiring + fundraising credibility
+F6S,f6s.com,f6s.com/add-product-or-service,83,500000,nofollow,free,startup,UK,en,"1-7 days",30,83,65,66,High,Accelerator/grants access
+Trustpilot,trustpilot.com,trustpilot.com/claim-your-profile,93,91000000,dofollow,freemium,review,Denmark,en,"1-3 days",20,93,80,88,Critical,Rich snippets in SERPs
+AppSumo,appsumo.com,appsumo.com/partners/products/,83,1500000,dofollow,paid,saas,USA,en,"4-8 weeks",60,83,60,64,High,Lifetime deals marketplace; revenue gen
+PitchGround,pitchground.com,pitchground.com/sell,75,200000,dofollow,paid,saas,USA,en,"2-4 weeks",50,75,65,61,High,Founder-friendly deal platform; growing fast
+Software Advice,softwareadvice.com,softwareadvice.com/vendors (via Gartner),86,2000000,dofollow,freemium,saas,USA,en,"3-7 days",30,86,70,63,High,Gartner; buyers call in
+Peerlist,peerlist.io,peerlist.io,76,100000,nofollow,free,startup,India,en,"1-3 days",20,76,55,51,Medium,Professional tech network
+DEV Community,dev.to,dev.to,90,3000000,dofollow,free,startup,USA,en,instant,10,90,55,58,High,Write technical content; dofollow links
+Clutch,clutch.co,clutch.co/get-listed,85,500000,dofollow,free,agency,USA,en,"1-2 weeks",30,85,100,90,Critical,Top B2B agency directory; free basic profile
+GoodFirms,goodfirms.co,goodfirms.co/get-listed,75,200000,dofollow,free,agency,India,en,"1-2 weeks",25,75,100,85,Critical,IT service provider directory; verified reviews
+StackShare,stackshare.io,stackshare.io,79,622000,nofollow,free,saas,USA,en,"1-3 days",25,79,65,65,High,Developer tech stack discovery
+TrustRadius,trustradius.com,trustradius.com/vendor-signup,75,1000000,nofollow,freemium,saas,USA,en,"1-2 weeks",30,75,70,60,High,Enterprise-focused detailed reviews
+FinancesOnline,financesonline.com,financesonline.com/add-product/,87,500000,nofollow,free,saas,USA,en,"1-7 days",30,87,60,59,High,SaaS industry awards
+Devpost,devpost.com,devpost.com/software/new,88,1000000,nofollow,free,saas,USA,en,"1-3 days",20,88,50,56,High,Software project showcase
+Y Combinator Startup Directory,startupdirectory.ycombinator.com,startupdirectory.ycombinator.com/submit,90,500000,nofollow,free,startup,USA,en,"1-7 days",25,90,55,58,High,YC startup directory; free listing
+Fazier,fazier.com,fazier.com,82,80000,dofollow,freemium,launch,USA,en,"1-3 days",20,82,50,53,Medium,PH alternative with DR 82 dofollow
+DEV Community (Agency),dev.to,dev.to/new,90,3000000,dofollow,free,guest-post,Global,en,instant,10,90,55,58,High,Write technical web dev content
+BetaPage,betapage.co,betapage.co/submit,55,30000,dofollow,free,launch,USA,en,"1-7 days",25,55,60,35,Medium,Beta-stage startup discovery
+Launching Next,launchingnext.com,launchingnext.com/submit,50,5000,dofollow,free,launch,UK,en,"2-8 weeks",40,50,60,28,Low,Startup directory; free but slow
+Startup Stash,startupstash.com,startupstash.com/submit,65,50000,nofollow,free,startup,USA,en,"1-3 days",20,65,60,40,Medium,Curated resource directory for startups
+OpenLaunch,open-launch.com,open-launch.com,71,10000,dofollow,free,launch,USA,en,"1-3 days",15,71,55,42,Medium,Free launch platform for new products
+Crozdesk,crozdesk.com,crozdesk.com,74,100000,nofollow,freemium,saas,Germany,en,"1-2 weeks",30,74,65,44,Medium,SaaS reviews with Crozscore
+SoftwareSuggest,softwaresuggest.com,softwaresuggest.com/get-listed,52,150000,dofollow,free,saas,India,en,"1-3 days",15,52,60,37,Medium,Popular in Asia-Pacific markets
+SaaSGenius,saasgenius.com,saasgenius.com,50,20000,nofollow,free,saas,USA,en,"1-3 days",15,50,60,32,Medium,SaaS comparisons and user reviews
+SaaSworthy,saasworthy.com,saasworthy.com,55,40000,nofollow,free,saas,India,en,"1-3 days",15,55,60,35,Medium,SaaS directory with comparison charts
+OpenHunts,openhunts.com,openhunts.com/sign-up,59,10000,dofollow,free,launch,USA,en,"1-3 days",15,59,50,37,Medium,Free PH alternative; no paywall
+Alternative.me,alternative.me,alternative.me/account/,75,100000,dofollow,free,saas,USA,en,"1-3 days",15,75,65,49,Medium,Software alternatives comparison
+Killer Startups,killerstartups.com,killerstartups.com/submit,45,20000,dofollow,free,startup,USA,en,"1-2 weeks",30,45,55,27,Low,Editorial review; decent DA
+There's An AI For That,theresanaiforthat.com,theresanaiforthat.com/submit,65,5000000,dofollow,paid,ai-directory,USA,en,"3-7 days",50,65,85,54,High,Largest AI directory; paid ~$347
+Futurepedia,futurepedia.io,futurepedia.io/submit-tool,62,3000000,nofollow,paid,ai-directory,USA,en,"2-7 days",55,62,85,37,Medium,Well-organized; $247-497
+Toolify.ai,toolify.ai,toolify.ai/submit,55,340000,dofollow,freemium,ai-directory,USA,en,"1-2 days",40,55,85,52,Medium,Free basic + $99 promoted; strong analytics
+FutureTools,futuretools.io,futuretools.io/submit-a-tool,69,500000,dofollow,free,ai-directory,USA,en,"~1 week",25,69,80,49,Medium,Curated by Matt Wolfe; DR 69 dofollow
+TopAI.tools,topai.tools,topai.tools/submit,45,300000,dofollow,paid,ai-directory,USA,en,48hrs,40,45,80,38,Medium,$47 one-time fast listing
+AIChief,aichief.com,aichief.com/submit-ai-tool,55,370000,dofollow,paid,ai-directory,USA,en,"12-24hrs",35,55,80,43,Medium,100K+ daily visitors; paid submission
+AIParabellum,aiparabellum.com,aiparabellum.com/submit-your-ai-tool,35,80000,dofollow,paid,ai-directory,USA,en,24hrs,30,35,80,31,Medium,Paid from $29; 100% manual reviews
+SaaSCity,saascity.io,saascity.io,44,30000,dofollow,free,ai-directory,USA,en,"24-48hrs",15,44,70,38,Medium,Gamified SaaS directory; free DR 44+
+PoweredByAI,poweredbyai.app,poweredbyai.app/submit-tool,35,60000,dofollow,freemium,ai-directory,USA,en,"24-48hrs",20,35,80,34,Medium,10K+ tools; free + Pro/Elite
+OpenTools,opentools.ai,opentools.ai,70,782000,dofollow,paid,ai-directory,USA,en,"~1 week",45,70,80,49,Medium,DA 70; 120+ successful launches
+AI Tools Neil Patel,aitools.neilpatel.com,aitools.neilpatel.com/submit,91,6000,dofollow,free,ai-directory,USA,en,"1-3 days",10,91,65,62,High,DR 91; Neil Patel brand authority
+GPTE,gpte.ai,gpte.ai/submit-a-tool,31,1400000,dofollow,free,ai-directory,USA,en,"1-3 days",10,31,80,35,Medium,1.4M visits; free dofollow
+Tool Pilot,toolpilot.ai,toolpilot.ai/pages/submit-your-ai-tool,51,660000,dofollow,free,ai-directory,USA,en,"1-3 days",15,51,80,45,Medium,660K visits; free dofollow
+Easy With AI,easywithai.com,easywithai.com/submit-tool,33,922000,dofollow,free,ai-directory,USA,en,"1-3 days",10,33,80,37,Medium,High traffic free directory
+AI Valley,aivalley.ai,aivalley.ai/submit-tool,25,230000,dofollow,free,ai-directory,USA,en,"1-3 days",10,25,75,28,Low,Free; good traffic
+Aixploria,aixploria.com,aixploria.com/en/add-ai,17,584000,dofollow,free,ai-directory,France,fr,"1-3 days",10,17,80,30,Low,French AI directory; strong traffic
+All Things AI,allthingsai.com,allthingsai.com/submit,27,500000,dofollow,free,ai-directory,USA,en,"1-3 days",10,27,75,28,Low,Free; 500K monthly visits
+Dang.ai,dang.ai,dang.ai,45,27700,dofollow,free,ai-directory,USA,en,"1-3 days",10,45,75,40,Medium,Clean AI directory; free listing
+Find My AI Tool,findmyaitool.com,findmyaitool.com/submit-tool,36,69000,dofollow,free,ai-directory,USA,en,"1-3 days",10,36,75,30,Medium,Free; 69K visits
+Gate2AI,gate2ai.com,gate2ai.com/submit-tool,27,129000,dofollow,free,ai-directory,USA,en,"1-3 days",10,27,75,26,Low,Free; 129K visits
+GPTs Hunter,gptshunter.com,gptshunter.com/submit-gpt,59,400000,dofollow,free,ai-directory,USA,en,"1-3 days",15,59,75,42,Medium,DR 59; 400K visits
+Insidr AI,insidr.ai,insidr.ai/submit-tools,40,150000,dofollow,free,ai-directory,USA,en,"1-3 days",10,40,75,33,Medium,Free; 150K visits
+Open Future AI,openfuture.ai,openfuture.ai/submit-tool,31,496000,dofollow,free,ai-directory,USA,en,"1-3 days",10,31,75,28,Low,Free; 496K visits
+Tekpon,tekpon.com,tekpon.com/get-listed,54,134000,dofollow,free,ai-directory,USA,en,"1-3 days",15,54,75,40,Medium,Free listing; good traffic
+LaunchBoosts,launchboosts.com,launchboosts.com,30,450000,dofollow,free,ai-directory,USA,en,"24-48hrs",10,30,75,28,Low,15K+ daily visitors; free dofollow
+StartupHub.ai,startuphub.ai,startuphub.ai,35,50000,dofollow,free,ai-directory,USA,en,24hrs,10,35,70,30,Medium,27K+ AI startups; free forever
+Submit AI Tools,submitaitools.org,submitaitools.org/submit-your-ai-tool,61,50000,dofollow,free,ai-directory,USA,en,"1-3 days",15,61,75,44,Medium,DR 61; dedicated submission
+Maroc Pages,marocpages.com,marocpages.com/list-business/,52,150000,dofollow,free,local-directory,Morocco,fr,"1-3 days",15,52,100,72,High,Morocco #1 business directory; 15K+ businesses
+Telecontact.ma,telecontact.ma,telecontact.ma/inscrire,58,500000,nofollow,freemium,local-directory,Morocco,fr,"24-48h",20,58,100,68,High,Les Pages Jaunes du Maroc
+Kerix.net,kerix.net,kerix.net/en/annuaire-entreprise/kerix,38,500000,nofollow,free,local-directory,Morocco,fr,"2-5 days",15,38,100,43,Medium,30K+ Moroccan companies; B2B
+Sourcia.ma,sary-b2-b.vercel.app,sary-b2-b.vercel.app/en/inscrire-fournisseur,30,80000,dofollow,free,local-directory,Morocco,fr,48 hours,10,30,100,44,Medium,#1 B2B platform Morocco; team creates listing
+MAwebzine.ma,mawebzine.ma,mawebzine.ma/submit-your-business/,22,25000,dofollow,free,local-directory,Morocco,en,"1-3 days",10,22,100,36,Medium,Morocco trusted local directory; free 2026
+Annuaire Gratuit Maroc,annuaire-gratuit.ma,annuaire-gratuit.ma/deposer-annonce,28,40000,dofollow,free,local-directory,Morocco,fr,"1-3 days",10,28,100,38,Medium,200K+ professional addresses; Moroccan data
+Yenino Morocco,yenino.com/ma-en,yenino.com/ma-en,45,30000,dofollow,free,local-directory,Morocco,en,"1-3 days",10,45,100,54,Medium,31 categories; 10 cities incl FÃ¨s
+Morocco.com,morocco.com,morocco.com/add-my-business/,48,100000,dofollow,free,local-directory,Morocco,en,"5-7 days",20,48,100,56,High,30-year domain authority; editorial review
+B2BMap Morocco,b2bmap.com,b2bmap.com/morocco/companies,35,50000,dofollow,free,local-directory,Morocco,en,"2-5 days",15,35,100,42,Medium,Manufacturers/suppliers focus
+Africa Listings Morocco,africalistings.com,africalistings.com/morocco,30,20000,dofollow,free,local-directory,Morocco,en,"2-5 days",15,30,100,38,Medium,3590+ Moroccan companies; pan-African
+Euro Biz Guide Morocco,eurobizguide.com,eurobizguide.com/business-directory-in-morocco,25,15000,dofollow,free,local-directory,Morocco,en,"2-5 days",10,25,100,36,Medium,Free listing; city + category
+Bizafrix Morocco,bizafrix.com/ma/,bizafrix.com/ma/,25,15000,dofollow,freemium,local-directory,Morocco,fr,"2-5 days",15,25,100,34,Low,30K+ companies; AI matching
+PagesJaunes France,pagesjaunes.fr,pagesjaunes.fr/inscription,80,15000000,nofollow,freemium,local-directory,France,fr,"24-48h",20,80,80,54,High,Leading French directory; 95% pros listed
+Kompass France,kompass.com,kompass.com/fr,75,7500000,nofollow,free,local-directory,France,fr,"2-5 days",15,75,80,52,High,Global B2B directory; 75M+ visits/yr
+Societe.com,societe.com,societe.com,78,5000000,nofollow,free,local-directory,France,fr,Auto,10,78,80,52,High,Official French companies registry
+Annuaire-Entreprises.data.gouv.fr,annuaire-entreprises.data.gouv.fr,annuaire-entreprises.data.gouv.fr,85,2000000,nofollow,free,local-directory,France,fr,Auto,10,85,80,54,High,Official French government directory
+Infobel France,infobel.com,infobel.com/fr,65,1000000,nofollow,freemium,local-directory,France,fr,"2-5 days",20,65,80,42,Medium,73 countries; 120M+ visitors
+Cylex France,cylex-locale.fr,cylex-locale.fr,60,500000,dofollow,free,local-directory,France,fr,"2-5 days",15,60,80,50,Medium,Part of global Cylex network
+Webwiki France,webwiki.fr,webwiki.fr,55,250000,dofollow,free,local-directory,France,fr,"1-3 days",10,55,75,48,Medium,Web directory + reviews; good DA
+Europages,europages.fr,europages.fr,68,2000000,nofollow,free,local-directory,France,fr,"2-5 days",15,68,80,46,Medium,European B2B directory
+Coodoeil,coodoeil.fr,coodoeil.fr/proposer_un_site.php,35,80000,dofollow,freemium,local-directory,France,fr,"30 days",25,35,75,33,Low,Francophone since 2005; 78K+ sites
+Annuaire Web France,annuaire-web-france.com,annuaire-web-france.com/proposer_site.php,30,50000,dofollow,free,local-directory,France,fr,"7-30 days",25,30,75,30,Low,Since 2005; 360+ categories
+FaitesVousConnaitre,faitesvousconnaitre.com,faitesvousconnaitre.com,28,30000,dofollow,free,local-directory,France,fr,"1-3 days",10,28,75,32,Low,Free professional directory
+Toplien.fr,toplien.fr,toplien.fr,28,15000,dofollow,free,local-directory,France,fr,"3-7 days",15,28,75,30,Low,SEO-oriented French web directory
+Econotion,econotion.fr,econotion.fr/referencer-entreprise-annuaire/,18,8000,dofollow,free,local-directory,France,fr,"24-72h",10,18,75,26,Low,300-word min description required
+Pages d'Or Belgique,pagesdor.be,pagesdor.be,68,4500000,nofollow,freemium,local-directory,Belgium,fr,"24-48h",20,68,70,42,Medium,#1 Belgium directory; 4.5M monthly searches
+Goudengids.be,goudengids.be,goudengids.be/bedrijftoevoegen/,65,3000000,nofollow,freemium,local-directory,Belgium,nl,"24-48h",20,65,70,40,Medium,Dutch-language Belgium Golden Pages
+Handelsgids.be,handelsgids.be,handelsgids.be/zaak-aanmelden/,35,200000,dofollow,free,local-directory,Belgium,nl,"1-3 days",10,35,70,38,Medium,Free Belgian business directory
+Gids.Vlaanderen,gids.vlaanderen,gids.vlaanderen/en,32,100000,dofollow,free,local-directory,Belgium,nl,"1-3 days",10,32,70,33,Low,500K+ businesses; 4M monthly visitors
+Yelp,yelp.com,biz.yelp.com,93,150000000,nofollow,free,local-directory,Global,en,"1-3 days",15,93,50,44,Medium,Top global review directory
+Hotfrog,hotfrog.com,hotfrog.com/add,78,5000000,dofollow,free,local-directory,Global,en,"1-3 days",20,78,75,79,Critical,Global directory; dofollow on free listing
+Manta,manta.com,manta.com/add-listing,87,3000000,nofollow,freemium,local-directory,Global,en,"1-3 days",20,87,70,80,Critical,SMB focused; free listing + paid upgrades
+Cylex International,cylex.com,cylex.com,73,1000000,dofollow,free,local-directory,Global,en,"2-5 days",20,73,70,50,Medium,35+ country directories; 1M+ daily users
+BBB,bbb.org,bbb.org/get-accredited,91,10000000,nofollow,freemium,local-directory,Global,en,"1-2 weeks",40,91,65,73,High,Business trust signal; free profile
+Foursquare,foursquare.com,foursquare.com/city-guide,92,50000000,nofollow,free,local-directory,Global,en,"1-3 days",10,92,50,54,High,Location data giant; free listing
+Tuugo,tuugo.fr,tuugo.fr,55,100000,dofollow,free,local-directory,Global,fr,"1-3 days",10,55,75,46,Medium,Available in Morocco/France/Belgium
+ChamberofCommerce,chamberofcommerce.com,chamberofcommerce.com,82,2000000,nofollow,freemium,local-directory,Global,en,"1-3 days",20,82,60,48,Medium,Global business directory; free basic
+MerchantCircle,merchantcircle.com,merchantcircle.com,65,500000,dofollow,freemium,local-directory,Global,en,"1-3 days",20,65,65,42,Medium,Local business directory
+ShowMeLocal,showmelocal.com,showmelocal.com,58,150000,dofollow,free,local-directory,Global,en,"1-3 days",10,58,65,42,Medium,Multi-country directory; free business submission
+DesignRush,designrush.com,designrush.com/agency,72,500000,dofollow,free,agency-directory,Global,en,"1-3 days",25,72,100,84,Critical,Creative/design agency directory; free basic
+Agency Spotter,agencyspotter.com,agencyspotter.com/agencies/new,56,200000,dofollow,free,agency-directory,Global,en,"3-5 days",25,56,95,69,High,23K+ agencies listed; free basic
+Sortlist,sortlist.com,sortlist.com/register,62,300000,dofollow,free,agency-directory,Global,en,"2-3 days",25,62,95,71,High,Used by Adobe/Blizzard/Samsung; free
+The Manifest,themanifest.com,themanifest.com/get-listed,68,200000,dofollow,free,agency-directory,Global,en,"3-7 days",30,68,95,70,High,Clutch sister site; auto-listed via Clutch
+UpCity,upcity.com,upcity.com/profiles/new,62,100000,dofollow,free,agency-directory,USA,en,"5-7 days",25,62,95,78,Critical,SMB/local agency focus; free basic
+Digital Agency Network,digitalagencynetwork.com,digitalagencynetwork.com/agencies/,52,50000,dofollow,paid,agency-directory,Global,en,"7-14 days",50,52,95,40,Medium,From â‚¬520/yr; 4K+ agencies
+Agency Vista,agencyvista.com,agencyvista.com/signup/agency,50,30000,dofollow,free,agency-directory,Global,en,"2-3 days",20,50,95,52,Medium,51K+ listed agencies; free basic
+Find Digital Agency,finddigitalagency.com,finddigitalagency.com/submit-an-agency/,35,10000,dofollow,free,agency-directory,Global,en,"3-5 days",15,35,95,45,Medium,Multi-category agency directory; free
+InfoWebWorld,infowebworld.com,infowebworld.com/business,35,5000,dofollow,free,agency-directory,Global,en,"3-5 days",15,35,95,44,Medium,1.7K+ verified agencies; dofollow
+AdForum,adforum.com,adforum.com/agency,65,200000,dofollow,free,agency-directory,Global,en,"2-3 days",20,65,90,55,High,24K+ agencies; creative industry
+Semrush Agency Partners,semrush.com/agencies,semrush.com/agencies/profile/,90,2000000,dofollow,paid,agency-directory,Global,en,"3-5 days",70,90,95,67,High,$90/mo; only Semrush certified
+HubSpot Solutions Directory,ecosystem.hubspot.com,offers.hubspot.com/solutions-directory-listing,92,5000000,dofollow,freemium,agency-directory,Global,en,"5-10 days",60,92,90,60,High,Free basic; requires HubSpot certs
+TopSEOs,topseos.com,topseos.com,68,200000,dofollow,free,SEO-directory,Global,en,"7-30 days",35,68,90,48,Medium,Evaluation-based ranking; free
+Expertise.com,expertise.com,expertise.com,60,200000,dofollow,free,SEO-directory,USA,en,"7-14 days",30,60,85,44,Medium,Location-based ranking; free
+Zyppy List,zyppy.com,zyppy.com/for-companies/,55,50000,dofollow,freemium,marketing-directory,Global,en,"3-7 days",25,55,90,50,Medium,Free verified profile; Pro $24/mo
+SEO Mafia,seomafiaclub.com,seomafiaclub.com/free-seo-expert-directory-listing/,30,10000,dofollow,free,SEO-directory,Global,en,"3-7 days",20,30,85,33,Low,Free SEO expert profile; manual review
+DodoDirectory,dododirectory.com,dododirectory.com/submit,20,5000,dofollow,free,SEO-directory,Global,en,Instant,5,20,80,33,Low,Free plan requires badge; AI review
+Directory Index,directory-index.com,directory-index.com,25,5000,dofollow,free,SEO-directory,Global,en,Instant,5,25,80,35,Low,Instant publication; 14 categories
+SumoDir,sumodir.com,sumodir.com,20,3000,dofollow,free,marketing-directory,Global,en,"1-3 days",5,20,80,30,Low,Business/SaaS directory; dofollow
+SiteJabber,sitejabber.com,sitejabber.com,73,500000,dofollow,free,marketing-directory,Global,en,"1-3 days",15,73,70,52,Medium,Free business profile; dofollow backlink
+Bark.com,bark.com,bark.com,70,500000,nofollow,freemium,marketing-directory,Global,en,"1-2 days",20,70,80,46,Medium,Pay-per-lead platform
+Yellow Pages,yellowpages.com,yellowpages.com,90,25000000,nofollow,free,marketing-directory,USA,en,"1-3 days",10,90,60,56,High,Legacy directory giant; free basic
+Upwork,upwork.com,upwork.com,94,100000000,nofollow,free,agency-directory,Global,en,"1-3 days",15,94,60,56,High,Largest freelance marketplace; free agency profile
+Fiverr,fiverr.com,fiverr.com,92,80000000,nofollow,free,agency-directory,Global,en,"1-3 days",15,92,60,54,High,Service marketplace; free seller account
+Contra,contra.com,contra.com,60,100000,dofollow,free,agency-directory,Global,en,"1-3 days",10,60,70,47,Medium,Zero-commission freelance; dofollow
+Awwwards,awwwards.com,awwwards.com/submit/,78,500000,dofollow,paid,webdesign-directory,Global,en,"3-7 days",55,78,85,45,Medium,$65/standard submission; high authority
+CSS Design Awards,cssdesignawards.com,cssdesignawards.com/submit,62,200000,dofollow,paid,webdesign-directory,Global,en,"3-5 days",50,62,85,37,Medium,Paid submission (Solo/Studio/Agency)
+SiteInspire,siteinspire.com,siteinspire.net/submit,58,100000,nofollow,free,webdesign-directory,Global,en,"1-7 days",20,58,80,43,Medium,Curated CSS gallery; free submission
+TopDevelopers,topdevelopers.co,topdevelopers.co/register,56,100000,dofollow,free,agency-directory,Global,en,"3-5 days",20,56,100,81,Critical,IT/dev agency directory
+SelectedFirms,selectedfirms.co,selectedfirms.co/join,45,30000,dofollow,free,agency-directory,Global,en,"3-5 days",15,45,95,50,Medium,IT services & dev agency directory
+FindBestFirms,findbestfirms.com,findbestfirms.com/get-listed,50,40000,dofollow,free,agency-directory,Global,en,"3-5 days",20,50,95,52,Medium,Clutch alternative; multi-platform
+Thumbtack,thumbtack.com,thumbtack.com/businesses/new,75,3000000,nofollow,free,service-directory,Global,en,"1-3 days",15,75,70,48,Medium,Service marketplace for agencies
+Angi (Angie's List),angi.com,angi.com/list-business,82,10000000,nofollow,free,service-directory,Global,en,"1-3 days",15,82,65,48,Medium,Home services & business directory
+Bing Places,bingplaces.com,bingplaces.com,90,50000000,nofollow,free,local-directory,Global,en,"1-3 days",10,90,60,54,High,Bing search visibility
+Google Business Profile,google.com/business,business.google.com,100,200000000,nofollow,free,local-directory,Global,en,"1-3 days",10,100,100,95,Critical,Essential for local SEO
+HARO/Featured,featured.com,featured.com/signup,85,1000000,dofollow,free,PR,USA,en,"24-72h",50,85,85,50,Medium,Tier-1 placements possible; 3 free responses/mo
+Connectively,connectively.com,connectively.com,82,500000,dofollow,freemium,PR,USA,en,"24-48h",40,82,85,53,High,AI co-pilot for PR; free tier avail
+Qwoted,qwoted.com,qwoted.com,80,200000,dofollow,freemium,PR,USA,en,"24-48h",45,80,80,48,Medium,70% placements from DR80+ pubs; 2 free/mo
+Source of Sources,sourceofsources.com,sourceofsources.com,78,150000,dofollow,free,PR,USA,en,"12-24h",35,78,85,47,Medium,Shankman's HARO successor; 3 daily digests
+MentionMatch,mentionmatch.com,mentionmatch.com,70,80000,dofollow,free,PR,USA,en,"48-72h",30,70,85,45,Medium,B2B SaaS focus; HubSpot DR93 possible
+SourceBottle,sourcebottle.com,sourcebottle.com/signup,65,100000,dofollow,free,PR,Australia,en,"24-72h",20,65,80,44,Medium,APAC/UK/AU coverage; free unlimited
+Terkel,terkel.io,terkel.io,70,100000,dofollow,free,PR,USA,en,"24-72h",25,70,85,48,Medium,Expert roundups; now part of Featured
+Medium,medium.com,medium.com/new-story,92,500000000,nofollow,free,guest-post,Global,en,instant,10,92,55,57,High,Publish under own publication; nofollow
+Dev.to,dev.to,dev.to/new,90,50000000,dofollow,free,guest-post,Global,en,instant,10,90,55,58,High,Developer community; dofollow links
+Hashnode,hashnode.com,hashnode.com/new,80,10000000,dofollow,free,guest-post,Global,en,instant,10,80,55,55,High,Tech blogging platform; custom domain
+Nexa Growth,nexagrowth.co.uk,nexagrowth.co.uk/blog/write-for-us/,40,5000,dofollow,free,guest-post,UK,en,"5 days",15,40,80,37,Medium,Digital marketing/SEO/B2B growth; 1200 words
+SEO Pro Star Agency,seoprostaragency.com,seoprostaragency.com/write-for-us/,35,3000,dofollow,free,guest-post,USA,en,48h,15,35,80,34,Medium,SEO/PPC/content marketing; email pitch
+Ranking Champs,rankingchamps.com,rankingchamps.com/write-for-us-submit-guest-post-on-digital-marketing/,30,2000,dofollow,free,guest-post,Global,en,"3-5 days",15,30,80,32,Low,Digital marketing; 1000+ words; 1-2 dofollow links
+RayanSEO,rayanseo.com,rayanseo.com/guest-post-guidelines/,40,5000,dofollow,free,guest-post,Global,en,"24-48h",15,40,80,37,Medium,SEO/link building/PPC; strict editorial
+r/SEO,reddit.com/r/SEO,reddit.com/r/SEO,91,50000000,nofollow,free,community,Global,en,instant,10,91,50,54,High,483K members; SEO discussions; 10% self-promo
+r/digitalmarketing,reddit.com/r/digitalmarketing,reddit.com/r/digitalmarketing,91,30000000,nofollow,free,community,Global,en,instant,10,91,50,54,High,351K members; digital marketing discussions
+r/Entrepreneur,reddit.com/r/Entrepreneur,reddit.com/r/Entrepreneur,91,50000000,nofollow,free,community,Global,en,instant,10,91,45,51,Medium,4M members; indirect brand visibility
+Quora SEO Space,quora.com/q/seo-and-digital-marketing,quora.com/q/seo-and-digital-marketing,90,50000000,nofollow,free,community,Global,en,instant,10,90,50,53,High,88K members; SEO/digital marketing space
+PodMatch,podmatch.com,podmatch.com,60,100000,dofollow,freemium,podcast,Global,en,"24-48h",25,60,70,45,Medium,Dating-app style podcast matching; free basic
+MatchMaker.fm,matchmaker.fm,matchmaker.fm/get-booked,55,80000,dofollow,freemium,podcast,Global,en,"24-72h",25,55,70,40,Medium,2500+ active guests; free to join
+Talks.co,talks.co,talks.co,55,50000,dofollow,free,podcast,Global,en,"24-72h",15,55,70,42,Medium,Free expert directory; 10K+ users
+PodcastGuest.org,podcastguest.org,podcastguest.org,35,5000,dofollow,paid,podcast,Global,en,"24-48h",20,35,70,31,Low,$10 one-time permanent listing
+PRLog,prlog.org,prlog.org/submit-free-press-release.html,55,500000,nofollow,free,PR,Global,en,instant,10,55,70,42,Medium,Free press release distribution
+OpenPR,openpr.com,openpr.com/news/submit.html,50,100000,nofollow,free,PR,Global,en,instant,10,50,70,39,Medium,1 free PR per 30 days
+EIN Presswire,einpresswire.com,einpresswire.com,55,100000,nofollow,freemium,PR,Global,en,"24-48h",15,55,70,39,Medium,Limited free press release distribution
+IssueWire,issuewire.com,issuewire.com,50,30000,nofollow,free,PR,Global,en,"24-72h",10,50,70,38,Medium,Free plan for one-time press release
+awesome-seo (brandonhimpfen),github.com/brandonhimpfen/awesome-seo,github.com/brandonhimpfen/awesome-seo,90,10000000,dofollow,free,resource,Global,en,"N/A (PR)",20,90,65,56,High,Add your SEO resource via PR
+awesome-digital-marketing (paulbradish),github.com/paulbradish/awesome-digital-marketing,github.com/paulbradish/awesome-digital-marketing,90,5000000,dofollow,free,resource,Global,en,"N/A (PR)",20,90,65,56,High,Add via GitHub PR; dofollow from github.com
+awesome-marketing (marketingtoolslist),github.com/marketingtoolslist/awesome-marketing,github.com/marketingtoolslist/awesome-marketing,90,2000000,dofollow,free,resource,Global,en,"N/A (PR)",15,90,65,57,High,Curated marketing tools list; PR
+Awesome SEO Backlinks (indie-hacking),github.com/indie-hacking/Awesome-SEO-Backlinks,github.com/indie-hacking/Awesome-SEO-Backlinks,90,1000000,dofollow,free,resource,Global,en,"N/A (PR)",15,90,65,57,High,Curated backlink collection; PR
+awesome-seo-tools (serpapi),github.com/serpapi/awesome-seo-tools,github.com/serpapi/awesome-seo-tools,90,2000000,dofollow,free,resource,Global,en,"N/A (PR)",15,90,65,57,High,SEO tools curated list; PR
+Newsletter Crew,newslettercrew.com,newslettercrew.com,40,20000,nofollow,free,newsletter,Global,en,"3-5 days",10,40,60,28,Low,Submit newsletter to curated directoryHacker News,news.ycombinator.com,news.ycombinator.com/submit,91,8000000,nofollow,free,launch,USA,en,instant,30,91,40,58,High,Show HN for dev tools; unpredictable but massive
+Uneed,uneed.best,uneed.best/submit,74,50000,dofollow,free,launch,France,en,"1-3 days",20,74,60,48,Medium,Product Hunt alternative; guaranteed visibility
+PeerPush,peerpush.net,peerpush.net,74,80000,dofollow,free,launch,Poland,en,"1-3 days",20,74,55,50,Medium,Build in public community
+SideProjectors,sideprojectors.com,sideprojectors.com/auth/register,70,20000,dofollow,free,startup,USA,en,"1-3 days",15,70,50,40,Medium,Side project marketplace
+Open Launch,open-launch.com,open-launch.com,71,10000,dofollow,free,launch,USA,en,"1-3 days",15,71,55,42,Medium,Free launch platform
+Startup Inspire,startupinspire.com,startupinspire.com,26,5000,dofollow,free,startup,USA,en,"1-3 days",10,26,50,18,Low,Low DA startup directory
+Feedmyapp,feedmyapp.com,feedmyapp.com/submit,36,15000,nofollow,free,startup,USA,en,"1-7 days",20,36,55,22,Low,Startup review and directory site
+EU-Startups,eu-startups.com,eu-startups.com/submit-startup,29,50000,nofollow,free,startup,Germany,en,"1-4 weeks",35,29,55,16,Low,European startup focus; editorial
+DevHunt,devhunt.org,devhunt.org,62,30000,dofollow,free,launch,USA,en,"1-3 days",15,62,50,39,Medium,PH for developer tools
+OpenAlternative,openalternative.co,openalternative.co/submit,51,20000,dofollow,free,saas,USA,en,"1-3 days",15,51,60,33,Medium,Open-source alternatives
+Land-book,land-book.com,land-book.com/submit,47,20000,nofollow,paid,startup,Poland,en,"1-7 days",40,47,40,19,Low,Landing page design gallery; paid
+Lapa Ninja,lapa.ninja,lapa.ninja/submit,29,30000,nofollow,free,startup,Vietnam,en,"1-7 days",20,29,40,15,Low,Landing page inspiration directory
+PitchWall,pitchwall.co,pitchwall.co,69,20000,nofollow,freemium,launch,India,en,"1-3 days",25,69,50,38,Medium,Storytelling-focused launch platform
+10words,10words.io,10words.io,42,10000,dofollow,free,launch,USA,en,"1-3 days",10,42,50,30,Medium,Discover apps in 10 words
+TinyLaunch,tinylaunch.com,tinylaunch.com,72,15000,dofollow,freemium,launch,USA,en,"1-3 days",25,72,50,42,Medium,Indie product launch platform
+Aura++,auraplusplus.com,auraplusplus.com,70,10000,dofollow,freemium,launch,USA,en,"1-3 days",20,70,45,39,Medium,Indie maker directory
+Tiny Startups,tinystartups.com,tinystartups.com,64,15000,dofollow,free,startup,USA,en,"1-3 days",10,64,55,41,Medium,Micro-venture and startup directory
+MicroLaunch,microlaunch.net,microlaunch.net,58,10000,dofollow,free,launch,USA,en,"1-3 days",10,58,50,36,Medium,Daily/weekly product rankings
+LaunchLlama,launchllama.com,launchllama.com,60,5000,dofollow,free,launch,USA,en,"1-3 days",10,60,50,38,Medium,Tool directory and launch platform
+Product Watch,productwatch.io,productwatch.io,69,20000,dofollow,free,launch,USA,en,"1-3 days",15,69,50,41,Medium,PH alternative with dofollow backlinks
+StartupBase,startupbase.io,startupbase.io,51,10000,dofollow,free,startup,USA,en,"1-3 days",10,51,55,33,Medium,Maker directory for showcasing startups
+FoundrList,foundrlist.com,foundrlist.com,71,10000,dofollow,free,startup,USA,en,"1-3 days",15,71,60,45,Medium,Startup directory for founders
+Promote Project,promoteproject.com,promoteproject.com,48,15000,dofollow,free,startup,USA,en,"1-3 days",10,48,55,32,Medium,Submit and promote side projects
+Kick Product,kickproduct.com,kickproduct.com,50,10000,dofollow,free,launch,Ukraine,en,"1-3 days",10,50,50,32,Medium,Community-driven voting launch platform
+All Top Startups,alltopstartups.com,alltopstartups.com/submit,45,20000,dofollow,free,startup,USA,en,"1-2 weeks",25,45,55,27,Low,Blog and resource hub; guest post outreach
+Software World,softwareworld.co,softwareworld.co,73,50000,dofollow,freemium,saas,USA,en,"1-7 days",25,73,65,46,Medium,Software reviews and comparisons
+Postmake,postmake.io,postmake.io/submit,50,20000,dofollow,free,startup,USA,en,"1-3 days",10,50,60,34,Medium,Curated tools and resources
+eBool,ebool.com,ebool.com/submit,40,10000,dofollow,free,startup,USA,en,"1-3 days",10,40,50,28,Low,Product directory with growing traffic
+MicroAcquire,microacquire.com,microacquire.com/list,65,100000,nofollow,free,startup,USA,en,"1-3 days",20,65,50,37,Medium,Startup acquisition marketplace
+Acid Tools,acidtools.com,acidtools.com/submit,65,10000,dofollow,free,startup,USA,en,"1-3 days",15,65,55,41,Medium,AI and SaaS tools directory
+Launchnicely,launchnicely.com,launchnicely.com,50,10000,dofollow,freemium,launch,USA,en,"1-3 days",20,50,50,30,Medium,Database of 737+ directories
+SaaS Promo,saaspromo.com,saaspromo.com,35,5000,dofollow,free,saas,USA,en,"1-3 days",10,35,55,24,Low,SaaS promotional platform
+ConfettiSaaS,confettisaas.com,confettisaas.com,36,3000,dofollow,freemium,saas,USA,en,"1-3 days",15,36,55,24,Low,Indie-focused SaaS discovery
+Indie Showcase,indieshowcase.io,indieshowcase.io/submit,25,3000,dofollow,free,startup,USA,en,"1-3 days",10,25,50,16,Low,Indie startup tools and products
+Justacoté,justacote.com,justacote.com/register,58,300000,nofollow,free,local-directory,France,fr,"1-3 days",10,58,75,40,Medium,Community-driven good addresses guide
+Annuaire-entreprise.co,annuaire-entreprise.co,annuaire-entreprise.co,22,5000,dofollow,free,local-directory,France,fr,"1-3 days",10,22,75,27,Low,Quick add; follow links. No spam
+Brownbook,brownbook.net,brownbook.net/free-listing,61,500000,dofollow,free,local-directory,Global,en,"1-3 days",15,61,65,43,Medium,44.6M businesses; 200+ countries
+Fyple,fyple.com,fyple.com,55,200000,dofollow,free,local-directory,Global,en,"1-3 days",10,55,65,41,Medium,Global business directory; free listing
+BizList.be,bizlist.be,bizlist.be,28,30000,dofollow,free,local-directory,Belgium,nl,"1-3 days",10,28,70,30,Low,Free Belgian company guide
+BizBel.be,bizbel.be,bizbel.be/bedrijf-aanmelden/,20,10000,dofollow,free,local-directory,Belgium,fr,"2-5 days",15,20,70,26,Low,Free business registration
+Mon Quartier Belgique,mon-quartier.be,mon-quartier.be,22,12000,dofollow,free,local-directory,Belgium,fr,"1-3 days",10,22,70,27,Low,New-gen Belgian directory
+EnrollBusiness Belgium,be.enrollbusiness.com,be.enrollbusiness.com,42,50000,dofollow,free,local-directory,Belgium,en,"1-3 days",10,42,70,36,Medium,Free business profile
+PRLog Belgium,biz.prlog.org,biz.prlog.org/be/,60,200000,dofollow,free,local-directory,Belgium,en,"1-3 days",15,60,70,44,Medium,PR + business directory
+Atout-Commerces Belgique,atout-commerces.be,atout-commerces.be/public/fr,24,15000,dofollow,free,local-directory,Belgium,fr,"2-5 days",15,24,70,27,Low,20 years; 655K+ classified
+CitySquares,citysquares.com,citysquares.com/add_business,64,200000,dofollow,free,local-directory,Global,en,"1-3 days",15,64,60,41,Medium,Local city guide; free business addition
+Superpages,superpages.com,superpages.com,78,3000000,nofollow,free,local-directory,Global,en,"1-3 days",10,78,55,46,Medium,US-focused but global reach
+Local.com,local.com,local.com,70,1000000,nofollow,free,local-directory,Global,en,"1-3 days",10,70,60,42,Medium,Local search directory
+BizCommunity,bizcommunity.com,bizcommunity.com,77,500000,nofollow,free,local-directory,Global,en,"1-3 days",10,77,60,46,Medium,Global B2B news + directory
+iGlobal,iglobal.co,iglobal.co,50,100000,dofollow,free,local-directory,Global,en,"1-3 days",10,50,65,38,Medium,Global business directory; multi-country
+Yalwa,yalwa.fr,yalwa.fr,52,100000,dofollow,free,local-directory,Global,fr,"1-3 days",10,52,70,41,Medium,Operates France/Belgium/Morocco
+Telecontact.ma (SEO),telecontact.ma,telecontact.ma/inscrire,58,500000,nofollow,freemium,local-directory,Morocco,fr,"24-48h",20,58,100,68,High,Les Pages Jaunes du Maroc; 36+ years
+SaaS Browser,saasbrowser.com,saasbrowser.com/en/add-your-saas,70,30000,nofollow,free,saas,USA,en,"1-3 days",20,70,60,42,Medium,SaaS discovery with category browsing
+SaaSGenius,saasgenius.com,saasgenius.com,50,20000,nofollow,free,saas,USA,en,"1-3 days",15,50,60,32,Medium,SaaS comparisons and user reviews
+Crozdesk,crozdesk.com,crozdesk.com,74,100000,nofollow,freemium,saas,Germany,en,"1-2 weeks",30,74,65,44,Medium,SaaS reviews with Crozscore quality seal
+SoftwareSuggest,softwaresuggest.com,softwaresuggest.com/get-listed,52,150000,dofollow,free,saas,India,en,"1-3 days",15,52,60,37,Medium,Popular in Asia-Pacific markets
+Entasher,entasher.com,entasher.com/business/add,20,5000,dofollow,free,agency-directory,Morocco,en,"2-3 days",10,20,95,35,Low,Casablanca-focused business directory
+TopSoftwareCompanies,topsoftwarecompanies.co,topsoftwarecompanies.co/submit,50,30000,dofollow,free,software-directory,Global,en,"3-5 days",15,50,80,44,Medium,Dev companies globally
+CSS Mania,cssmania.com,cssmania.com/submit,50,50000,dofollow,free,webdesign-directory,Global,en,"1-7 days",20,50,80,42,Medium,Web design showcase; DA 50+
+Freelancer,freelancer.com,freelancer.com,78,50000000,nofollow,free,agency-directory,Global,en,"1-3 days",15,78,60,46,Medium,Global freelance project marketplace
+Guru,guru.com,guru.com,70,500000,nofollow,free,agency-directory,Global,en,"1-3 days",15,70,60,42,Medium,Freelance platform; free basic
+Hubstaff Talent,hubstafftalent.net,hubstafftalent.net,50,50000,dofollow,free,agency-directory,Global,en,"1-3 days",10,50,70,42,Medium,100% free directory; no fees
+Braintrust,usebraintrust.com,usebraintrust.com,65,200000,nofollow,free,agency-directory,Global,en,"3-7 days",25,65,70,40,Medium,Enterprise talent network; vetting required
+Toptal,toptal.com,toptal.com,85,2000000,nofollow,free,agency-directory,Global,en,"14-30 days",50,85,70,45,Medium,Top 3% talent network; rigorous vetting
+Go4WorldBusiness,go4worldbusiness.com,go4worldbusiness.com,72,200000,nofollow,free,marketing-directory,Global,en,"1-3 days",15,72,60,43,Medium,B2B trade directory; global reach
+WebRank Directory,webrankdirectory.org,webrankdirectory.org,25,5000,dofollow,free,SEO-directory,Global,en,"2-5 days",15,25,80,30,Low,Human-edited; free basic listing
+SEF Directory,sefdirectory.com,sefdirectory.com/submit.html,35,10000,dofollow,free,SEO-directory,Global,en,"7-14 days",25,35,80,30,Low,Human reviewed; broad categories
+Web Design Listings,webdesignlistings.org,webdesignlistings.org/new_listing.asp,25,5000,dofollow,freemium,webdesign-directory,Global,en,12 hours,15,25,80,30,Low,Free gold listing; 12h review
+DesignDIR.net,designdir.net,designdir.net/submit.php,30,5000,dofollow,free,webdesign-directory,Global,en,48 hours,20,30,80,30,Low,Requires reciprocal link or /mo
+Webxperia,webxperia.com,webxperia.com/websites-submit/,25,3000,dofollow,free,webdesign-directory,Global,en,"2-3 days",10,25,80,31,Low,Design showcase; manual curation
+LeaGron,leagron.com,leagron.com/business-listing-site/,15,5000,dofollow,paid,SEO-directory,Global,en,7 days,25,15,80,22,Low, one-time for dofollow
+HitWebDirectory,hitwebdirectory.com,hitwebdirectory.com/submit.php,35,10000,dofollow,free,SEO-directory,Global,en,"2-3 months",50,35,85,22,Low,Free listing very slow
+Allo Webmaster,allowebmaster.com,allowebmaster.com/submit.php,46,10000,dofollow,freemium,SEO-directory,Global,en,"3-7 days",20,46,80,38,Medium,Free regular listing; featured paid
+Zearches,zearches.com,zearches.com/submit-website-free.php,15,3000,dofollow,free,SEO-directory,Global,en,instant,5,15,80,28,Low,No account; instant listing
+W3 Directory,w3-directory.com,w3-directory.com/Add-a-web-site.php,30,5000,dofollow,free,SEO-directory,Global,en,"3-7 days",15,30,80,30,Low,Worldwide classification; free
+InfoWebWorld (SEO),infowebworld.com,infowebworld.com/business,35,5000,dofollow,free,agency-directory,Global,en,"3-5 days",15,35,85,40,Medium,1.7K+ verified agencies; dofollow
+New Site Index,newsiteindex.com,newsiteindex.com/submit,15,2000,dofollow,free,SEO-directory,Global,en,instant,5,15,80,28,Low,Free dofollow backlink; no account
+Poststack,poststack.ai,poststack.ai/list-agency,25,3000,dofollow,free,agency-directory,Global,en,"2-3 days",10,25,85,33,Low,AI marketing agency directory; free
+Similar.Agency,similar.agency,similar.agency/promote/,30,5000,dofollow,free,agency-directory,Global,en,"2-3 days",15,30,90,37,Medium,Service distribution breakdown; free listing
+AppDevAgencies,appdevelopmentagencies.com,appdevelopmentagencies.com/submit/,35,5000,dofollow,freemium,agency-directory,Global,en,48 hours,15,35,90,39,Medium,Free standard listing; featured /mo
+AgencyGenius,agencygenius.co,agencygenius.co/join-our-directory,20,2000,dofollow,free,agency-directory,Global,en,48 hours,10,20,90,33,Low,Free curated; Duda partner focus
+Marketing Solutions Directory,marketingsolutionsdirectory.com,marketingsolutionsdirectory.com/addyourcompany,40,10000,nofollow,free,marketing-directory,Global,en,"2-3 days",15,40,80,36,Medium,CMR network; zero cost basic
+Pick an Agency,pickanagency.com,pickanagency.com/add-agency,30,8000,dofollow,free,agency-directory,Global,en,"3-5 days",15,30,90,37,Medium,Free ad agency listing
+Zyppy List (free),zyppy.com,zyppy.com/for-companies/,55,50000,dofollow,freemium,marketing-directory,Global,en,"3-7 days",25,55,90,50,Medium,Free verified profile; Pro /mo
+Followed Link Directory,followed.link,dododirectory.com/submit,20,5000,dofollow,free,SEO-directory,Global,en,instant,5,20,80,30,Low,DodoDirectory; permanent dofollow
+SiteJabber (free),sitejabber.com,sitejabber.com,73,500000,dofollow,free,marketing-directory,Global,en,"1-3 days",15,73,70,52,Medium,Free business profile; dofollow backlink
+Connectively (free),connectively.com,connectively.com,82,500000,dofollow,freemium,PR,USA,en,"24-48h",40,82,85,53,High,AI co-pilot for PR; relaunched 2026
+MentionMatch (free),mentionmatch.com,mentionmatch.com,70,80000,dofollow,free,PR,USA,en,"48-72h",30,70,85,45,Medium,B2B SaaS/tech focus; HubSpot DR93
+SourceBottle (free),sourcebottle.com,sourcebottle.com/signup,65,100000,dofollow,free,PR,Australia,en,"24-72h",20,65,80,44,Medium,Best for APAC/UK/AU coverage
+JournoLink,journolink.com,journolink.com,65,60000,dofollow,paid,PR,UK,en,"24-48h",40,65,80,38,Medium,UK-focused small business PR; £12/mo
+PressPlugs,pressplugs.com,pressplugs.com,60,30000,dofollow,paid,PR,UK,en,"24-48h",35,60,80,37,Medium,UK media specific; £29/mo
+Terkel (free),terkel.io,terkel.io,70,100000,dofollow,free,PR,USA,en,"24-72h",25,70,85,48,Medium,B2B SaaS/marketing expert roundups
+Nexa Growth (guest post),nexagrowth.co.uk,nexagrowth.co.uk/blog/write-for-us/,40,5000,dofollow,free,guest-post,UK,en,5 days,15,40,80,37,Medium,Digital marketing/SEO/B2B growth
+WhatNWhy,whatnwhy.com,whatnwhy.com/write-for-us/,35,3000,dofollow,free,guest-post,Global,en,"3-5 days",15,35,80,34,Low,SEO/PPC/analytics/CRO; email pitch
+MarkMyDigi,markmydigi.com,markmydigi.com/write-for-us/,30,2000,dofollow,free,guest-post,Global,en,"3-5 days",15,30,80,32,Low,SEO/content marketing/AI marketing
+Upvelix,upvelix.com,upvelix.com/seo-write-for-us/,35,3000,dofollow,free,guest-post,Global,en,"3-5 days",15,35,80,34,Low,SEO/digital marketing/link building
+BUHAVE,buhave.com,buhave.com/write-for-us-seo/,35,5000,dofollow,free,guest-post,USA,en,"5-7 days",20,35,80,33,Low,SEO/technical SEO/link building
+Nexqor,usenexqor.com,usenexqor.com/write-for-us/,30,2000,dofollow,free,guest-post,USA,en,"4-8h",10,30,80,34,Low,SEO/digital marketing; AI-free content
+PodcastGuests.com,podcastguests.com,podcastguests.com,40,20000,dofollow,free,podcast,Global,en,"24-72h",15,40,70,33,Low,Guest directory; newsletter to 47K
+SpeakUp,speak-up.pro,speak-up.pro,50,30000,dofollow,free,podcast,Global,en,"24-48h",20,50,70,38,Medium,70K+ verified experts; AI matching
+CastFox,castfox.net,castfox.net,45,20000,dofollow,free,podcast,Global,en,instant,10,45,70,37,Medium,5M+ podcasts; AI ranking
+Newsletter Crew,newslettercrew.com,newslettercrew.com,40,20000,nofollow,free,newsletter,Global,en,"3-5 days",10,40,60,28,Low,Submit newsletter to directory
+GoLetter Directory,directory.goletter.co,directory.goletter.co/submit,35,10000,nofollow,free,newsletter,Global,en,"24-72h",10,35,60,24,Low,Free newsletter listing
+StackLetter,stackletter.com,stackletter.com/submit,35,10000,nofollow,free,newsletter,Global,en,"3-5 days",10,35,60,24,Low,Newsletter discovery platform
+Aldus Newsletter Directory,usealdus.com/directory,usealdus.com/directory,30,5000,nofollow,free,newsletter,Global,en,"24-72h",10,30,60,22,Low,64+ curated newsletters
+PRFree,prfree.org,prfree.org,45,200000,nofollow,free,PR,Global,en,instant,10,45,70,36,Medium,Free since 2010; unlimited releases
+1888 PressRelease,1888pressrelease.com,1888pressrelease.com,45,50000,nofollow,free,PR,Global,en,"24-48h",15,45,70,36,Medium,Free basic submissions; paid upgrade
+News By Wire,newsbywire.com,newsbywire.com,40,20000,nofollow,free,PR,USA,en,"24-48h",10,40,70,34,Low,Best for regional targeting; free basic
+r/SEOandBacklinks,reddit.com/r/SEOandBacklinks,reddit.com/r/SEOandBacklinks,91,5000000,nofollow,free,community,Global,en,instant,10,91,45,50,Medium,8K members; link building focus
+r/Blogging,reddit.com/r/Blogging,reddit.com/r/Blogging,91,10000000,nofollow,free,community,Global,en,instant,10,91,40,48,Medium,178K members; content strategy
+r/SmallBusiness,reddit.com/r/SmallBusiness,reddit.com/r/SmallBusiness,91,15000000,nofollow,free,community,Global,en,instant,10,91,45,50,Medium,142K members; small business marketing
+Quora SEOs Space,seos.quora.com,seos.quora.com,90,10000000,nofollow,free,community,Global,en,instant,10,90,45,49,Medium,SEO professionals; topic-focused Q&A
+awesome-search-engine-optimization (thospfuller),github.com/thospfuller/awesome-search-engine-optimization,github.com/thospfuller/awesome-search-engine-optimization,90,3000000,dofollow,free,resource,Global,en,"N/A (PR)",15,90,65,57,High,Backlink/social signal opportunities; PR
+SaaSHub (SEO),saashub.com,saashub.com/register,79,200000,dofollow,free,saas,Global,en,"1-3 days",20,79,80,77,Critical,SaaS-specific; strong dev/product audience
+AlternativeTo (SEO),alternativeto.net,alternativeto.net/submit/,79,3000000,nofollow,free,saas,Global,en,"1-3 days",20,79,75,76,Critical,High-intent visitors searching for alternatives
+Alternative.me (SEO),alternative.me,alternative.me/account/,75,100000,dofollow,free,saas,Global,en,"1-3 days",15,75,65,49,Medium,Software alternatives comparison; dofollow
+GetLatka (SaaS),getlatka.com,getlatka.com/saas-companies,71,20000,dofollow,free,ai-directory,USA,en,"1-3 days",15,71,65,46,Medium,SaaS company data; private SaaS
+SOFTRANK - RankMyAI,rankmyai.com,rankmyai.com,50,50000,dofollow,free,ai-directory,USA,en,"1-3 days",10,50,75,38,Medium,AI tool ranking platform
+Dang.ai (free),dang.ai,dang.ai,45,27700,dofollow,free,ai-directory,USA,en,"1-3 days",10,45,75,40,Medium,Free listing; clean AI directory
+Nextpedia,nextpedia.io,nextpedia.io/submit-tool,11,8000,dofollow,free,ai-directory,USA,en,"1-3 days",5,11,70,16,Low,Free directory; low DA
+1000 Tools,1000.tools,1000.tools/my/tools/create,23,7500,dofollow,free,ai-directory,USA,en,"1-3 days",10,23,70,22,Low,Free; DR 23
+Resource fyi,resource.fyi,resource.fyi/account/submit,39,5000,dofollow,free,ai-directory,USA,en,"1-3 days",10,39,70,31,Medium,Free; DR 39
+SaasSurf,saassurf.com,saassurf.com/submit-a-product,21,31000,dofollow,free,ai-directory,USA,en,"1-3 days",10,21,70,22,Low,Free; 31K visits
+AI Tool Board,aitoolboard.com,aitoolboard.com/submit-ai-tool,3,7000,dofollow,free,ai-directory,USA,en,"1-3 days",5,3,70,13,Low,Free directory; very low DA
+AIToolSync,aitoolsync.com,aitoolsync.com/submit-a-tool,15,100000,dofollow,free,ai-directory,USA,en,"24-48hrs",5,15,75,19,Low,Free dofollow; 100K visitors
+BroUseAI,brouseai.com,brouseai.com,35,31000,dofollow,free,ai-directory,USA,en,"1-3 days",10,35,70,29,Low,Free; 31K visits
+IndieHunt,indiehunt.io,indiehunt.io,32,5000,dofollow,free,ai-directory,USA,en,"1-3 days",10,32,70,27,Low,Indie maker focused
+Most Popular AI Tools,mostpopularaitools.com,mostpopularaitools.com,15,10000,dofollow,free,ai-directory,USA,en,"1-3 days",5,15,70,18,Low,Free listing
+The Next AI,thenextai.com,thenextai.com/submit-ai-tool,40,120000,dofollow,freemium,ai-directory,USA,en,48hrs,20,40,75,30,Low,Free basic; Featured 
+StartupHub.ai,startuphub.ai,startuphub.ai,35,50000,dofollow,free,ai-directory,USA,en,24hrs,10,35,70,30,Low,27K+ AI startups; free
+Startup List,startup-list.org,startup-list.org,40,50000,dofollow,free,ai-directory,USA,en,"24-48hrs",10,40,70,34,Low,DR 40+; permanent dofollow
+AI Agents Base,aiagentsbase.com,aiagentsbase.com,15,10000,dofollow,free,ai-directory,USA,en,"1-3 days",5,15,65,16,Low,AI agent directory
+AgentHunter,agenthunter.io,agenthunter.io,15,10000,dofollow,free,ai-directory,USA,en,"1-3 days",5,15,65,16,Low,AI agent directory
+Sitelike,sitelike.org,sitelike.org/add-site,70,1300000,dofollow,free,saas,USA,en,"1-3 days",15,70,60,44,Medium,Site comparison platform; high traffic
+GetApp (Gartner),getapp.com,getapp.com/vendors (via Gartner),84,3000000,dofollow,freemium,saas,USA,en,"3-7 days",30,84,70,62,High,Gartner; submit once via portal
+Software Advice (Gartner),softwareadvice.com,softwareadvice.com/vendors (via Gartner),86,2000000,dofollow,freemium,saas,USA,en,"3-7 days",30,86,70,63,High,Gartner; buyers call in
+SourceForge (open source),sourceforge.net,sourceforge.net/user/registration,92,22000000,dofollow,free,software-directory,Global,en,"1-3 days",30,92,65,82,Critical,Best for open-source/installable software
+Peerlist (vetted),peerlist.io,peerlist.io,76,100000,nofollow,free,startup,India,en,"1-3 days",20,76,55,51,Medium,Professional tech network; vetted profiles
+IndieHunt,indiehunt.io,indiehunt.io,32,5000,dofollow,free,startup,USA,en,"1-3 days",10,32,55,21,Low,Indie maker focused
+AIToolSync (free),aitoolsync.com,aitoolsync.com/submit-a-tool,15,100000,dofollow,free,ai-directory,USA,en,"24-48hrs",5,15,75,19,Low,Free dofollow; 100K visitors
+AI Tool Board (free),aitoolboard.com,aitoolboard.com/submit-ai-tool,3,7000,dofollow,free,ai-directory,USA,en,"1-3 days",5,3,70,13,Low,Free directory; very low DA
+AI Tool List (free),aitoollist.org,aitoollist.org,20,15000,dofollow,free,ai-directory,USA,en,"1-3 days",5,20,70,19,Low,Free directory
+ToolsAI (free),toolsai.net,toolsai.net/add-listing,19,60000,dofollow,free,ai-directory,USA,en,"1-3 days",5,19,70,18,Low,Free; 60K visits
+AI Hustle (free),aihustle.tools,aihustle.tools,10,5000,dofollow,free,ai-directory,USA,en,"1-3 days",5,10,70,14,Low,Free AI tools directory
+AgentLocker AI Directory,agentlocker.ai,agentlocker.ai/submit-your-tool,25,3000,dofollow,free,ai-directory,USA,en,"24-48h",10,25,70,23,Low,Free AI tool listing
+Cut & Ship Directory,cutandship.ai,cutandship.ai/submit,30,5000,dofollow,free,resource,Global,en,"24-48h",10,30,65,27,Low,Free AI/SaaS project listing; dofollow
+RankWithNaresh AI Directory,rankwithnaresh.com,rankwithnaresh.com/ai-tools-directory-submit-startup/,30,3000,nofollow,free,resource,Global,en,"5-7 days",20,30,70,23,Low,Free AI startup listing; paid dofollow
+AI Newsletters Directory,ainewslettersdirectory.com,ainewslettersdirectory.com/submit,25,2000,nofollow,free,resource,Global,en,"2-3 days",10,25,60,18,Low,AI/ML newsletters; manual review
+AI Marketing Directory,aimarketing.directory,aimarketing.directory/submit,12,9600,dofollow,free,ai-directory,USA,en,"1-3 days",5,12,75,17,Low,AI marketing focused
+AI Depot,aidepot.co,aidepot.co,11,30000,dofollow,free,ai-directory,USA,en,"1-3 days",5,11,70,15,Low,Free; 30K visits
+AIDudeInfo,aidude.info,aidude.info/submit-your-tool,13,84700,dofollow,free,ai-directory,USA,en,"1-3 days",5,13,70,16,Low,Free submission
+AI Lib,ailib.ru,ailib.ru,23,119000,dofollow,free,ai-directory,Russia,ru,"1-3 days",5,23,65,19,Low,Russian AI tools library
+AI Center,aicenter.ai,aicenter.ai/products/submit,10,5000,dofollow,free,ai-directory,USA,en,"1-3 days",5,10,70,14,Low,Free submission
+AI Agent Store,aiagentstore.ai,aiagentstore.ai,10,5000,dofollow,free,ai-directory,USA,en,"1-3 days",5,10,65,13,Low,AI agent marketplace
+SaaS Tonic,saastonic.com,saastonic.com,30,5000,dofollow,free,saas,USA,en,"1-3 days",10,30,60,26,Low,SaaS discovery and reviews
+Startups Lab,startupslab.site,startupslab.site,56,5000,dofollow,freemium,startup,USA,en,"1-3 days",15,56,55,34,Low,Startup lab and directory
+ProductBurst,productburst.com,productburst.com,39,5000,dofollow,free,launch,USA,en,"1-3 days",10,39,50,27,Low,Product launch burst platform
+TechTrendin,techtrendin.com,techtrendin.com,38,5000,dofollow,free,startup,USA,en,"1-3 days",10,38,50,26,Low,Tech startup discovery
+IdeaKiln,ideakiln.com,ideakiln.com,41,5000,dofollow,free,startup,USA,en,"1-3 days",10,41,55,29,Low,Startup idea validation
+IndieHub,indiehub.best,indiehub.best,39,3000,nofollow,paid,startup,USA,en,"1-3 days",25,39,50,19,Low,Indie maker hub; paid placement
+SoloPush,solopush.com,solopush.com,45,5000,dofollow,paid,launch,USA,en,"1-3 days",25,45,50,24,Low,Launch platform for solopreneurs
+LaunchVault,launchvault.dev,launchvault.dev/submit,35,5000,dofollow,free,launch,USA,en,"1-3 days",10,35,50,24,Low,Developer-focused launch platform
+Startups.fyi,startups.fyi,startups.fyi/submit,31,10000,dofollow,paid,startup,USA,en,"1-3 days",20,31,50,19,Low,Revenue-generating startup stories
+What Launched Today,whatlaunchedtoday.com,whatlaunchedtoday.com,26,5000,dofollow,free,launch,USA,en,"1-3 days",10,26,50,19,Low,Daily product launch roundup
+Indie Dev Tools,indiedevtools.com,indiedevtools.com,24,5000,dofollow,free,saas,USA,en,"1-3 days",10,24,55,19,Low,Indie developer tools
+Good AI Tools,goodaitools.com,goodaitools.com,27,10000,dofollow,free,startup,USA,en,"1-3 days",10,27,50,19,Low,AI tools discovery
+Needed Directory,neeed.directory,neeed.directory,71,5000,dofollow,free,startup,USA,en,"1-3 days",15,71,55,42,Medium,Curated startup directory
+MagicBox Tools,magicbox.tools,magicbox.tools,70,5000,dofollow,freemium,saas,USA,en,"1-3 days",15,70,60,42,Medium,SaaS tools discovery
+Cool Startups,coolstartups.io,coolstartups.io/submit,35,5000,dofollow,free,startup,USA,en,"1-3 days",10,35,55,25,Low,Unique startup ideas
+Startup Lift,startuplift.com,startuplift.com,40,10000,dofollow,free,startup,USA,en,"1-7 days",20,40,55,27,Low,Exposure and feedback for startups
+ToolDirs,tooldirs.com,tooldirs.com,35,5000,dofollow,free,saas,USA,en,"1-3 days",10,35,55,24,Low,General tools directory
+Startup Dope,startupdope.com,startupdope.com,30,5000,dofollow,free,startup,USA,en,"1-3 days",10,30,55,23,Low,Startup community and directory
+Smol Launch,smollaunch.com,smollaunch.com,30,5000,dofollow,free,launch,USA,en,"1-3 days",10,30,50,22,Low,Minimalist product launch
+NickLaunches,nicklaunches.com,nicklaunches.com,11,2000,dofollow,free,launch,USA,en,"1-3 days",5,11,50,13,Low,Personal blog listing new launches
+Indie Showcase,indieshowcase.io,indieshowcase.io/submit,25,3000,dofollow,free,startup,USA,en,"1-3 days",10,25,55,18,Low,Indie startup tools and products
+Firsto,firsto.co,firsto.co/submit,54,10000,nofollow,free,launch,USA,en,"1-3 days",10,54,50,33,Low,Fair launch platform; permanent SEO asset
+Hardlaunch,hardlaunch.com,hardlaunch.com,40,8000,dofollow,free,launch,USA,en,"1-3 days",10,40,50,28,Low,Product launch platform
+Pitchwall (startup),pitchwall.co,pitchwall.co/product/submit,64,59000,dofollow,free,ai-directory,USA,en,"1-3 days",15,64,60,40,Medium,DR 64; free listing
+B2B Map France,b2bmap.com/france,b2bmap.com/france/companies,35,40000,dofollow,free,local-directory,France,en,"2-5 days",10,35,75,34,Low,B2B France business directory
+B2B Map Belgium,b2bmap.com/belgium,b2bmap.com/belgium/companies,35,30000,dofollow,free,local-directory,Belgium,en,"2-5 days",10,35,70,32,Low,B2B Belgium business directory
+Kompass Belgium,kompass.com/be,kompass.com/be,72,2000000,nofollow,free,local-directory,Belgium,fr,"2-5 days",15,72,70,44,Medium,Global B2B directory Belgium
+Europages (Belgium),europages.be,europages.be,65,500000,nofollow,free,local-directory,Belgium,fr,"2-5 days",15,65,70,40,Medium,European B2B directory Belgium
+Company.info Belgium,company.info/be,company.info/be,50,100000,nofollow,free,local-directory,Belgium,nl,"2-5 days",15,50,70,35,Low,Belgian company database
+BizDir.be,bizdir.be,bizdir.be,15,5000,dofollow,free,local-directory,Belgium,nl,"1-3 days",5,15,70,20,Low,Free Belgian directory
+Entreprises.ma (register),entreprises.ma,entreprises.ma,26,20000,dofollow,free,local-directory,Morocco,fr,"1-3 days",10,26,100,36,Medium,15K+ verified companies; professional
+Optimus.ma,optimus.ma,optimus.ma,30,35000,nofollow,freemium,local-directory,Morocco,fr,"1-2 days",15,30,100,37,Medium,1.8M+ companies; free basic
+STEMA.ma,ste.ma,ste.ma,22,12000,dofollow,free,local-directory,Morocco,fr,"2-5 days",10,22,100,34,Low,Moroccan companies and agencies
+Afrikta Morocco,afrikta.com/fr/annuaire-des-entreprises-africaines/maroc/,afrikta.com/fr/annuaire-des-entreprises-africaines/maroc/,32,25000,dofollow,free,local-directory,Morocco,fr,"2-5 days",10,32,100,38,Medium,Pan-African business directory
+Yak Maroc,yakmaroc.com,yakmaroc.com/soumettre-une-entreprises/,20,8000,dofollow,free,local-directory,Morocco,fr,"2-5 days",10,20,100,34,Low,Simple submission form
+BizNiz.ma,bizniz.ma/fr/,bizniz.ma/fr/,18,10000,dofollow,paid,local-directory,Morocco,fr,"1-2 days",20,18,100,30,Low,19K+ businesses; 99 DH fee
+ResponseSource,responsesource.com,responsesource.com,80,200000,dofollow,paid,PR,UK,en,"24-48h",50,80,85,39,Medium,Dominant UK journalist platform; £50/mo
+ProfNet,profnet.com,profnet.com,85,100000,dofollow,paid,PR,USA,en,"24-48h",60,85,80,37,Medium,Enterprise/academic; ~/quarter
+Muck Rack (enterprise),muckrack.com,muckrack.com,85,500000,dofollow,paid,PR,USA,en,"24-72h",70,85,85,34,Medium,Enterprise PR CRM; +/yr
+JournoFinder,journofinder.com,journofinder.com,65,30000,dofollow,paid,PR,USA,en,"24-48h",40,65,80,35,Medium,Hybrid database + alerts; -189/mo
+PressPulse,presspulse.ai,presspulse.ai,70,20000,dofollow,paid,PR,USA,en,Real-time,35,70,80,36,Medium,AI-filtered multi-platform; -99/mo
+Epirus.vc Newsletter Directory,epirus.vc/newsletter-directory,epirus.vc/newsletter-directory/submit-your-newsletter,40,5000,nofollow,free,newsletter,Global,en,"5 business days",10,40,55,24,Low,Startup/entrepreneurship newsletters
+Newsletterly,newsletterly.io,newsletterly.io/submit,30,3000,nofollow,free,newsletter,Global,en,"3-5 days",10,30,55,20,Low,Submit newsletters for curation
+Aeroleads,aeroleads.com,aeroleads.com,45,10000,nofollow,free,startup,USA,en,"1-3 days",10,45,50,28,Low,B2B lead database
+IndieHunt (re-listed),indiehunt.io,indiehunt.io,32,5000,dofollow,free,community,USA,en,"1-3 days",10,32,45,20,Low,Indie maker community
+SaasSurf (free),saassurf.com,saassurf.com/submit-a-product,21,31000,dofollow,free,startup,USA,en,"1-3 days",10,21,55,18,Low,Free; 31K visits
+Startup.fm,startups.fm,startups.fm/submit,40,10000,dofollow,paid,startup,USA,en,"1-3 days",25,40,50,22,Low,Curated startup directory; partner listings
+ShowMySites,showmysites.com,showmysites.com/accounts/signup,68,10000,nofollow,paid,saas,USA,en,"1-3 days",30,68,55,32,Low,Showcase website designs; paid
+AeroLeads (SEO version),aeroleads.com,aeroleads.com,45,10000,dofollow,free,startup,USA,en,"1-3 days",10,45,50,28,Low,B2B lead database; directory
+Applauncher (tools),applauncher.io,applauncher.io/submit,40,10000,dofollow,free,launch,USA,en,"1-3 days",10,40,50,27,Low,199+ launch platforms listed
+TechJuice,techjuice.pk,techjuice.pk/submit,60,150000,nofollow,free,startup,Pakistan,en,"1-2 weeks",25,60,45,32,Low,Pakistani startup ecosystem
+Inc42,inc42.com,inc42.com/startup-submission/,80,500000,nofollow,free,startup,India,en,"1-2 weeks",30,80,45,40,Medium,Indian startup media
+SEO Mafia (features),seomafiaclub.com,seomafiaclub.com/free-seo-expert-directory-listing/,30,10000,dofollow,freemium,SEO-directory,Global,en,"3-7 days",20,30,85,33,Low,Free SEO expert profile; featured paid
+W3 Directory (SEO),w3-directory.com,w3-directory.com/Add-a-web-site.php,30,5000,dofollow,free,SEO-directory,Global,en,"3-7 days",15,30,80,30,Low,Worldwide classification; free
+Annuaire-lien.fr (French),annuaire-lien.fr,annuaire-lien.fr/soumettre-un-site/,18,5000,dofollow,free,local-directory,France,fr,"3-7 days",15,18,75,24,Low,Francophone sites only; manual review
+Noogle.fr (French),noogle.fr,noogle.fr,22,10000,dofollow,free,local-directory,France,fr,"3-7 days",15,22,75,25,Low,Selective French directory
+Indexeur.fr (French),indexeur.fr,indexeur.fr,30,25000,dofollow,free,local-directory,France,fr,"7-30 days",20,30,75,28,Low,SEO directory; TF>25 DA>30
+Refoo Annuaire (French),refoo.fr,refoo.fr,20,8000,dofollow,free,local-directory,France,fr,30 days,15,20,75,24,Low,Francophone; manual validation
+Buzz l'annuaire (French),buzz.vunet.fr,buzz.vunet.fr,25,20000,dofollow,free,local-directory,France,fr,"1-3 days",10,25,75,28,Low,Manual moderation; no reciprocal link
+Avis Site Internet (French),avis-site-internet.com,avis-site-internet.com,22,10000,dofollow,free,local-directory,France,fr,"24-72h",10,22,75,26,Low,Free SEO directory; dofollow
+Annuaires-Entreprises.fr,annuaires-entreprises.fr,annuaires-entreprises.fr,24,12000,dofollow,free,local-directory,France,fr,"1-3 days",10,24,75,27,Low,Professional directory

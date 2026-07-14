@@ -1,0 +1,19 @@
+{
+  "name": "Weblancia — Agence Digitale Premium",
+  "short_name": "Weblancia",
+  "description": "Agence digitale premium à Casablanca : développement web, marketing digital, design UI/UX, consulting et branding.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#0a0a0a",
+  "orientation": "portrait-primary",
+  "lang": "fr-FR",
+  "categories": ["business", "technology", "design"],
+  "icons": [
+    {
+      "src": "/favicon.ico",
+      "sizes": "48x48",
+      "type": "image/x-icon"
+    }
+  ]
+}

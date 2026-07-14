@@ -4,7 +4,7 @@ import { useState, useEffect } from "react"
 import { useRouter } from "next/navigation"
 import { PageHeader } from "@/components/admin/page-header"
 import { WorkshopForm } from "@/components/admin/academy/workshop-form"
-import type { WorkshopFormData } from "@/lib/validations/academy"
+import type { WorkshopFormData } from "@/lib/validation/academy"
 
 export default function NewWorkshopPage() {
   const router = useRouter()

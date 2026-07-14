@@ -1,27 +1,18 @@
-import { NextResponse } from "next/server"
-import { addLeadNote, deleteLeadNote } from "@/lib/leads/queries"
-import { leadNoteSchema } from "@/lib/validations/leads"
-import { getSession } from "@/lib/auth/session"
+import { leadService } from "@/lib/repositories/services/lead.service"
+import { leadNoteSchema } from "@/lib/validation/leads"
+import { apiRoute, apiBody } from "@/lib/security/api-handler"
+import { success, created, badRequest } from "@/lib/security/response"
 
-export async function POST(req: Request, { params }: { params: Promise<{ id: string }> }) {
-  const session = await getSession()
-  if (!session) return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
-  const { id } = await params
-  const body = await req.json()
-  const parsed = leadNoteSchema.safeParse(body)
-  if (!parsed.success) {
-    return NextResponse.json({ error: parsed.error.flatten() }, { status: 400 })
-  }
-  const note = await addLeadNote(Number(id), parsed.data.content, session.userId)
-  return NextResponse.json(note, { status: 201 })
-}
+export const POST = apiRoute(async (ctx) => {
+  const body = await apiBody(leadNoteSchema)(ctx.request)
+  if (body.error) return body.error
+  const note = await leadService.addNote(Number(ctx.params.id), body.data.content, ctx.auth.session.userId)
+  return created(note)
+}, { auth: true, admin: true })
 
-export async function DELETE(req: Request, { params: _params }: { params: Promise<{ id: string }> }) {
-  const session = await getSession()
-  if (!session) return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
-  const { searchParams } = new URL(req.url)
-  const noteId = searchParams.get("noteId")
-  if (!noteId) return NextResponse.json({ error: "noteId required" }, { status: 400 })
-  await deleteLeadNote(Number(noteId))
-  return NextResponse.json({ success: true })
-}
+export const DELETE = apiRoute(async (ctx) => {
+  const noteId = ctx.request.nextUrl.searchParams.get("noteId")
+  if (!noteId) return badRequest("noteId requis")
+  await leadService.deleteNote(Number(noteId))
+  return success({ message: "Note supprimée" })
+}, { auth: true, admin: true })

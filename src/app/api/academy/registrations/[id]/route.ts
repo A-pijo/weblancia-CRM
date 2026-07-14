@@ -1,17 +1,8 @@
-import { NextResponse } from "next/server"
-import { deleteRegistration } from "@/lib/academy/registrations/queries"
+import { academyService } from "@/lib/repositories/services/academy.service"
+import { apiRoute } from "@/lib/security/api-handler"
+import { success } from "@/lib/security/response"
 
-export async function DELETE(_req: Request, { params }: { params: Promise<{ id: string }> }) {
-  try {
-    const { id } = await params
-    const registrationId = Number(id)
-    if (isNaN(registrationId)) {
-      return NextResponse.json({ error: "Invalid ID" }, { status: 400 })
-    }
-    await deleteRegistration(registrationId)
-    return NextResponse.json({ success: true })
-  } catch (e) {
-    const message = e instanceof Error ? e.message : "Internal error"
-    return NextResponse.json({ error: message }, { status: 500 })
-  }
-}
+export const DELETE = apiRoute(async (ctx) => {
+  await academyService.deleteRegistration(Number(ctx.params.id))
+  return success({ message: "Inscription supprimée" })
+}, { auth: true, admin: true })

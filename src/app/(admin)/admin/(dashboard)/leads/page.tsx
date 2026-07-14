@@ -4,7 +4,7 @@ import { useState, useEffect, useCallback } from "react"
 import { useRouter } from "next/navigation"
 import { PageHeader } from "@/components/admin/page-header"
 import { cn } from "@/lib/utils/cn"
-import { LEAD_STATUSES } from "@/lib/validations/leads"
+import { LEAD_STATUSES } from "@/lib/validation/leads"
 
 interface Lead {
   id: number; name: string; company: string | null; email: string | null; phone: string | null

@@ -4,7 +4,7 @@ import { useState, useEffect } from "react"
 import { useRouter, useParams } from "next/navigation"
 import { PageHeader } from "@/components/admin/page-header"
 import { cn } from "@/lib/utils/cn"
-import { LEAD_STATUSES } from "@/lib/validations/leads"
+import { LEAD_STATUSES } from "@/lib/validation/leads"
 
 interface User { id: number; name: string; email: string }
 interface Note { id: number; content: string; createdAt: string; author: User }

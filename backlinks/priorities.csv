@@ -1,0 +1,51 @@
+rank,name,url,submission_url,da_estimate,link_type,cost,category,relevance_score,authority_score,difficulty_score,expected_seo_value,priority,notes
+1,Google Business Profile,business.google.com,business.google.com,100,nofollow,free,local,95,100,10,95,Critical,Essential for local SEO; verify Fès location
+2,Crunchbase,crunchbase.com,crunchbase.com/add-new,92,dofollow,free,startup,90,92,20,92,Critical,Investor/journalist credibility; dofollow
+3,Clutch.co,clutch.co,clutch.co/get-listed,85,dofollow,free,agency,100,85,30,90,Critical,Top B2B agency directory; 12M+ buyers
+4,Product Hunt,producthunt.com,producthunt.com/posts/new,92,nofollow,free,launch,70,92,40,89,Critical,Launch day traffic spike potential
+5,Trustpilot,trustpilot.com,business.trustpilot.com,93,nofollow,free,review,80,93,20,88,Critical,Rich snippets in Google SERPs
+6,LinkedIn Company Page,linkedin.com,linkedin.com/company,98,dofollow,free,social,95,98,10,87,Critical,Company page essential for B2B credibility
+7,G2,g2.com,sell.g2.com/create-a-profile,91,nofollow,free,saas,80,91,30,86,Critical,100M+ buyers/year; review platform
+8,GoodFirms,goodfirms.co,goodfirms.co/get-listed,75,dofollow,free,agency,100,75,25,85,Critical,Verified reviews; IT service provider focus
+9,DesignRush,designrush.com,designrush.com/agency,72,dofollow,free,agency,100,72,25,84,Critical,Creative/design agency directory
+10,SourceForge,sourceforge.net,sourceforge.net/create,92,dofollow,free,saas,70,92,30,83,Critical,Open-source software directory; high DA
+11,Capterra,capterra.com,capterra.com/vendors,91,nofollow,free,saas,80,91,30,82,Critical,Gartner-owned; syndicated distribution
+12,TopDevelopers,topdevelopers.co,topdevelopers.co/register,56,dofollow,free,agency,100,56,20,81,Critical,IT/dev agency directory; free basic
+13,Manta,manta.com,manta.com/add-listing,87,nofollow,free,local,70,87,20,80,Critical,SMB focused; 3M visits
+14,Hotfrog,hotfrog.com,hotfrog.com/add,78,dofollow,free,local,75,78,20,79,Critical,40+ country directories; dofollow free
+15,UpCity,upcity.com,upcity.com/profiles/new,62,dofollow,free,agency,95,62,25,78,Critical,SMB/local agency focus
+16,SaaSHub,saashub.com,saashub.com/register,79,dofollow,free,saas,80,79,20,77,Critical,SaaS-specific; evergreen dofollow
+17,AlternativeTo,alternativeto.net,alternativeto.net/manage-item,79,nofollow,free,saas,75,79,20,76,Critical,High-intent alternative searchers
+18,Indie Hackers,indiehackers.com,indiehackers.com/contribute,81,dofollow,free,community,70,81,20,75,Critical,Founder community; engagement-driven
+19,AngelList/Wellfound,angel.co,angel.co/startups/new,85,dofollow,free,startup,75,85,30,74,Critical,Hiring + fundraising credibility
+20,BBB,bbb.org,bbb.org/get-accredited,91,nofollow,free,local,65,91,40,73,High,Business trust signal
+21,Maroc Pages,marocpages.com,marocpages.com/list-business/,52,dofollow,free,local,100,52,15,72,High,Morocco #1 business directory
+22,Sortlist,sortlist.com,sortlist.com/register,62,dofollow,free,agency,95,62,25,71,High,500+ service categories; used by Adobe/Samsung
+23,The Manifest,themanifest.com,themanifest.com/claim-profile,68,dofollow,free,agency,95,68,30,70,High,Clutch sister site; auto-listed via Clutch
+24,Agency Spotter,agencyspotter.com,agencyspotter.com/agencies/new,56,dofollow,free,agency,95,56,25,69,High,23K+ agencies; AI search optimized
+25,Telecontact.ma,telecontact.ma,telecontact.ma/inscrire,58,nofollow,free,local,100,58,20,68,High,Les Pages Jaunes du Maroc
+26,Semrush Agency,semrush.com/agencies,semrush.com/agencies,90,dofollow,paid,agency,95,90,70,67,High,$90/mo; only certified agencies
+27,F6S,f6s.com,f6s.com/add-product-or-service,83,nofollow,free,startup,65,83,30,66,High,Accelerator access; startup perks
+28,StackShare,stackshare.io,stackshare.io/submit,79,nofollow,free,saas,65,79,25,65,High,Developer tech stack discovery
+29,AppSumo,appsumo.com,appsumo.com/partners/products/,83,dofollow,paid,saas,60,83,60,64,High,Lifetime deal marketplace; revenue gen
+30,Software Advice,softwareadvice.com,softwareadvice.com/vendors (via Gartner),86,nofollow,free,saas,70,86,30,63,High,Gartner property; buyers call in
+31,GetApp,getapp.com,getapp.com/vendors (via Gartner),84,nofollow,free,saas,70,84,30,62,High,Gartner syndication network
+32,PitchGround,pitchground.com,pitchground.com/sell,75,dofollow,paid,saas,65,75,50,61,High,Founder-friendly; growing fast
+33,TrustRadius,trustradius.com,trustradius.com/vendor-signup,75,nofollow,free,saas,70,75,30,60,High,Enterprise-focused detailed reviews
+34,FinancesOnline,financesonline.com,financesonline.com/add-product/,87,nofollow,free,saas,60,87,30,59,High,SaaS industry awards
+35,DEV Community,dev.to,dev.to/new,90,dofollow,free,guest-post,55,90,20,58,High,Write technical web dev content
+36,Medium,medium.com,medium.com/new-story,92,nofollow,free,guest-post,55,92,20,57,High,Publish under own publication
+37,Devpost,devpost.com,devpost.com/software/new,88,dofollow,free,community,50,88,20,56,High,Software project showcase
+38,Hashnode,hashnode.com,hashnode.com/new,80,dofollow,free,guest-post,55,80,20,55,High,Dev blogging platform; custom domain
+39,There's An AI For That,theresanaiforthat.com,theresanaiforthat.com/submit,65,dofollow,paid,ai-directory,85,65,50,54,High,5M visits; largest AI directory
+40,Fazier,fazier.com,fazier.com,82,dofollow,free,launch,50,82,20,53,Medium,PH alternative with high DR
+41,Toolify.ai,toolify.ai,toolify.ai/submit,55,dofollow,paid,ai-directory,85,55,40,52,Medium,300K+ visits; AI analytics
+42,Peerlist,peerlist.io,peerlist.io,76,dofollow,free,startup,55,76,20,51,Medium,Professional tech network
+43,HARO/Featured,featured.com,featured.com/signup,85,dofollow,free,pr,85,85,50,50,Medium,Journo queries; tier-1 placements
+44,Futuretools.io,futuretools.io,futuretools.io/submit-a-tool,69,dofollow,free,ai-directory,80,69,25,49,Medium,Curated by Matt Wolfe; strong traffic
+45,Qwoted,qwoted.com,qwoted.com,82,dofollow,free,pr,80,82,45,48,Medium,Premium journo queries; 2 free/mo
+46,Source of Sources,sourceofsources.com,sourceofsources.com,78,dofollow,free,pr,80,78,35,47,Medium,Shankman's HARO successor
+47,Muck Rack (individual),muckrack.com,muckrack.com,85,dofollow,paid,pr,80,85,70,46,Medium,Enterprise PR CRM; $5K+/yr
+48,PodMatch,podmatch.com,podmatch.com,60,dofollow,free,podcast,70,60,25,45,Medium,Dating-app style podcast matching
+49,Yelp,biz.yelp.com,biz.yelp.com,93,nofollow,free,local,50,93,15,44,Medium,Top global review directory
+50,Kerix.net,kerix.net,kerix.net/en/annuaire-entreprise/kerix,38,dofollow,free,local,100,38,15,43,Medium,30K+ Moroccan companies; B2B focus

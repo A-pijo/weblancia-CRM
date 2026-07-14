@@ -7,43 +7,65 @@ import { AnimatedReveal } from "@/components/shared/animated-reveal"
 import { CTABanner } from "@/components/sections/cta-banner"
 import { SectionHeader } from "@/components/shared/section-header"
 import { BlogCard } from "@/components/cards/blog-card"
-import { getPublishedPosts, getBlogCategories } from "@/lib/blog/queries"
+import { prisma } from "@/lib/database/prisma"
 import { siteConfig } from "@/lib/constants/site"
 import type { Insight } from "@/types/insight"
+import { CollectionPageJsonLd } from "@/components/shared/json-ld"
+import { getAuthorSlug } from "@/lib/data/authors"
 
 export const metadata: Metadata = {
   title: "Insights | Weblancia",
   description: "Articles, analyses et tendances du digital : développement web, marketing, design et innovation.",
+  keywords: ["Weblancia", "blog", "insights", "digital", "développement web", "marketing digital", "design", "tendances"],
   alternates: { canonical: `${siteConfig.url}/insights` },
   openGraph: {
     title: "Insights | Weblancia",
     description: "Articles, analyses et tendances du digital : développement web, marketing, design et innovation.",
     url: `${siteConfig.url}/insights`,
+    siteName: "Weblancia",
+    locale: "fr_FR",
+    alternateLocale: ["en_US", "ar_SA"],
+    type: "website",
+    images: [{ url: "/images/og/og.svg", width: 1200, height: 630 }],
   },
+  twitter: { card: "summary_large_image", site: "@weblancia", creator: "@weblancia", title: "Insights | Weblancia", description: "Articles, analyses et tendances du digital.", images: ["/images/og/og.svg"] },
+  robots: { index: true, follow: true, googleBot: { index: true, follow: true, "max-image-preview": "large" } },
 }
+
+export const revalidate = 3600
 
 export default async function InsightsPage() {
   const [dbPosts, categories] = await Promise.all([
-    getPublishedPosts(50).catch(() => []),
-    getBlogCategories().catch(() => []),
+    prisma.blogPost.findMany({
+      where: { isPublished: true },
+      orderBy: { publishedAt: "desc" },
+      take: 50,
+      include: { category: true },
+    }).catch(() => []),
+    prisma.blogCategory.findMany({ orderBy: { title: "asc" } }).catch(() => []),
   ])
 
-  const articles: Insight[] = dbPosts.map((p) => ({
-    slug: p.slug,
-    title: p.title,
-    description: p.excerpt ?? "",
-    category: p.category.title,
-    author: p.author ?? "Weblancia",
-    date: p.publishedAt?.toISOString().split("T")[0] ?? "",
-    readTime: p.readingTime ? `${p.readingTime} min` : "5 min",
-    image: p.featuredImage ?? undefined,
-    content: p.content ?? undefined,
-    tags: (p.tags as string[]) ?? [],
-    featured: p.isFeatured,
-  }))
+  const articles: Insight[] = dbPosts.map((p) => {
+    const authorName = p.author ?? "Weblancia"
+    return {
+      slug: p.slug,
+      title: p.title,
+      description: p.excerpt ?? "",
+      category: p.category.title,
+      author: authorName,
+      authorSlug: getAuthorSlug(authorName),
+      date: p.publishedAt?.toISOString().split("T")[0] ?? "",
+      readTime: p.readingTime ? `${p.readingTime} min` : "5 min",
+      image: p.featuredImage ?? undefined,
+      content: p.content ?? undefined,
+      tags: (p.tags as string[]) ?? [],
+      featured: p.isFeatured,
+    }
+  })
 
   return (
     <>
+      <CollectionPageJsonLd name="Insights | Weblancia" description="Articles, analyses et tendances du digital" url={`${siteConfig.url}/insights`} numberOfItems={articles.length} />
       <HeroDefault
         headline="Insights"
         subheadline="Articles, analyses et tendances pour rester à la pointe du digital."

@@ -147,8 +147,8 @@ export default async function HomePage() {
       <HeroDefault
         headline="L'expertise digitale au service de votre succès"
         subheadline="Agence digitale premium à Fès, spécialisée en création de sites web, développement sur-mesure, SEO et branding. Nous accompagnons les entreprises ambitieuses."
-        primaryCta={{ label: "Découvrez nos services", href: "/services" }}
-        secondaryCta={{ label: "Voir nos réalisations", href: "/work" }}
+        primaryCta={{ label: "Démarrer votre projet", href: "/start-project" }}
+        secondaryCta={{ label: "Découvrez nos services", href: "/services" }}
       />
 
       <TrustBar />

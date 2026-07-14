@@ -1,28 +1,29 @@
-import { NextResponse } from "next/server"
-import { getFAQs, createFAQ } from "@/lib/faq/queries"
+import { faqService } from "@/lib/repositories/services/faq.service"
+import { apiRoute, apiBody } from "@/lib/security/api-handler"
+import { success, created } from "@/lib/security/response"
+import { z } from "zod"
 
-export async function GET(req: Request) {
-  const { searchParams } = new URL(req.url)
+const faqSchema = z.object({
+  question: z.string().min(1, "Question is required"),
+  answer: z.string().min(1, "Answer is required"),
+  category: z.string().optional(),
+  displayOrder: z.number().int().optional(),
+  isActive: z.boolean().optional(),
+})
 
-  const result = await getFAQs({
+export const GET = apiRoute(async (ctx) => {
+  const { searchParams } = ctx.request.nextUrl
+  const result = await faqService.list({
     search: searchParams.get("search") ?? undefined,
-    isActive: searchParams.has("isActive") ? searchParams.get("isActive") === "true" : undefined,
-    sort: searchParams.get("sort") ?? undefined,
-    order: (searchParams.get("order") as "asc" | "desc") ?? undefined,
     page: searchParams.get("page") ? Number(searchParams.get("page")) : undefined,
     limit: searchParams.get("limit") ? Number(searchParams.get("limit")) : undefined,
   })
+  return success(result)
+})
 
-  return NextResponse.json(result)
-}
-
-export async function POST(req: Request) {
-  try {
-    const body = await req.json()
-    const faq = await createFAQ(body)
-    return NextResponse.json(faq, { status: 201 })
-  } catch (e) {
-    const message = e instanceof Error ? e.message : "Internal error"
-    return NextResponse.json({ error: message }, { status: 500 })
-  }
-}
+export const POST = apiRoute(async (ctx) => {
+  const body = await apiBody(faqSchema)(ctx.request)
+  if (body.error) return body.error
+  const faq = await faqService.create(body.data)
+  return created(faq)
+}, { auth: true, admin: true })

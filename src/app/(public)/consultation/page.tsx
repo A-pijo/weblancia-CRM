@@ -1,5 +1,6 @@
 import { Metadata } from "next"
 import Link from "next/link"
+import { CollectionPageJsonLd } from "@/components/shared/json-ld"
 import { HeroDefault } from "@/components/sections/hero/hero-default"
 import { SectionWrapper } from "@/components/shared/section-wrapper"
 import { Container } from "@/components/shared/container"
@@ -12,12 +13,19 @@ import { ArrowRight, CheckCircle } from "@/components/icons"
 export const metadata: Metadata = {
   title: "Consultation | Weblancia",
   description: "Réservez une consultation personnalisée avec nos experts pour définir la stratégie digitale de votre projet.",
+  keywords: ["Weblancia", "consultation", "stratégie digitale", "Casablanca", "expert"],
   alternates: { canonical: `${siteConfig.url}/consultation` },
   openGraph: {
     title: "Consultation | Weblancia",
     description: "Réservez une consultation personnalisée avec nos experts pour définir la stratégie digitale de votre projet.",
     url: `${siteConfig.url}/consultation`,
+    siteName: "Weblancia",
+    locale: "fr_FR",
+    alternateLocale: ["en_US", "ar_SA"],
+    images: [{ url: "/images/og/og.svg", width: 1200, height: 630 }],
   },
+  twitter: { card: "summary_large_image", site: "@weblancia", creator: "@weblancia", title: "Consultation | Weblancia", description: "Réservez une consultation personnalisée avec nos experts.", images: ["/images/og/og.svg"] },
+  robots: { index: true, follow: true, googleBot: { index: true, follow: true, "max-image-preview": "large" } },
 }
 
 const consultationTypes = [
@@ -57,6 +65,7 @@ const processSteps = [
 export default function ConsultationPage() {
   return (
     <>
+      <CollectionPageJsonLd name="Consultation | Weblancia" description="Réservez une consultation personnalisée avec nos experts pour définir la stratégie digitale de votre projet." url={`${siteConfig.url}/consultation`} numberOfItems={4} />
       <HeroDefault
         headline="Consultation"
         subheadline="Réservez une consultation personnalisée avec nos experts pour accélérer votre projet digital."

@@ -9,34 +9,38 @@ import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Clock, BookOpen, Monitor, CalendarBlank, ArrowRight } from "@/components/icons"
 import { CourseJsonLd } from "@/components/shared/json-ld"
-import { getCourseBySlug, getPublishedCourses } from "@/lib/academy/courses/queries"
+import { prisma } from "@/lib/database/prisma"
 import { siteConfig } from "@/lib/constants/site"
 
 type Props = { params: Promise<{ slug: string }> }
 
-export async function generateStaticParams() {
-  const courses = await getPublishedCourses().catch(() => [])
-  return courses.map((c) => ({ slug: c.slug }))
-}
-
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params
-  const course = await getCourseBySlug(slug).catch(() => null)
+  const course = await prisma.course.findUnique({ where: { slug }, include: { category: true } }).catch(() => null)
   if (!course) return { title: "Cours non trouvé | Weblancia Academy" }
   return {
     title: `${course.title} | Weblancia Academy`,
     description: course.shortDescription ?? undefined,
+    keywords: `Weblancia, ${course.title}, cours, formation, ${course.category?.title ?? "digital"}, academy, Casablanca`,
     alternates: { canonical: `${siteConfig.url}/academy/courses/${course.slug}` },
     openGraph: {
       title: course.title,
       description: course.shortDescription ?? undefined,
       url: `${siteConfig.url}/academy/courses/${course.slug}`,
+      siteName: "Weblancia",
+      locale: "fr_FR",
+      alternateLocale: ["en_US", "ar_SA"],
+      images: course.thumbnail ? [{ url: course.thumbnail, width: 1200, height: 630 }] : [{ url: "/images/og/og.svg", width: 1200, height: 630 }],
     },
     twitter: {
       card: "summary_large_image",
+      site: "@weblancia",
+      creator: "@weblancia",
       title: course.title,
       description: course.shortDescription ?? undefined,
+      images: course.thumbnail ? [course.thumbnail] : ["/images/og/og.svg"],
     },
+    robots: { index: true, follow: true, googleBot: { index: true, follow: true, "max-image-preview": "large" } },
   }
 }
 
@@ -46,9 +50,11 @@ const levelColors: Record<string, "success" | "warning" | "danger"> = {
   Advanced: "danger",
 }
 
+export const revalidate = 3600
+
 export default async function CourseDetailPage({ params }: Props) {
   const { slug } = await params
-  const course = await getCourseBySlug(slug).catch(() => null)
+  const course = await prisma.course.findUnique({ where: { slug }, include: { category: true } }).catch(() => null)
   if (!course) notFound()
 
   const curriculumLen = Array.isArray(course.curriculum) ? (course.curriculum as unknown[]).length : 0
@@ -59,7 +65,7 @@ export default async function CourseDetailPage({ params }: Props) {
   return (
     <SectionWrapper>
       <Container>
-        <CourseJsonLd name={course.title} description={course.shortDescription ?? ""} provider={course.instructor ?? "Weblancia"} url={`${siteConfig.url}/academy/courses/${course.slug}`} image={course.thumbnail ? `${siteConfig.url}${course.thumbnail}` : undefined} />
+        <CourseJsonLd name={course.title} description={course.shortDescription ?? ""} provider={course.instructor ?? "Weblancia"} url={`${siteConfig.url}/academy/courses/${course.slug}`} image={course.thumbnail ? `${siteConfig.url}${course.thumbnail}` : undefined} duration={course.duration ?? undefined} price={course.price ? Number(course.price) : undefined} currency="EUR" />
         <AnimatedReveal>
           <Link href="/academy/courses" className="text-body-sm text-accent hover:text-accent-hover mb-4 inline-flex items-center gap-1">
             <ArrowRight size={16} className="rotate-180" /> Tous les cours

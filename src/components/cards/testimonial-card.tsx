@@ -1,17 +1,9 @@
 import { cn } from "@/lib/utils/cn"
+import { getInitials } from "@/lib/utils/string"
 import type { Testimonial } from "@/types/common"
 
 interface TestimonialCardProps {
   testimonial: Testimonial
-}
-
-function getInitials(name: string): string {
-  return name
-    .split(" ")
-    .map((n) => n.charAt(0))
-    .join("")
-    .toUpperCase()
-    .slice(0, 2)
 }
 
 function TestimonialCard({ testimonial }: TestimonialCardProps) {
@@ -27,7 +19,7 @@ function TestimonialCard({ testimonial }: TestimonialCardProps) {
         &ldquo;{testimonial.quote}&rdquo;
       </blockquote>
       <div className="flex items-center gap-3">
-        <div className="w-12 h-12 rounded-full bg-accent-light flex items-center justify-center shrink-0">
+        <div className="w-12 h-12 rounded-full bg-accent-light flex items-center justify-center shrink-0" aria-hidden="true">
           <span className="text-sm font-semibold text-accent">{getInitials(testimonial.author)}</span>
         </div>
         <div>

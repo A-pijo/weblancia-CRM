@@ -4,7 +4,7 @@ import { useState } from "react"
 import { useRouter } from "next/navigation"
 import { PageHeader } from "@/components/admin/page-header"
 import { TestimonialForm } from "@/components/admin/testimonials/testimonials-form"
-import type { TestimonialFormData } from "@/lib/validations/testimonials"
+import type { TestimonialFormData } from "@/lib/validation/testimonials"
 
 export default function NewTestimonialPage() {
   const router = useRouter()

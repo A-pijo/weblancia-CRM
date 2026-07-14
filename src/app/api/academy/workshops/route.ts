@@ -1,35 +1,22 @@
-import { NextResponse } from "next/server"
-import { getWorkshops, createWorkshop } from "@/lib/academy/workshops/queries"
-import { workshopSchema } from "@/lib/validations/academy"
+import { academyService } from "@/lib/repositories/services/academy.service"
+import { apiRoute, apiBody } from "@/lib/security/api-handler"
+import { success, created } from "@/lib/security/response"
+import { workshopSchema } from "@/lib/validation/academy"
 
-export async function GET(req: Request) {
-  const { searchParams } = new URL(req.url)
-
-  const result = await getWorkshops({
+export const GET = apiRoute(async (ctx) => {
+  const { searchParams } = ctx.request.nextUrl
+  return success(await academyService.listWorkshops({
     search: searchParams.get("search") ?? undefined,
-    academyCategoryId: searchParams.get("academyCategoryId") ? Number(searchParams.get("academyCategoryId")) : undefined,
+    category: searchParams.get("category") ?? undefined,
     status: searchParams.get("status") ?? undefined,
-    isPublished: searchParams.has("isPublished") ? searchParams.get("isPublished") === "true" : undefined,
-    sort: searchParams.get("sort") ?? undefined,
-    order: (searchParams.get("order") as "asc" | "desc") ?? undefined,
+    published: searchParams.has("isPublished") ? searchParams.get("isPublished") === "true" : undefined,
     page: searchParams.get("page") ? Number(searchParams.get("page")) : undefined,
     limit: searchParams.get("limit") ? Number(searchParams.get("limit")) : undefined,
-  })
+  }))
+})
 
-  return NextResponse.json(result)
-}
-
-export async function POST(req: Request) {
-  try {
-    const body = await req.json()
-    const parsed = workshopSchema.safeParse(body)
-    if (!parsed.success) {
-      return NextResponse.json({ error: parsed.error.flatten() }, { status: 400 })
-    }
-    const item = await createWorkshop(parsed.data as unknown as Record<string, unknown>)
-    return NextResponse.json(item, { status: 201 })
-  } catch (e) {
-    const message = e instanceof Error ? e.message : "Internal error"
-    return NextResponse.json({ error: message }, { status: 500 })
-  }
-}
+export const POST = apiRoute(async (ctx) => {
+  const body = await apiBody(workshopSchema)(ctx.request)
+  if (body.error) return body.error
+  return created(await academyService.createWorkshop(body.data))
+}, { auth: true, admin: true })

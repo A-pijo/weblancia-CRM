@@ -1,6 +1,6 @@
 import { PageHeader } from "@/components/admin/page-header"
 import { SectionCard } from "@/components/admin/section-card"
-import { db } from "@/lib/db"
+import { prisma } from "@/lib/database/prisma"
 
 function missingTags(m: { description: string | null; ogImage: string | null } | null): string[] {
   if (!m) return ["Meta Description", "OG Image"]
@@ -20,11 +20,11 @@ const contentGroups = [
 
 export default async function SEOCenterPage() {
   const [services, projects, posts, courses, resources] = await Promise.all([
-    db.service.findMany({ where: { isActive: true }, include: { seoMetadata: true }, orderBy: { title: "asc" } }),
-    db.project.findMany({ where: { isActive: true }, include: { seoMetadata: true }, orderBy: { title: "asc" } }),
-    db.blogPost.findMany({ where: { isPublished: true }, include: { seoMetadata: true }, orderBy: { title: "asc" } }),
-    db.course.findMany({ where: { isPublished: true }, include: { seoMetadata: true }, orderBy: { title: "asc" } }),
-    db.resource.findMany({ where: { isPublished: true }, include: { seoMetadata: true }, orderBy: { title: "asc" } }),
+    prisma.service.findMany({ where: { isActive: true }, include: { seoMetadata: true }, orderBy: { title: "asc" } }),
+    prisma.project.findMany({ where: { isActive: true }, include: { seoMetadata: true }, orderBy: { title: "asc" } }),
+    prisma.blogPost.findMany({ where: { isPublished: true }, include: { seoMetadata: true }, orderBy: { title: "asc" } }),
+    prisma.course.findMany({ where: { isPublished: true }, include: { seoMetadata: true }, orderBy: { title: "asc" } }),
+    prisma.resource.findMany({ where: { isPublished: true }, include: { seoMetadata: true }, orderBy: { title: "asc" } }),
   ])
 
   const allData = { services, projects, posts, courses, resources } as Record<string, { id: number; title: string; seoMetadata: { description: string | null; ogImage: string | null } | null }[]>

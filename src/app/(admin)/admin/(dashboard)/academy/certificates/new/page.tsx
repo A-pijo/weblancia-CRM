@@ -4,7 +4,7 @@ import { useState, useEffect } from "react"
 import { useRouter } from "next/navigation"
 import { PageHeader } from "@/components/admin/page-header"
 import { CertificateForm } from "@/components/admin/academy/certificate-form"
-import type { CertificateFormData } from "@/lib/validations/academy"
+import type { CertificateFormData } from "@/lib/validation/academy"
 
 export default function NewCertificatePage() {
   const router = useRouter()

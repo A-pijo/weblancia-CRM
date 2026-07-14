@@ -4,7 +4,7 @@ import { useState, useEffect } from "react"
 import { useRouter } from "next/navigation"
 import { PageHeader } from "@/components/admin/page-header"
 import { UserForm } from "@/components/admin/users/users-form"
-import type { UserFormData } from "@/lib/validations/users"
+import type { UserFormData } from "@/lib/validation/users"
 
 interface Role { id: number; name: string }
 

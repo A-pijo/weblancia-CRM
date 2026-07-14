@@ -1,43 +1,37 @@
-import { NextResponse } from "next/server"
-import { getWorkshopById, updateWorkshop, softDeleteWorkshop, permanentlyDeleteWorkshop, duplicateWorkshop, toggleWorkshopStatus } from "@/lib/academy/workshops/queries"
-import { workshopSchema } from "@/lib/validations/academy"
+import { z } from "zod"
+import { academyService } from "@/lib/repositories/services/academy.service"
+import { workshopSchema } from "@/lib/validation/academy"
+import { apiRoute, apiBody } from "@/lib/security/api-handler"
+import { success, notFound, badRequest } from "@/lib/security/response"
+import { NotFoundError } from "@/lib/errors"
 
-export async function GET(_req: Request, { params }: { params: Promise<{ id: string }> }) {
-  const { id } = await params
-  const item = await getWorkshopById(Number(id))
-  if (!item) return NextResponse.json({ error: "Not found" }, { status: 404 })
-  return NextResponse.json(item)
-}
+const workshopUpdateSchema = workshopSchema.partial().extend({
+  _action: z.enum(["duplicate", "toggle"]).optional(),
+}).strict()
 
-export async function PATCH(req: Request, { params }: { params: Promise<{ id: string }> }) {
-  const { id } = await params
-  const body = await req.json()
+const workshopDeleteSchema = z.object({ permanent: z.literal(true).optional() }).strict()
 
-  if (body._action === "duplicate") {
-    const dup = await duplicateWorkshop(Number(id))
-    return NextResponse.json(dup)
-  }
+export const GET = apiRoute(async (ctx) => {
+  try { return success(await academyService.getWorkshopById(Number(ctx.params.id))) }
+  catch (e) { if (e instanceof NotFoundError) return notFound(); throw e }
+})
 
-  if (body._action === "toggle") {
-    const updated = await toggleWorkshopStatus(Number(id), body.isPublished)
-    return NextResponse.json(updated)
-  }
+export const PATCH = apiRoute(async (ctx) => {
+  const body = await apiBody(workshopUpdateSchema)(ctx.request)
+  if (body.error) return body.error
 
-  const parsed = workshopSchema.partial().safeParse(body)
-  if (!parsed.success) {
-    return NextResponse.json({ error: parsed.error.flatten() }, { status: 400 })
-  }
-  const updated = await updateWorkshop(Number(id), parsed.data as unknown as Record<string, unknown>)
-  return NextResponse.json(updated)
-}
+  if (body.data._action === "duplicate") return success(await academyService.duplicateWorkshop(Number(ctx.params.id)))
+  if (body.data._action === "toggle") return success(await academyService.toggleWorkshopStatus(Number(ctx.params.id)))
 
-export async function DELETE(req: Request, { params }: { params: Promise<{ id: string }> }) {
-  const { id } = await params
-  const body = await req.json().catch(() => ({}))
-  if (body.permanent) {
-    await permanentlyDeleteWorkshop(Number(id))
-  } else {
-    await softDeleteWorkshop(Number(id))
-  }
-  return NextResponse.json({ success: true })
-}
+  return success(await academyService.updateWorkshop(Number(ctx.params.id), body.data))
+}, { auth: true, admin: true })
+
+export const DELETE = apiRoute(async (ctx) => {
+  const raw = await ctx.request.json().catch(() => ({}))
+  const parsed = workshopDeleteSchema.safeParse(raw)
+  if (!parsed.success) return badRequest("Données invalides", parsed.error.flatten().fieldErrors)
+
+  if (parsed.data.permanent) { await academyService.permanentlyDeleteWorkshop(Number(ctx.params.id)) }
+  else { await academyService.deleteWorkshop(Number(ctx.params.id)) }
+  return success({ message: "Atelier supprimé" })
+}, { auth: true, admin: true })

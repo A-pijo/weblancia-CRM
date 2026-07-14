@@ -1,75 +1,51 @@
-import { NextResponse } from "next/server"
-import { getSession } from "@/lib/auth/session"
-import {
-  getProjectRequests,
-  getProjectRequestsCount,
-  markProjectRead,
-  deleteProjectRequest,
-} from "@/lib/forms/queries"
+import { prisma } from "@/lib/database/prisma"
+import { apiRoute, apiBody } from "@/lib/security/api-handler"
+import { success, badRequest } from "@/lib/security/response"
+import { z } from "zod"
 
-async function requireAdmin() {
-  const session = await getSession()
-  if (!session) throw new Error("Unauthorized")
-}
+export const GET = apiRoute(
+  async (ctx) => {
+    const { searchParams } = ctx.request.nextUrl
+    const page = Math.max(1, Number(searchParams.get("page")) || 1)
+    const limit = Math.max(1, Number(searchParams.get("limit")) || 20)
+    const isRead = searchParams.has("isRead") ? searchParams.get("isRead") === "true" : undefined
+    const search = searchParams.get("search") ?? undefined
 
-function withError(fn: (req: Request) => Promise<Response>) {
-  return async (req: Request) => {
-    try {
-      await requireAdmin()
-      return fn(req)
-    } catch (e) {
-      const message = e instanceof Error ? e.message : "Internal error"
-      const status = message === "Unauthorized" ? 401 : 500
-      return NextResponse.json({ error: message }, { status })
-    }
-  }
-}
+    const where: Record<string, unknown> = {}
+    if (isRead !== undefined) where.isRead = isRead
+    if (search) where.OR = [{ name: { contains: search } }, { email: { contains: search } }]
 
-export const GET = withError(async function GET(req: Request) {
-  const { searchParams } = new URL(req.url)
-  const page = Math.max(1, Number(searchParams.get("page")) || 1)
-  const limit = Math.max(1, Number(searchParams.get("limit")) || 20)
+    const [items, total] = await Promise.all([
+      prisma.startProject.findMany({ where, orderBy: { createdAt: "desc" }, skip: (page - 1) * limit, take: limit }),
+      prisma.startProject.count({ where }),
+    ])
 
-  const items = await getProjectRequests({
-    search: searchParams.get("search") ?? undefined,
-    isRead: searchParams.has("isRead") ? searchParams.get("isRead") === "true" : undefined,
-    page,
-    limit,
-  })
-  const total = await getProjectRequestsCount({
-    search: searchParams.get("search") ?? undefined,
-    isRead: searchParams.has("isRead") ? searchParams.get("isRead") === "true" : undefined,
-  })
+    return success({ items, total, page, totalPages: Math.ceil(total / limit) })
+  },
+  { auth: true, admin: true },
+)
 
-  return NextResponse.json({ items, total, page, totalPages: Math.ceil(total / limit) })
-})
+export const PATCH = apiRoute(
+  async (ctx) => {
+    const body = await apiBody(z.object({ action: z.literal("read"), id: z.number() }))(ctx.request)
+    if (body.error) return body.error
+    await prisma.startProject.update({ where: { id: body.data.id }, data: { isRead: true } })
+    return success({ message: "Projet marqué comme lu" })
+  },
+  { auth: true, admin: true },
+)
 
-export const PATCH = withError(async function PATCH(req: Request) {
-  try {
-    const body = await req.json()
-    if (body.action !== "read") {
-      return NextResponse.json({ error: "Invalid action" }, { status: 400 })
-    }
-    await markProjectRead(Number(body.id))
-    return NextResponse.json({ success: true })
-  } catch (e) {
-    const message = e instanceof Error ? e.message : "Internal error"
-    return NextResponse.json({ error: message }, { status: 500 })
-  }
-})
-
-export const DELETE = withError(async function DELETE(req: Request) {
-  try {
-    const { searchParams } = new URL(req.url)
+export const DELETE = apiRoute(
+  async (ctx) => {
+    const { searchParams } = ctx.request.nextUrl
     if (searchParams.has("id")) {
-      await deleteProjectRequest(Number(searchParams.get("id")))
+      await prisma.startProject.delete({ where: { id: Number(searchParams.get("id")) } })
     } else {
-      const body = await req.json()
-      await Promise.all(body.ids.map((id: number) => deleteProjectRequest(id)))
+      const body = await apiBody(z.object({ ids: z.array(z.number()) }))(ctx.request)
+      if (body.error) return body.error
+      await Promise.all(body.data.ids.map((id: number) => prisma.startProject.delete({ where: { id } })))
     }
-    return NextResponse.json({ success: true })
-  } catch (e) {
-    const message = e instanceof Error ? e.message : "Internal error"
-    return NextResponse.json({ error: message }, { status: 500 })
-  }
-})
+    return success({ message: "Projet(s) supprimé(s)" })
+  },
+  { auth: true, admin: true },
+)

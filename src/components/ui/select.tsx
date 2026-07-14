@@ -53,6 +53,11 @@ const Select = forwardRef<HTMLSelectElement, SelectProps>(
               className,
             )}
             aria-invalid={hasError}
+            aria-describedby={
+              hasError
+                ? `${selectId}-error`
+                : undefined
+            }
             {...props}
           >
             {placeholder && (
@@ -71,7 +76,7 @@ const Select = forwardRef<HTMLSelectElement, SelectProps>(
           </div>
         </div>
         {hasError && (
-          <p className="text-[13px]/[18px] text-danger" role="alert">
+          <p id={`${selectId}-error`} className="text-[13px]/[18px] text-danger" role="alert">
             {error}
           </p>
         )}

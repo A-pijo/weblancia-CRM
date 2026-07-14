@@ -1,36 +1,20 @@
-import { NextResponse } from "next/server"
-import { db } from "@/lib/db"
+import { prisma } from "@/lib/database/prisma"
 import { hashPassword } from "@/lib/auth/password"
-import { registerSchema } from "@/lib/validations/auth"
+import { registerSchema } from "@/lib/validation/auth"
+import { apiRoute, apiBody } from "@/lib/security/api-handler"
+import { created, conflict, serverError } from "@/lib/security/response"
 
-export async function POST(req: Request) {
-  try {
-    const body = await req.json()
-    const parsed = registerSchema.safeParse(body)
-    if (!parsed.success) {
-      return NextResponse.json({ error: parsed.error.flatten() }, { status: 400 })
-    }
+export const POST = apiRoute(async (ctx) => {
+  const body = await apiBody(registerSchema)(ctx.request)
+  if (body.error) return body.error
+  const { name, email, password } = body.data
 
-    const { name, email, password } = parsed.data
+  const existing = await prisma.user.findUnique({ where: { email } })
+  if (existing) return conflict("Email déjà enregistré")
 
-    const existing = await db.user.findUnique({ where: { email } })
-    if (existing) {
-      return NextResponse.json({ error: "Email already registered" }, { status: 409 })
-    }
+  const editorRole = await prisma.role.findUnique({ where: { name: "Editor" } })
+  if (!editorRole) return serverError()
 
-    const editorRole = await db.role.findUnique({ where: { name: "Editor" } })
-    if (!editorRole) {
-      return NextResponse.json({ error: "Registration unavailable" }, { status: 500 })
-    }
-
-    const hashed = await hashPassword(password)
-    const user = await db.user.create({
-      data: { name, email, password: hashed, roleId: editorRole.id, isActive: false },
-    })
-
-    return NextResponse.json({ success: true, message: "Account created. Awaiting admin activation." }, { status: 201 })
-  } catch (e) {
-    const message = e instanceof Error ? e.message : "Internal error"
-    return NextResponse.json({ error: message }, { status: 500 })
-  }
-}
+  await prisma.user.create({ data: { name, email, password: await hashPassword(password), roleId: editorRole.id, isActive: false } })
+  return created({ message: "Compte créé. En attente d'activation par un administrateur." })
+}, { rateLimit: { max: 5, by: "ip" } })

@@ -1,24 +1,31 @@
 import { Metadata } from "next"
 import Link from "next/link"
+import { CollectionPageJsonLd } from "@/components/shared/json-ld"
 import { SectionWrapper } from "@/components/shared/section-wrapper"
 import { Container } from "@/components/shared/container"
 import { AnimatedReveal } from "@/components/shared/animated-reveal"
 import { CTABanner } from "@/components/sections/cta-banner"
 import { SectionHeader } from "@/components/shared/section-header"
 import { siteConfig } from "@/lib/constants/site"
-import { getPublishedWorkshops } from "@/lib/academy/workshops/queries"
-import { getAcademyCategories } from "@/lib/academy/categories/queries"
+import { prisma } from "@/lib/database/prisma"
 import { ArrowRight, Clock, Monitor, CalendarBlank, User } from "@/components/icons"
 
 export const metadata: Metadata = {
   title: "Ateliers | Weblancia Academy",
   description: "Participez à nos ateliers pratiques pour développer vos compétences digitales en temps réel.",
+  keywords: ["Weblancia", "academy", "ateliers", "workshops", "formation pratique", "digital"],
   alternates: { canonical: `${siteConfig.url}/academy/workshops` },
   openGraph: {
     title: "Ateliers | Weblancia Academy",
     description: "Participez à nos ateliers pratiques pour développer vos compétences digitales en temps réel.",
     url: `${siteConfig.url}/academy/workshops`,
+    siteName: "Weblancia",
+    locale: "fr_FR",
+    alternateLocale: ["en_US", "ar_SA"],
+    images: [{ url: "/images/og/og.svg", width: 1200, height: 630 }],
   },
+  twitter: { card: "summary_large_image", site: "@weblancia", creator: "@weblancia", title: "Ateliers | Weblancia Academy", description: "Participez à nos ateliers pratiques pour développer vos compétences digitales.", images: ["/images/og/og.svg"] },
+  robots: { index: true, follow: true, googleBot: { index: true, follow: true, "max-image-preview": "large" } },
 }
 
 function formatPrice(price: unknown): string {
@@ -26,11 +33,14 @@ function formatPrice(price: unknown): string {
   return `${Number(price as unknown as number).toFixed(2)} €`
 }
 
+export const revalidate = 3600
+
 export default async function WorkshopsPage() {
-  const workshops = await getPublishedWorkshops().catch(() => [])
+  const workshops = await prisma.workshop.findMany({ where: { isPublished: true }, include: { category: true }, orderBy: { date: "asc" } }).catch(() => [])
 
   return (
     <>
+      <CollectionPageJsonLd name="Ateliers | Weblancia Academy" description="Participez à nos ateliers pratiques pour développer vos compétences digitales en temps réel." url={`${siteConfig.url}/academy/workshops`} numberOfItems={workshops.length} />
       <SectionWrapper>
         <Container>
           <AnimatedReveal>

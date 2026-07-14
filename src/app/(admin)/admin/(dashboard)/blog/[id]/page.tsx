@@ -4,7 +4,7 @@ import { useState, useEffect } from "react"
 import { useRouter, useParams } from "next/navigation"
 import { PageHeader } from "@/components/admin/page-header"
 import { BlogForm } from "@/components/admin/blog/blog-form"
-import type { BlogFormData } from "@/lib/validations/blog"
+import type { BlogFormData } from "@/lib/validation/blog"
 
 export default function EditBlogPage() {
   const router = useRouter()

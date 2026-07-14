@@ -1,29 +1,21 @@
-import { NextResponse } from "next/server"
-import { getTestimonials, createTestimonial } from "@/lib/testimonials/queries"
-import { testimonialSchema } from "@/lib/validations/testimonials"
+import { testimonialService } from "@/lib/repositories/services/testimonial.service"
+import { apiRoute, apiBody } from "@/lib/security/api-handler"
+import { success, created } from "@/lib/security/response"
+import { testimonialSchema } from "@/lib/validation/testimonials"
 
-export async function GET(req: Request) {
-  const { searchParams } = new URL(req.url)
-  const result = await getTestimonials({
+export const GET = apiRoute(async (ctx) => {
+  const { searchParams } = ctx.request.nextUrl
+  const result = await testimonialService.list({
     search: searchParams.get("search") ?? undefined,
-    isActive: searchParams.has("isActive") ? searchParams.get("isActive") === "true" : undefined,
     page: searchParams.get("page") ? Number(searchParams.get("page")) : undefined,
     limit: searchParams.get("limit") ? Number(searchParams.get("limit")) : undefined,
   })
-  return NextResponse.json(result)
-}
+  return success(result)
+})
 
-export async function POST(req: Request) {
-  try {
-    const body = await req.json()
-    const parsed = testimonialSchema.safeParse(body)
-    if (!parsed.success) {
-      return NextResponse.json({ error: parsed.error.flatten() }, { status: 400 })
-    }
-    const testimonial = await createTestimonial(parsed.data as unknown as Record<string, unknown>)
-    return NextResponse.json(testimonial, { status: 201 })
-  } catch (e) {
-    const message = e instanceof Error ? e.message : "Internal error"
-    return NextResponse.json({ error: message }, { status: 500 })
-  }
-}
+export const POST = apiRoute(async (ctx) => {
+  const body = await apiBody(testimonialSchema)(ctx.request)
+  if (body.error) return body.error
+  const testimonial = await testimonialService.create(body.data)
+  return created(testimonial)
+}, { auth: true, admin: true })

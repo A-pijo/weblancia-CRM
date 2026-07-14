@@ -1,5 +1,6 @@
 import { Metadata } from "next"
 import Link from "next/link"
+import { WebPageJsonLd } from "@/components/shared/json-ld"
 import { SectionWrapper } from "@/components/shared/section-wrapper"
 import { Container } from "@/components/shared/container"
 import { AnimatedReveal } from "@/components/shared/animated-reveal"
@@ -10,11 +11,7 @@ import { siteConfig } from "@/lib/constants/site"
 
 type Props = { params: Promise<{ type: string }> }
 
-const consultationTypes = ["strategie-digitale", "site-ecommerce", "seo-marketing", "audit-performance"] as const
-
-export function generateStaticParams() {
-  return consultationTypes.map((type) => ({ type }))
-}
+const consultationTypes = ["strategie-digitale", "site-ecommerce", "seo-marketing", "audit-performance", "refonte-site", "marketing-digital", "transformation-digitale"] as const
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { type } = await params
@@ -24,9 +21,11 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   return {
     title,
     description: data.description,
+    keywords: `Weblancia, consultation, ${type}, stratégie digitale, Casablanca`,
     alternates: { canonical: `${siteConfig.url}/consultation/${type}` },
-    openGraph: { title, description: data.description, url: `${siteConfig.url}/consultation/${type}` },
-    twitter: { card: "summary_large_image", title, description: data.description },
+    openGraph: { title, description: data.description, url: `${siteConfig.url}/consultation/${type}`, siteName: "Weblancia", locale: "fr_FR", alternateLocale: ["en_US", "ar_SA"], images: [{ url: "/images/og/og.svg", width: 1200, height: 630 }] },
+    twitter: { card: "summary_large_image", site: "@weblancia", creator: "@weblancia", title, description: data.description, images: ["/images/og/og.svg"] },
+    robots: { index: true, follow: true, googleBot: { index: true, follow: true, "max-image-preview": "large" } },
   }
 }
 
@@ -51,6 +50,21 @@ const consultationData: Record<string, { title: string; description: string; ben
     description: "Identifiez les opportunités d'optimisation de votre site web. Performance, sécurité, accessibilité et conversion.",
     benefits: ["Analyse de performance", "Audit de sécurité", "Tests d'accessibilité", "Optimisation Core Web Vitals", "Recommandations priorisées"],
   },
+  "refonte-site": {
+    title: "Consultation Refonte de Site",
+    description: "Modernisez votre site web pour améliorer performance, design et expérience utilisateur.",
+    benefits: ["Analyse de votre site actuel", "Maquettes et wireframes", "Proposition technique détaillée", "Plan de migration", "Suivi post-lancement"],
+  },
+  "marketing-digital": {
+    title: "Consultation Marketing Digital",
+    description: "Optimisez votre acquisition et votre visibilité avec une stratégie marketing sur mesure.",
+    benefits: ["Audit SEO et SEA", "Stratégie de contenu", "Calendrier éditorial", "Social media strategy", "Analyse de la concurrence"],
+  },
+  "transformation-digitale": {
+    title: "Consultation Transformation Digitale",
+    description: "Accompagnez votre entreprise dans sa transformation numérique avec une approche structurée.",
+    benefits: ["Diagnostic de maturité digitale", "Feuille de route stratégique", "Accompagnement au changement", "Choix technologiques", "Formation des équipes"],
+  },
 }
 
 export default async function ConsultationTypePage({ params }: Props) {
@@ -71,6 +85,7 @@ export default async function ConsultationTypePage({ params }: Props) {
 
   return (
     <SectionWrapper>
+      <WebPageJsonLd name={data.title + " | Weblancia"} description={data.description} url={`${siteConfig.url}/consultation/${type}`} />
       <Container>
         <AnimatedReveal>
           <Link href="/consultation" className="text-body-sm text-accent hover:text-accent-hover mb-4 inline-flex items-center gap-1">
@@ -79,7 +94,7 @@ export default async function ConsultationTypePage({ params }: Props) {
           <h1 className="text-display mt-4 mb-3">{data.title}</h1>
           <p className="text-body-lg text-text-secondary max-w-2xl mb-8">{data.description}</p>
           <Card className="p-8">
-            <h2 className="text-h3 font-semibold mb-6">Ce que vous obtiendrez</h2>
+            <h2 className="text-h2 font-semibold mb-6">Ce que vous obtiendrez</h2>
             <ul className="flex flex-col gap-3 mb-8">
               {data.benefits.map((benefit) => (
                 <li key={benefit} className="flex items-start gap-3">

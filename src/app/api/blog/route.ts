@@ -1,50 +1,42 @@
-import { NextResponse } from "next/server"
 import { revalidatePath } from "next/cache"
-import { getBlogPosts, createBlogPost, getBlogCategories } from "@/lib/blog/queries"
-import { blogSchema } from "@/lib/validations/blog"
-import { rateLimit, getClientIp } from "@/lib/rate-limiter"
+import { blogService } from "@/lib/repositories/services/blog.service"
+import { blogPostSchema } from "@/lib/repositories/dto/blog.dto"
+import { apiRoute, apiBody } from "@/lib/security/api-handler"
+import { success, created } from "@/lib/security/response"
+import { createAuditLog } from "@/lib/security/audit"
 
-export async function GET(req: Request) {
-  const { searchParams } = new URL(req.url)
+export const GET = apiRoute(async (ctx) => {
+  const { searchParams } = new URL(ctx.request.url)
 
-  const result = await getBlogPosts({
+  const result = await blogService.list({
     search: searchParams.get("search") ?? undefined,
-    categoryId: searchParams.get("categoryId") ? Number(searchParams.get("categoryId")) : undefined,
-    isPublished: searchParams.has("isPublished") ? searchParams.get("isPublished") === "true" : undefined,
-    isFeatured: searchParams.has("isFeatured") ? searchParams.get("isFeatured") === "true" : undefined,
-    sort: searchParams.get("sort") ?? undefined,
-    order: (searchParams.get("order") as "asc" | "desc") ?? undefined,
+    category: searchParams.get("category") ?? undefined,
+    published: searchParams.has("isPublished") ? searchParams.get("isPublished") === "true" : undefined,
+    featured: searchParams.has("isFeatured") ? searchParams.get("isFeatured") === "true" : undefined,
+    sort: (searchParams.get("sort") as "asc" | "desc") ?? undefined,
     page: searchParams.get("page") ? Number(searchParams.get("page")) : undefined,
     limit: searchParams.get("limit") ? Number(searchParams.get("limit")) : undefined,
   })
 
-  return NextResponse.json(result)
-}
+  return success(result)
+}, { rateLimit: { max: 30 } })
 
-export async function POST(req: Request) {
-  try {
-    const ip = getClientIp(req)
-    const { allowed } = rateLimit(`blog-create:${ip}`, 20, 60_000)
-    if (!allowed) {
-      return NextResponse.json(
-        { error: "Trop de requêtes. Veuillez réessayer dans quelques minutes." },
-        { status: 429, headers: { "Retry-After": "300", "X-RateLimit-Remaining": "0" } },
-      )
-    }
+export const POST = apiRoute(async (ctx) => {
+  const bodyResult = await apiBody(blogPostSchema)(ctx.request)
+  if (bodyResult.error) return bodyResult.error
 
-    const body = await req.json()
-    const parsed = blogSchema.safeParse(body)
-    if (!parsed.success) {
-      return NextResponse.json({ error: parsed.error.flatten() }, { status: 400 })
-    }
-    const post = await createBlogPost(parsed.data as unknown as Record<string, unknown>)
-    try {
-      revalidatePath("/insights")
-      revalidatePath("/sitemap.xml")
-    } catch {}
-    return NextResponse.json(post, { status: 201 })
-  } catch (e) {
-    const message = e instanceof Error ? e.message : "Internal error"
-    return NextResponse.json({ error: message }, { status: 500 })
-  }
-}
+  const post = await blogService.create(bodyResult.data)
+
+  createAuditLog({
+    action: "CREATE",
+    entity: "BLOG_POST",
+    entityId: post.id,
+    description: `Creation de l'article de blog : ${bodyResult.data.title}`,
+    userId: ctx.auth.session.userId,
+    request: ctx.request,
+  })
+
+  try { revalidatePath("/insights"); revalidatePath("/sitemap.xml") } catch {}
+
+  return created(post)
+}, { auth: true, admin: true, rateLimit: { max: 20 } })

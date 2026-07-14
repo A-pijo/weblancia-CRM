@@ -22,14 +22,14 @@ function CaseStudyCard({ item }: CaseStudyCardProps) {
     >
       <div className="relative aspect-video overflow-hidden rounded-radius-md bg-bg-secondary">
         {item.featuredImage && (
-          <Image src={item.featuredImage} alt={item.title} fill className="object-cover group-hover:scale-[1.03] transition-transform duration-500" sizes="(max-width: 768px) 100vw, 50vw" />
+          <Image src={item.featuredImage} alt="" aria-hidden="true" fill className="object-cover group-hover:scale-[1.03] transition-transform duration-500" sizes="(max-width: 768px) 100vw, 50vw" />
         )}
       </div>
       <div className="p-6">
         <Badge variant="category" className="mb-3">
           {item.industry ?? "Portfolio"}
         </Badge>
-        <h3 className="text-xl/7 font-semibold mb-2">{item.title}</h3>
+        <h2 className="text-h2 font-semibold mb-2">{item.title}</h2>
         {topResult && (
           <p className="text-accent font-bold truncate">{topResult.value}</p>
         )}

@@ -1,43 +1,81 @@
-import { NextResponse } from "next/server"
-import { getProjectById, updateProject, softDeleteProject, permanentlyDeleteProject, duplicateProject, toggleProjectStatus } from "@/lib/projects/queries"
-import { projectSchema } from "@/lib/validations/project"
+import { z } from "zod"
+import { apiRoute, apiBody } from "@/lib/security/api-handler"
+import { success, badRequest, notFound } from "@/lib/security/response"
+import { projectService } from "@/lib/repositories/services"
+import { projectSchema } from "@/lib/validation/project"
+import { createAuditLog } from "@/lib/security/audit"
 
-export async function GET(_req: Request, { params }: { params: Promise<{ id: string }> }) {
-  const { id } = await params
-  const project = await getProjectById(Number(id))
-  if (!project) return NextResponse.json({ error: "Not found" }, { status: 404 })
-  return NextResponse.json(project)
-}
+const workUpdateSchema = projectSchema.partial().extend({
+  _action: z.enum(["duplicate", "toggle"]).optional(),
+}).strict()
 
-export async function PATCH(req: Request, { params }: { params: Promise<{ id: string }> }) {
-  const { id } = await params
-  const body = await req.json()
+const workDeleteSchema = z.object({ permanent: z.literal(true).optional() }).strict()
 
-  if (body._action === "duplicate") {
-    const dup = await duplicateProject(Number(id))
-    return NextResponse.json(dup)
+export const GET = apiRoute(async (ctx) => {
+  const id = ctx.params.id
+  if (!id) return notFound()
+
+  try {
+    const project = await projectService.getById(Number(id))
+    return success(project)
+  } catch {
+    return notFound()
+  }
+})
+
+export const PATCH = apiRoute(async (ctx) => {
+  const id = ctx.params.id
+  if (!id) return notFound()
+
+  const body = await apiBody(workUpdateSchema)(ctx.request)
+  if (body.error) return body.error
+
+  if (body.data._action === "duplicate") {
+    const dup = await projectService.duplicate(Number(id))
+    return success(dup)
   }
 
-  if (body._action === "toggle") {
-    const updated = await toggleProjectStatus(Number(id), body.isActive)
-    return NextResponse.json(updated)
+  if (body.data._action === "toggle") {
+    const updated = await projectService.toggleStatus(Number(id))
+    return success(updated)
   }
 
-  const parsed = projectSchema.partial().safeParse(body)
-  if (!parsed.success) {
-    return NextResponse.json({ error: parsed.error.flatten() }, { status: 400 })
-  }
-  const updated = await updateProject(Number(id), parsed.data as unknown as Record<string, unknown>)
-  return NextResponse.json(updated)
-}
+  const updated = await projectService.update(Number(id), body.data)
 
-export async function DELETE(req: Request, { params }: { params: Promise<{ id: string }> }) {
-  const { id } = await params
-  const body = await req.json().catch(() => ({}))
-  if (body.permanent) {
-    await permanentlyDeleteProject(Number(id))
+  createAuditLog({
+    action: "UPDATE",
+    entity: "PROJECT",
+    entityId: Number(id),
+    description: `Projet #${id} modifié`,
+    userId: ctx.auth.session?.userId,
+    request: ctx.request,
+  })
+
+  return success(updated)
+}, { auth: true, admin: true })
+
+export const DELETE = apiRoute(async (ctx) => {
+  const id = ctx.params.id
+  if (!id) return notFound()
+
+  const raw = await ctx.request.json().catch(() => ({}))
+  const parsed = workDeleteSchema.safeParse(raw)
+  if (!parsed.success) return badRequest("Données invalides", parsed.error.flatten().fieldErrors)
+
+  if (parsed.data.permanent) {
+    await projectService.permanentlyDelete(Number(id))
   } else {
-    await softDeleteProject(Number(id))
+    await projectService.delete(Number(id))
   }
-  return NextResponse.json({ success: true })
-}
+
+  createAuditLog({
+    action: "DELETE",
+    entity: "PROJECT",
+    entityId: Number(id),
+    description: `Projet #${id} supprimé`,
+    userId: ctx.auth.session?.userId,
+    request: ctx.request,
+  })
+
+  return success({ success: true })
+}, { auth: true, admin: true })

@@ -1,4 +1,4 @@
-import { db } from "@/lib/db"
+import { prisma } from "@/lib/database/prisma"
 import { writeFile, mkdir, unlink } from "node:fs/promises"
 import { existsSync } from "node:fs"
 import path from "node:path"
@@ -9,7 +9,6 @@ const ALLOWED_MIMES = [
   "image/png",
   "image/webp",
   "image/avif",
-  "image/svg+xml",
 ]
 
 const MAX_FILE_SIZE = 10 * 1024 * 1024
@@ -96,7 +95,7 @@ export async function deleteFile(url: string): Promise<void> {
 }
 
 export function createMediaRecord(data: UploadResult) {
-  return db.media.create({ data })
+  return prisma.media.create({ data })
 }
 
 export async function getMediaList(params: {
@@ -126,8 +125,8 @@ export async function getMediaList(params: {
   const orderBy = { [sort]: order }
 
   const [items, total] = await Promise.all([
-    db.media.findMany({ where, orderBy, skip, take: limit }),
-    db.media.count({ where }),
+    prisma.media.findMany({ where, orderBy, skip, take: limit }),
+    prisma.media.count({ where }),
   ])
 
   return { items, total, page, totalPages: Math.ceil(total / limit) }

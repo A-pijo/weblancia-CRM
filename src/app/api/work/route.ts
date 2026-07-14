@@ -1,35 +1,37 @@
-import { NextResponse } from "next/server"
-import { getProjects, createProject } from "@/lib/projects/queries"
-import { projectSchema } from "@/lib/validations/project"
+import { apiRoute, apiBody } from "@/lib/security/api-handler"
+import { success, created } from "@/lib/security/response"
+import { projectService } from "@/lib/repositories/services"
+import { projectSchema } from "@/lib/validation/project"
+import { createAuditLog } from "@/lib/security/audit"
 
-export async function GET(req: Request) {
-  const { searchParams } = new URL(req.url)
+export const GET = apiRoute(async (ctx) => {
+  const { searchParams } = ctx.request.nextUrl
 
-  const result = await getProjects({
+  const result = await projectService.list({
     search: searchParams.get("search") ?? undefined,
     industry: searchParams.get("industry") ?? undefined,
-    isActive: searchParams.has("isActive") ? searchParams.get("isActive") === "true" : undefined,
-    isFeatured: searchParams.has("isFeatured") ? searchParams.get("isFeatured") === "true" : undefined,
-    sort: searchParams.get("sort") ?? undefined,
-    order: (searchParams.get("order") as "asc" | "desc") ?? undefined,
+    featured: searchParams.has("featured") ? searchParams.get("featured") === "true" : undefined,
     page: searchParams.get("page") ? Number(searchParams.get("page")) : undefined,
     limit: searchParams.get("limit") ? Number(searchParams.get("limit")) : undefined,
   })
 
-  return NextResponse.json(result)
-}
+  return success(result)
+})
 
-export async function POST(req: Request) {
-  try {
-    const body = await req.json()
-    const parsed = projectSchema.safeParse(body)
-    if (!parsed.success) {
-      return NextResponse.json({ error: parsed.error.flatten() }, { status: 400 })
-    }
-    const project = await createProject(parsed.data as unknown as Record<string, unknown>)
-    return NextResponse.json(project, { status: 201 })
-  } catch (e) {
-    const message = e instanceof Error ? e.message : "Internal error"
-    return NextResponse.json({ error: message }, { status: 500 })
-  }
-}
+export const POST = apiRoute(async (ctx) => {
+  const { data, error } = await apiBody(projectSchema)(ctx.request)
+  if (error) return error
+
+  const project = await projectService.create(data)
+
+  createAuditLog({
+    action: "CREATE",
+    entity: "PROJECT",
+    entityId: project.id,
+    description: `Projet "${data.title}" créé`,
+    userId: ctx.auth.session?.userId,
+    request: ctx.request,
+  })
+
+  return created(project)
+}, { auth: true, admin: true })

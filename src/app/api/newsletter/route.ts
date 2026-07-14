@@ -1,52 +1,21 @@
-import { NextResponse } from "next/server"
 import { newsletterSchema } from "@/lib/validation"
 import { sendEmail } from "@/lib/email"
-import { env } from "@/lib/env"
-import { db } from "@/lib/db"
-import { rateLimit, getClientIp } from "@/lib/rate-limiter"
-import { createLead } from "@/lib/leads/queries"
-import { extractLeadInfo } from "@/lib/leads/tracker"
+import { env } from "@/lib/config"
+import { prisma } from "@/lib/database/prisma"
+import { apiRoute, apiBody } from "@/lib/security/api-handler"
+import { success } from "@/lib/security/response"
+import { leadService } from "@/lib/repositories/services/lead.service"
+import { extractLeadInfo } from "@/lib/repositories/services/lead-tracker.service"
 
-export async function POST(request: Request) {
-  try {
-    const ip = getClientIp(request)
-    const { allowed, remaining } = rateLimit(`newsletter:${ip}`)
-    if (!allowed) {
-      return NextResponse.json(
-        { success: false, error: "Trop de requêtes. Veuillez réessayer dans quelques minutes." },
-        { status: 429, headers: { "Retry-After": "300", "X-RateLimit-Remaining": "0" } },
-      )
-    }
+export const POST = apiRoute(async (ctx) => {
+  const body = await apiBody(newsletterSchema)(ctx.request)
+  if (body.error) return body.error
+  const { email } = body.data
 
-    const body = await request.json()
-    const parsed = newsletterSchema.safeParse(body)
+  await prisma.newsletterSubscriber.upsert({ where: { email }, update: { isActive: true }, create: { email } })
+  const info = extractLeadInfo(ctx.request)
+  await leadService.create({ ...info, name: email.split("@")[0], email, source: "newsletter", message: "Newsletter subscription" })
+  await sendEmail({ to: env.NOTIFICATION_EMAIL, subject: `[Newsletter] Nouvel abonné - ${email}`, body: `Nouvel abonné à la newsletter : ${email}`, replyTo: email })
 
-    if (!parsed.success) {
-      const errors = parsed.error.flatten().fieldErrors
-      return NextResponse.json({ success: false, errors }, { status: 400 })
-    }
-
-    const { email } = parsed.data
-
-    await db.newsletterSubscriber.upsert({
-      where: { email },
-      update: { isActive: true },
-      create: { email },
-    })
-
-    const info = extractLeadInfo(request)
-    await createLead({ ...info, name: email.split("@")[0], email, source: "newsletter", message: "Newsletter subscription" })
-
-    await sendEmail({
-      to: env.NOTIFICATION_EMAIL,
-      subject: `[Newsletter] Nouvel abonné - ${email}`,
-      body: `Nouvel abonné à la newsletter : ${email}`,
-      replyTo: email,
-    })
-
-    return NextResponse.json({ success: true })
-  } catch (error) {
-    console.error("Newsletter API error:", error)
-    return NextResponse.json({ success: false, error: "Erreur serveur" }, { status: 500 })
-  }
-}
+  return success({ message: "Inscription à la newsletter réussie" })
+}, { rateLimit: { max: 10, by: "ip" } })

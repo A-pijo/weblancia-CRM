@@ -1,40 +1,28 @@
-import { NextResponse } from "next/server"
 import { generateAndPublishArticle } from "@/lib/ai"
-import { rateLimit, getClientIp } from "@/lib/rate-limiter"
+import { apiRoute } from "@/lib/security/api-handler"
+import { success, unauthorized } from "@/lib/security/response"
 
-const CRON_SECRET = typeof process !== "undefined" ? process.env.CRON_SECRET : undefined
+const CRON_SECRET = process.env.CRON_SECRET
 
-export async function POST(request: Request) {
-  const ip = getClientIp(request)
-  const { allowed } = rateLimit(`cron-generate:${ip}`, 3, 60_000)
-  if (!allowed) {
-    return NextResponse.json({ success: false, error: "Too many requests" }, { status: 429 })
-  }
-
-  const authHeader = request.headers.get("authorization")
+export const POST = apiRoute(async (ctx) => {
+  const authHeader = ctx.request.headers.get("authorization")
   const token = authHeader?.startsWith("Bearer ") ? authHeader.slice(7) : null
 
-  if (CRON_SECRET && token !== CRON_SECRET) {
-    return NextResponse.json({ success: false, error: "Unauthorized" }, { status: 401 })
-  }
+  if (CRON_SECRET && token !== CRON_SECRET) return unauthorized("Token invalide")
 
   const result = await generateAndPublishArticle()
 
-  if (!result.success) {
-    return NextResponse.json({ success: false, error: result.error }, { status: 500 })
-  }
+  if (!result.success) return new Response(JSON.stringify({ success: false, error: result.error }), { status: 500 })
 
-  return NextResponse.json({
-    success: true,
+  return success({
     post: result.post,
     faq: result.faq,
     durationMs: result.durationMs,
   })
-}
+})
 
-export async function GET() {
-  return NextResponse.json({
-    ok: true,
+export const GET = apiRoute(async () => {
+  return success({
     description: "POST to trigger AI article generation. Requires Bearer token matching CRON_SECRET.",
   })
-}
+})

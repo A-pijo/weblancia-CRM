@@ -1,18 +1,26 @@
-import { NextResponse } from "next/server"
+import { apiRoute, apiBody } from "@/lib/security/api-handler"
+import { success } from "@/lib/security/response"
 import { getAllSettings, upsertSettings } from "@/lib/settings"
+import { createAuditLog } from "@/lib/security/audit"
+import { z } from "zod"
 
-export async function GET() {
+export const GET = apiRoute(async (_ctx) => {
   const settings = await getAllSettings()
-  return NextResponse.json({ success: true, settings })
-}
+  return success(settings)
+}, { auth: true, admin: true })
 
-export async function PUT(request: Request) {
-  try {
-    const body = await request.json()
-    const settings = await upsertSettings(body)
-    return NextResponse.json({ success: true, settings })
-  } catch (e) {
-    const message = e instanceof Error ? e.message : "Internal error"
-    return NextResponse.json({ success: false, error: message }, { status: 500 })
-  }
-}
+// Settings use passthrough intentionally: site settings are dynamic key-value pairs
+// stored as Setting rows. upsertSettings() only persists keys matching the SiteSettings
+// interface — unknown keys are silently ignored. Route is admin-only with auth.
+export const PUT = apiRoute(async (ctx) => {
+  const body = await apiBody(z.object({}).passthrough())(ctx.request)
+  if (body.error) return body.error
+  const settings = await upsertSettings(body.data)
+
+  createAuditLog({
+    action: "SETTINGS_UPDATE", entity: "SETTING",
+    description: "Paramètres généraux mis à jour", userId: ctx.auth.session?.userId, request: ctx.request,
+  })
+
+  return success(settings)
+}, { auth: true, admin: true })

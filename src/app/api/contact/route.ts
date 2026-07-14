@@ -1,62 +1,23 @@
-import { NextResponse } from "next/server"
 import { contactSchema } from "@/lib/validation"
 import { sendEmail } from "@/lib/email"
-import { env } from "@/lib/env"
-import { db } from "@/lib/db"
-import { rateLimit, getClientIp } from "@/lib/rate-limiter"
-import { createLead } from "@/lib/leads/queries"
-import { extractLeadInfo } from "@/lib/leads/tracker"
+import { env, siteConfig } from "@/lib/config"
+import { prisma } from "@/lib/database/prisma"
+import { apiRoute, apiBody } from "@/lib/security/api-handler"
+import { success } from "@/lib/security/response"
+import { leadService } from "@/lib/repositories/services/lead.service"
+import { extractLeadInfo } from "@/lib/repositories/services/lead-tracker.service"
 
-export async function POST(request: Request) {
-  try {
-    const ip = getClientIp(request)
-    const { allowed, remaining } = rateLimit(`contact:${ip}`)
-    if (!allowed) {
-      return NextResponse.json(
-        { success: false, error: "Trop de requêtes. Veuillez réessayer dans quelques minutes." },
-        { status: 429, headers: { "Retry-After": "300", "X-RateLimit-Remaining": "0" } },
-      )
-    }
+export const POST = apiRoute(async (ctx) => {
+  const body = await apiBody(contactSchema)(ctx.request)
+  if (body.error) return body.error
+  const { name, email, phone, subject, message } = body.data
 
-    const body = await request.json()
-    const parsed = contactSchema.safeParse(body)
+  const contact = await prisma.contactRequest.create({ data: { name, email, phone, subject, message } })
+  const info = extractLeadInfo(ctx.request)
+  await leadService.create({ ...info, name, email, phone, message, source: "contact", service: subject, originalId: contact.id })
 
-    if (!parsed.success) {
-      const errors = parsed.error.flatten().fieldErrors
-      return NextResponse.json({ success: false, errors }, { status: 400 })
-    }
+  const emailBody = [`Nouveau message de contact`, `---`, `Nom: ${name}`, `Email: ${email}`, `Téléphone: ${phone || "Non renseigné"}`, `Sujet: ${subject}`, `Message: ${message}`, `---`, `Envoyé depuis ${siteConfig.url}`].join("\n")
+  await sendEmail({ to: env.NOTIFICATION_EMAIL, subject: `[Contact] ${subject} - ${name}`, body: emailBody, replyTo: email })
 
-    const { name, email, phone, subject, message } = parsed.data
-
-    const contact = await db.contactRequest.create({
-      data: { name, email, phone, subject, message },
-    })
-
-    const info = extractLeadInfo(request)
-    await createLead({ ...info, name, email, phone, message, source: "contact", service: subject, originalId: contact.id })
-
-    const emailBody = [
-      "Nouveau message de contact",
-      "---",
-      `Nom: ${name}`,
-      `Email: ${email}`,
-      `Téléphone: ${phone || "Non renseigné"}`,
-      `Sujet: ${subject}`,
-      `Message: ${message}`,
-      "---",
-      `Envoyé depuis app.weblancia.com`,
-    ].join("\n")
-
-    await sendEmail({
-      to: env.NOTIFICATION_EMAIL,
-      subject: `[Contact] ${subject} - ${name}`,
-      body: emailBody,
-      replyTo: email,
-    })
-
-    return NextResponse.json({ success: true })
-  } catch (error) {
-    console.error("Contact API error:", error)
-    return NextResponse.json({ success: false, error: "Erreur serveur" }, { status: 500 })
-  }
-}
+  return success({ message: "Message envoyé avec succès" })
+}, { rateLimit: { max: 10, by: "ip" } })

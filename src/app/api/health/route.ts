@@ -1,7 +1,8 @@
-import { NextResponse } from "next/server"
 import { getPool, testConnection, dbDiagnostics } from "@/lib/db-pool"
+import { apiRoute } from "@/lib/security/api-handler"
+import { success, serverError } from "@/lib/security/response"
 
-export async function GET() {
+export const GET = apiRoute(async () => {
   const app = { ok: true, timestamp: new Date().toISOString() }
   const db = await testConnection()
 
@@ -16,13 +17,10 @@ export async function GET() {
     userCount = d.userCount as number
   }
 
-  return NextResponse.json(
-    { app, database: db, databaseName, tableCount, userCount },
-    { status: db.ok ? 200 : 503 },
-  )
-}
+  return success({ app, database: db, databaseName, tableCount, userCount })
+})
 
-export async function POST() {
+export const POST = apiRoute(async () => {
   const p = getPool()
   const dbRes = await p.query("SELECT CURRENT_DATABASE() AS db")
   const dbName = dbRes.rows[0]?.db ?? "unknown"
@@ -33,10 +31,10 @@ export async function POST() {
   const usersRes = await p.query('SELECT COUNT(*)::int AS c FROM "User"')
   const userCount = usersRes.rows[0]?.c ?? 0
 
-  return NextResponse.json({
+  return success({
     database: dbName,
     tables: tableList,
     tableCount: tableList.length,
     userCount,
   })
-}
+})

@@ -1,32 +1,33 @@
-import { NextResponse } from "next/server"
-import { getAcademyCategoryById, updateAcademyCategory, deleteAcademyCategory, permanentlyDeleteAcademyCategory } from "@/lib/academy/categories/queries"
-import { academyCategorySchema } from "@/lib/validations/academy"
+import { z } from "zod"
+import { academyService } from "@/lib/repositories/services/academy.service"
+import { academyCategorySchema } from "@/lib/validation/academy"
+import { apiRoute, apiBody } from "@/lib/security/api-handler"
+import { success, notFound, badRequest } from "@/lib/security/response"
+import { NotFoundError } from "@/lib/errors"
 
-export async function GET(_req: Request, { params }: { params: Promise<{ id: string }> }) {
-  const { id } = await params
-  const item = await getAcademyCategoryById(Number(id))
-  if (!item) return NextResponse.json({ error: "Not found" }, { status: 404 })
-  return NextResponse.json(item)
-}
+const categoryUpdateSchema = academyCategorySchema.partial().strict()
 
-export async function PATCH(req: Request, { params }: { params: Promise<{ id: string }> }) {
-  const { id } = await params
-  const body = await req.json()
-  const parsed = academyCategorySchema.partial().safeParse(body)
-  if (!parsed.success) {
-    return NextResponse.json({ error: parsed.error.flatten() }, { status: 400 })
-  }
-  const updated = await updateAcademyCategory(Number(id), parsed.data as unknown as Record<string, unknown>)
-  return NextResponse.json(updated)
-}
+const categoryDeleteSchema = z.object({ permanent: z.literal(true).optional() }).strict()
 
-export async function DELETE(req: Request, { params }: { params: Promise<{ id: string }> }) {
-  const { id } = await params
-  const body = await req.json().catch(() => ({}))
-  if (body.permanent) {
-    await permanentlyDeleteAcademyCategory(Number(id))
-  } else {
-    await deleteAcademyCategory(Number(id))
-  }
-  return NextResponse.json({ success: true })
-}
+export const GET = apiRoute(async (ctx) => {
+  try { return success(await academyService.getCategoryById(Number(ctx.params.id))) }
+  catch (e) { if (e instanceof NotFoundError) return notFound(); throw e }
+})
+
+export const PATCH = apiRoute(async (ctx) => {
+  const body = await apiBody(categoryUpdateSchema)(ctx.request)
+  if (body.error) return body.error
+
+  const updated = await academyService.updateCategory(Number(ctx.params.id), body.data)
+  return success(updated)
+}, { auth: true, admin: true })
+
+export const DELETE = apiRoute(async (ctx) => {
+  const raw = await ctx.request.json().catch(() => ({}))
+  const parsed = categoryDeleteSchema.safeParse(raw)
+  if (!parsed.success) return badRequest("Données invalides", parsed.error.flatten().fieldErrors)
+
+  if (parsed.data.permanent) { await academyService.permanentlyDeleteCategory(Number(ctx.params.id)) }
+  else { await academyService.softDeleteCategory(Number(ctx.params.id)) }
+  return success({ message: "Catégorie supprimée" })
+}, { auth: true, admin: true })

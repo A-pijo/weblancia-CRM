@@ -1,17 +1,9 @@
-import { NextResponse } from "next/server"
 import { z } from "zod"
-import { getSessionById, updateSession, deleteSession } from "@/lib/academy/sessions/queries"
-
-export async function GET(_req: Request, { params }: { params: Promise<{ id: string }> }) {
-  const { id } = await params
-  const sessionId = Number(id)
-  if (isNaN(sessionId)) {
-    return NextResponse.json({ error: "Invalid ID" }, { status: 400 })
-  }
-  const item = await getSessionById(sessionId)
-  if (!item) return NextResponse.json({ error: "Not found" }, { status: 404 })
-  return NextResponse.json(item)
-}
+import { academyService } from "@/lib/repositories/services/academy.service"
+import { apiRoute, apiBody } from "@/lib/security/api-handler"
+import { success, notFound } from "@/lib/security/response"
+import { NotFoundError } from "@/lib/errors"
+import { created } from "@/lib/security/response"
 
 const sessionUpdateSchema = z.object({
   title: z.string().min(1).max(200).optional(),
@@ -21,46 +13,22 @@ const sessionUpdateSchema = z.object({
   startDate: z.string().optional(),
   endDate: z.string().optional(),
   timezone: z.string().max(50).optional(),
-  maxParticipants: z.number().int().positive().optional(),
+  maxParticipants: z.number().int().optional(),
+}).strict()
+
+export const GET = apiRoute(async (ctx) => {
+  try { return success(await academyService.getSessionById(Number(ctx.params.id))) }
+  catch (e) { if (e instanceof NotFoundError) return notFound(); throw e }
 })
 
-export async function PATCH(req: Request, { params }: { params: Promise<{ id: string }> }) {
-  try {
-    const { id } = await params
-    const sessionId = Number(id)
-    if (isNaN(sessionId)) {
-      return NextResponse.json({ error: "Invalid ID" }, { status: 400 })
-    }
+export const PATCH = apiRoute(async (ctx) => {
+  const body = await apiBody(sessionUpdateSchema)(ctx.request)
+  if (body.error) return body.error
 
-    const body = await req.json()
-    const parsed = sessionUpdateSchema.safeParse(body)
-    if (!parsed.success) {
-      return NextResponse.json({ error: parsed.error.flatten() }, { status: 400 })
-    }
+  return success(await academyService.updateSession(Number(ctx.params.id), body.data))
+}, { auth: true, admin: true })
 
-    const data: Record<string, unknown> = { ...parsed.data }
-    if (data.startDate) data.startDate = new Date(data.startDate as string)
-    if (data.endDate) data.endDate = new Date(data.endDate as string)
-
-    const updated = await updateSession(sessionId, data as any)
-    return NextResponse.json(updated)
-  } catch (e) {
-    const message = e instanceof Error ? e.message : "Internal error"
-    return NextResponse.json({ error: message }, { status: 500 })
-  }
-}
-
-export async function DELETE(_req: Request, { params }: { params: Promise<{ id: string }> }) {
-  try {
-    const { id } = await params
-    const sessionId = Number(id)
-    if (isNaN(sessionId)) {
-      return NextResponse.json({ error: "Invalid ID" }, { status: 400 })
-    }
-    await deleteSession(sessionId)
-    return NextResponse.json({ success: true })
-  } catch (e) {
-    const message = e instanceof Error ? e.message : "Internal error"
-    return NextResponse.json({ error: message }, { status: 500 })
-  }
-}
+export const DELETE = apiRoute(async (ctx) => {
+  await academyService.deleteSession(Number(ctx.params.id))
+  return success({ message: "Session supprimée" })
+}, { auth: true, admin: true })

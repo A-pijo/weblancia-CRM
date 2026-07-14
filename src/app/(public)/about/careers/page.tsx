@@ -7,22 +7,30 @@ import { CTABanner } from "@/components/sections/cta-banner"
 import { SectionHeader } from "@/components/shared/section-header"
 import { siteConfig } from "@/lib/constants/site"
 import { ArrowRight, MapPin, Clock, CheckCircle } from "@/components/icons"
+import { JobPostingJsonLd } from "@/components/shared/json-ld"
 
 export const metadata: Metadata = {
   title: "Carrières | Weblancia",
   description: "Rejoignez l'équipe Weblancia et participez à des projets digitaux innovants.",
+  keywords: ["Weblancia", "carrières", "emplois", "recrutement", "Casablanca", "digital"],
   alternates: { canonical: `${siteConfig.url}/about/careers` },
   openGraph: {
     title: "Carrières | Weblancia",
     description: "Rejoignez l'équipe Weblancia et participez à des projets digitaux innovants.",
     url: `${siteConfig.url}/about/careers`,
+    siteName: "Weblancia",
+    locale: "fr_FR",
+    alternateLocale: ["en_US", "ar_SA"],
+    images: [{ url: "/images/og/og.svg", width: 1200, height: 630 }],
   },
+  twitter: { card: "summary_large_image", site: "@weblancia", creator: "@weblancia", title: "Carrières | Weblancia", description: "Rejoignez l'équipe Weblancia et participez à des projets digitaux innovants.", images: ["/images/og/og.svg"] },
+  robots: { index: true, follow: true, googleBot: { index: true, follow: true, "max-image-preview": "large" } },
 }
 
 const positions = [
-  { title: "Développeur Full-Stack", type: "CDI", location: "Casablanca", description: "Vous développez des applications web modernes avec React, Next.js et Laravel." },
-  { title: "Designer UI/UX", type: "CDI", location: "Casablanca", description: "Vous créez des expériences utilisateur exceptionnelles et des interfaces élégantes." },
-  { title: "Chef de Projet Digital", type: "CDI", location: "Casablanca", description: "Vous pilotez des projets digitaux de A à Z et assurez la satisfaction client." },
+  { title: "Développeur Full-Stack", type: "CDI", location: "Fès", description: "Vous développez des applications web modernes avec React, Next.js et Laravel." },
+  { title: "Designer UI/UX", type: "CDI", location: "Fès", description: "Vous créez des expériences utilisateur exceptionnelles et des interfaces élégantes." },
+  { title: "Chef de Projet Digital", type: "CDI", location: "Fès", description: "Vous pilotez des projets digitaux de A à Z et assurez la satisfaction client." },
   { title: "Spécialiste SEO", type: "Freelance", location: "Remote", description: "Vous optimisez la visibilité de nos clients sur les moteurs de recherche." },
 ]
 
@@ -36,8 +44,13 @@ const perks = [
 ]
 
 export default function AboutCareersPage() {
+  const now = new Date().toISOString()
+  const future = new Date(Date.now() + 90 * 24 * 60 * 60 * 1000).toISOString()
   return (
     <>
+      {positions.map((p) => (
+        <JobPostingJsonLd key={p.title} title={p.title} description={p.description} datePosted={now} validThrough={future} employmentType={p.type === "Freelance" ? "CONTRACTOR" : "FULL_TIME"} location={p.location} />
+      ))}
       <SectionWrapper>
         <Container>
           <AnimatedReveal>

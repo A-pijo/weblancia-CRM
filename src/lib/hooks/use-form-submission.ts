@@ -1,7 +1,6 @@
 "use client"
 
 import { useState, useCallback } from "react"
-import { env } from "@/lib/env"
 
 interface UseFormSubmissionOptions {
   apiEndpoint: string
@@ -35,9 +34,9 @@ export function useFormSubmission({ apiEndpoint, redirectWhatsApp = false, whats
 
         setState("success")
 
-        if (redirectWhatsApp && env.WHATSAPP_ENABLED) {
+        if (redirectWhatsApp && process.env.NEXT_PUBLIC_WHATSAPP_ENABLED === "true") {
           const encodedMessage = encodeURIComponent(whatsappMessage)
-          const whatsappUrl = `https://wa.me/${env.WHATSAPP_NUMBER}?text=${encodedMessage}`
+          const whatsappUrl = `https://wa.me/${process.env.NEXT_PUBLIC_WHATSAPP_NUMBER}?text=${encodedMessage}`
           window.open(whatsappUrl, "_blank")
         }
 

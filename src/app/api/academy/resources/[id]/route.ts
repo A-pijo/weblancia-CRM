@@ -1,43 +1,37 @@
-import { NextResponse } from "next/server"
-import { getResourceById, updateResource, softDeleteResource, permanentlyDeleteResource, duplicateResource, toggleResourceStatus } from "@/lib/academy/resources/queries"
-import { resourceSchema } from "@/lib/validations/academy"
+import { z } from "zod"
+import { academyService } from "@/lib/repositories/services/academy.service"
+import { resourceSchema } from "@/lib/validation/academy"
+import { apiRoute, apiBody } from "@/lib/security/api-handler"
+import { success, notFound, badRequest } from "@/lib/security/response"
+import { NotFoundError } from "@/lib/errors"
 
-export async function GET(_req: Request, { params }: { params: Promise<{ id: string }> }) {
-  const { id } = await params
-  const item = await getResourceById(Number(id))
-  if (!item) return NextResponse.json({ error: "Not found" }, { status: 404 })
-  return NextResponse.json(item)
-}
+const resourceUpdateSchema = resourceSchema.partial().extend({
+  _action: z.enum(["duplicate", "toggle"]).optional(),
+}).strict()
 
-export async function PATCH(req: Request, { params }: { params: Promise<{ id: string }> }) {
-  const { id } = await params
-  const body = await req.json()
+const resourceDeleteSchema = z.object({ permanent: z.literal(true).optional() }).strict()
 
-  if (body._action === "duplicate") {
-    const dup = await duplicateResource(Number(id))
-    return NextResponse.json(dup)
-  }
+export const GET = apiRoute(async (ctx) => {
+  try { return success(await academyService.getResourceById(Number(ctx.params.id))) }
+  catch (e) { if (e instanceof NotFoundError) return notFound(); throw e }
+})
 
-  if (body._action === "toggle") {
-    const updated = await toggleResourceStatus(Number(id), body.isPublished)
-    return NextResponse.json(updated)
-  }
+export const PATCH = apiRoute(async (ctx) => {
+  const body = await apiBody(resourceUpdateSchema)(ctx.request)
+  if (body.error) return body.error
 
-  const parsed = resourceSchema.partial().safeParse(body)
-  if (!parsed.success) {
-    return NextResponse.json({ error: parsed.error.flatten() }, { status: 400 })
-  }
-  const updated = await updateResource(Number(id), parsed.data as unknown as Record<string, unknown>)
-  return NextResponse.json(updated)
-}
+  if (body.data._action === "duplicate") return success(await academyService.duplicateResource(Number(ctx.params.id)))
+  if (body.data._action === "toggle") return success(await academyService.toggleResourceStatus(Number(ctx.params.id)))
 
-export async function DELETE(req: Request, { params }: { params: Promise<{ id: string }> }) {
-  const { id } = await params
-  const body = await req.json().catch(() => ({}))
-  if (body.permanent) {
-    await permanentlyDeleteResource(Number(id))
-  } else {
-    await softDeleteResource(Number(id))
-  }
-  return NextResponse.json({ success: true })
-}
+  return success(await academyService.updateResource(Number(ctx.params.id), body.data))
+}, { auth: true, admin: true })
+
+export const DELETE = apiRoute(async (ctx) => {
+  const raw = await ctx.request.json().catch(() => ({}))
+  const parsed = resourceDeleteSchema.safeParse(raw)
+  if (!parsed.success) return badRequest("Données invalides", parsed.error.flatten().fieldErrors)
+
+  if (parsed.data.permanent) { await academyService.permanentlyDeleteResource(Number(ctx.params.id)) }
+  else { await academyService.deleteResource(Number(ctx.params.id)) }
+  return success({ message: "Ressource supprimée" })
+}, { auth: true, admin: true })

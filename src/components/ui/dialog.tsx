@@ -81,7 +81,7 @@ function Dialog({ open, onClose, title, children, className }: DialogProps) {
         style={{ animation: "dialog-panel 200ms ease-out" }}
       >
         <div className="flex items-center justify-between px-6 pt-6 pb-0">
-          {title && <h2 className="text-h5 text-text-primary">{title}</h2>}
+          {title && <h2 className="text-h2 text-text-primary">{title}</h2>}
           <button
             onClick={onClose}
             className={cn(

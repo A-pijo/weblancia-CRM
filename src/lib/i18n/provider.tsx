@@ -1,8 +1,9 @@
 "use client"
 
 import { createContext, useContext, useState, useEffect, useCallback, type ReactNode } from "react"
-import type { Locale } from "./index"
 import frCommon from "@/lib/i18n/locales/fr/common.json"
+
+type Locale = "fr" | "en" | "ar"
 import enCommon from "@/lib/i18n/locales/en/common.json"
 import arCommon from "@/lib/i18n/locales/ar/common.json"
 

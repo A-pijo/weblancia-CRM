@@ -1,46 +1,39 @@
-import { NextResponse } from "next/server"
-import { getUserById, updateUser, deleteUser, toggleUserStatus } from "@/lib/users/queries"
-import { userSchema } from "@/lib/validations/users"
-import { getSession } from "@/lib/auth/session"
-import { Role } from "@/lib/auth/config"
+import { userService } from "@/lib/repositories/services/user.service"
+import { apiRoute, apiBody } from "@/lib/security/api-handler"
+import { success, notFound, badRequest } from "@/lib/security/response"
+import { NotFoundError } from "@/lib/errors"
+import { userSchema } from "@/lib/validation/users"
+import { z } from "zod"
 
-export async function GET(_req: Request, { params }: { params: Promise<{ id: string }> }) {
-  const session = await getSession()
-  if (!session || session.role !== Role.SuperAdmin) {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
-  }
-  const { id } = await params
-  const user = await getUserById(Number(id))
-  if (!user) return NextResponse.json({ error: "Not found" }, { status: 404 })
-  const { password: _pw, ...safe } = user
-  return NextResponse.json(safe)
-}
+const userUpdateSchema = userSchema
+  .partial()
+  .extend({ _action: z.literal("toggle").optional() })
+  .strict()
 
-export async function PATCH(req: Request, { params }: { params: Promise<{ id: string }> }) {
-  const session = await getSession()
-  if (!session || session.role !== Role.SuperAdmin) {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
+export const GET = apiRoute(async (ctx) => {
+  try {
+    const user = await userService.getById(Number(ctx.params.id))
+    const { password: _pw, ...safe } = user
+    return success(safe)
+  } catch (error) {
+    if (error instanceof NotFoundError) return notFound()
+    throw error
   }
-  const { id } = await params
-  const body = await req.json()
-  if (body._action === "toggle") {
-    const updated = await toggleUserStatus(Number(id), body.isActive)
-    return NextResponse.json(updated)
-  }
-  const parsed = userSchema.partial().safeParse(body)
-  if (!parsed.success) {
-    return NextResponse.json({ error: parsed.error.flatten() }, { status: 400 })
-  }
-  const updated = await updateUser(Number(id), parsed.data as unknown as Record<string, unknown>)
-  return NextResponse.json(updated)
-}
+}, { auth: true, permission: "users:manage" })
 
-export async function DELETE(_req: Request, { params }: { params: Promise<{ id: string }> }) {
-  const session = await getSession()
-  if (!session || session.role !== Role.SuperAdmin) {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
+export const PATCH = apiRoute(async (ctx) => {
+  const body = await apiBody(userUpdateSchema)(ctx.request)
+  if (body.error) return body.error
+  if (body.data._action === "toggle") {
+    const updated = await userService.toggleStatus(Number(ctx.params.id))
+    return success(updated)
   }
-  const { id } = await params
-  await deleteUser(Number(id))
-  return NextResponse.json({ success: true })
-}
+  const { _action: _a, ...updateData } = body.data
+  const updated = await userService.update(Number(ctx.params.id), updateData)
+  return success(updated)
+}, { auth: true, permission: "users:manage" })
+
+export const DELETE = apiRoute(async (ctx) => {
+  await userService.delete(Number(ctx.params.id))
+  return success({ message: "Utilisateur supprimé" })
+}, { auth: true, permission: "users:manage" })

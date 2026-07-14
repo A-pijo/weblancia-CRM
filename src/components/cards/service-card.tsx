@@ -40,27 +40,31 @@ function ServiceCard({ service }: ServiceCardProps) {
   const Icon = iconMap[service.icon] || Code
 
   return (
-    <div
+    <Link
+      href={`/services/${service.slug}`}
       className={cn(
-        "group bg-surface border border-border rounded-radius-lg p-6",
+        "group block bg-surface border border-border rounded-radius-lg p-6",
         "transition-all duration-300 hover:-translate-y-1 hover:border-accent hover:shadow-lg",
-        "flex flex-col",
+        "flex flex-col relative overflow-hidden",
       )}
     >
-      <Icon size={40} className="text-accent mb-4 shrink-0" aria-hidden="true" />
-      <h3 className="text-xl/7 font-semibold mb-2">{service.title}</h3>
-      <p className="text-body-sm text-text-secondary line-clamp-2 mb-4">
-        {service.description}
-      </p>
-      <div className="mt-auto">
-        <Link
-          href={`/services/${service.slug}`}
-          className="inline-flex items-center gap-1.5 text-accent hover:text-accent-hover text-button font-medium hover:underline transition-colors duration-200"
-        >
-          Learn more
-        </Link>
+      <div className="absolute top-0 right-0 w-24 h-24 bg-accent/5 rounded-bl-full -mr-8 -mt-8 transition-transform duration-300 group-hover:scale-150" />
+      <div className="relative">
+        <div className="w-12 h-12 rounded-radius-md bg-accent-light flex items-center justify-center mb-4">
+          <Icon size={24} className="text-accent shrink-0" aria-hidden="true" />
+        </div>
+        <h3 className="text-xl/7 font-semibold mb-2 group-hover:text-accent transition-colors">{service.title}</h3>
+        <p className="text-body-sm text-text-secondary line-clamp-2 mb-4">
+          {service.description}
+        </p>
       </div>
-    </div>
+      <div className="mt-auto relative">
+        <span className="inline-flex items-center gap-1.5 text-accent group-hover:text-accent-hover text-button font-medium transition-all duration-200 group-hover:gap-2.5">
+          En savoir plus
+          <span aria-hidden="true" className="text-lg leading-none transition-transform duration-200 group-hover:translate-x-0.5">&rarr;</span>
+        </span>
+      </div>
+    </Link>
   )
 }
 

@@ -1,0 +1,61 @@
+# All identified backlink opportunities are considered "missing" unless confirmed existing.
+# See backlinks.csv for the complete list of 405 opportunities with scoring.
+# This file is a subset view of all opportunities that are NOT yet linked.
+
+# Total Missing Opportunities: 405
+# To generate this from backlinks.csv:
+# Import backlinks.csv, filter "existing_backlink" column where value is "FALSE"
+# All entries in backlinks.csv are currently unconfirmed, thus all 405 are missing.
+
+# Quick-start: Top 50 missing opportunities to target first
+name,submission_url,category,priority_score
+Google Business Profile,business.google.com,local,95
+Crunchbase,crunchbase.com/add-new,startup,92
+Clutch.co,clutch.co/get-listed,agency,90
+Product Hunt,producthunt.com/posts/new,launch,89
+Trustpilot,business.trustpilot.com,review,88
+G2,sell.g2.com/create-a-profile,saas,86
+GoodFirms,goodfirms.co/get-listed,agency,85
+DesignRush,designrush.com/agency,agency,84
+SourceForge,sourceforge.net/create,saas,83
+Capterra,capterra.com/vendors,saas,82
+TopDevelopers,topdevelopers.co/register,agency,81
+Manta,manta.com/add-listing,local,80
+Hotfrog,hotfrog.com/add,local,79
+UpCity,upcity.com/profiles/new,agency,78
+SaaSHub,saashub.com/register,saas,77
+AlternativeTo,alternativeto.net/manage-item,saas,76
+Indie Hackers,indiehackers.com/contribute,community,75
+AngelList/Wellfound,angel.co/startups/new,startup,74
+BBB,bbb.org/get-accredited,local,73
+Maroc Pages,marocpages.com/list-business/,local,72
+Sortlist,sortlist.com/register,agency,71
+The Manifest,themanifest.com/claim-profile,agency,70
+Agency Spotter,agencyspotter.com/agencies/new,agency,69
+Telecontact.ma,telecontact.ma/inscrire,local,68
+Semrush Agency,agencies.semrush.com/join,agency,67
+F6S,f6s.com/add-product-or-service,startup,66
+StackShare,stackshare.io/submit,saas,65
+AppSumo,appsumo.com/partners/products/,saas,64
+Software Advice,softwareadvice.com/vendors (via Gartner),saas,63
+GetApp,getapp.com/vendors (via Gartner),saas,62
+PitchGround,pitchground.com/sell,saas,61
+TrustRadius,trustradius.com/vendor-signup,saas,60
+FinancesOnline,financesonline.com/add-product/,saas,59
+DEV Community,dev.to/new,community,58
+Medium,medium.com/new-story,guest-post,57
+Devpost,devpost.com/software/new,community,56
+Hashnode,hashnode.com/new,guest-post,55
+There's An AI For That,theresanaiforthat.com/submit,ai-directory,54
+Fazier,fazier.com,launch,53
+Toolify.ai,toolify.ai/submit,ai-directory,52
+Peerlist,peerlist.io,startup,51
+HARO/Featured,featured.com/signup,pr,50
+Futuretools.io,futuretools.io/submit-a-tool,ai-directory,49
+Qwoted,qwoted.com,pr,48
+Source of Sources,sourceofsources.com,pr,47
+Muck Rack (individual),muckrack.com,pr,46
+PodMatch,podmatch.com,podcast,45
+Yelp,biz.yelp.com,local,44
+Kerix.net,kerix.net/en/annuaire-entreprise/kerix,local,43
+Kompass France,kompass.com/fr,local,42

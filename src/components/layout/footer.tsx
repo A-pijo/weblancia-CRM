@@ -55,6 +55,8 @@ const columns: FooterColumn[] = [
       { label: "Book a Call", href: "/book-call" },
       { label: "Start Project", href: "/start-project" },
       { label: "Consultation", href: "/consultation" },
+      { label: "Authors", href: "/author" },
+      { label: "Sitemap", href: "/sitemap" },
     ],
   },
 ]
@@ -75,11 +77,13 @@ export function Footer() {
   const copyright = `© ${currentYear} ${siteConfig.name}. ${t("footer.copyright")}`
 
   const [newsletterEmail, setNewsletterEmail] = useState("")
+  const [newsletterHp, setNewsletterHp] = useState("")
   const [newsletterStatus, setNewsletterStatus] = useState<"idle" | "loading" | "success" | "error">("idle")
   const [newsletterError, setNewsletterError] = useState("")
 
   async function handleNewsletterSubmit(e: FormEvent) {
     e.preventDefault()
+    if (newsletterHp) return
     if (!newsletterEmail.trim()) return
     setNewsletterStatus("loading")
     setNewsletterError("")
@@ -120,8 +124,11 @@ export function Footer() {
               ) : (
                 <form
                   className="flex flex-col sm:flex-row gap-3 w-full md:w-auto"
-                  onSubmit={handleNewsletterSubmit}
-                >
+                  onSubmit={handleNewsletterSubmit}>
+                  <div aria-hidden="true" style={{ position: "absolute", left: "-9999px" }}>
+                    <label htmlFor="nl_hp">Leave empty</label>
+                    <input id="nl_hp" type="text" value={newsletterHp} onChange={(e) => setNewsletterHp(e.target.value)} tabIndex={-1} autoComplete="off" />
+                  </div>
                   <div className="w-full sm:min-w-[280px]">
                     <Input
                       type="email"
@@ -170,10 +177,15 @@ export function Footer() {
           <p className="text-caption text-text-tertiary order-2 md:order-1">
             {copyright}
           </p>
-          <div className="flex items-center gap-6 order-1 md:order-2">
+          <nav className="flex items-center gap-4 order-1 md:order-2 flex-wrap">
+            <Link href="/legal/terms" className="text-caption text-text-tertiary hover:text-accent transition-colors">Conditions</Link>
+            <Link href="/legal/privacy" className="text-caption text-text-tertiary hover:text-accent transition-colors">Confidentialité</Link>
+            <Link href="/legal/cookies" className="text-caption text-text-tertiary hover:text-accent transition-colors">Cookies</Link>
+            <Link href="/legal/editorial-policy" className="text-caption text-text-tertiary hover:text-accent transition-colors">Éditorial</Link>
+            <Link href="/sitemap" className="text-caption text-text-tertiary hover:text-accent transition-colors">Plan du site</Link>
             <LanguageSwitcher />
             <SocialLinks />
-          </div>
+          </nav>
         </div>
       </div>
     </footer>

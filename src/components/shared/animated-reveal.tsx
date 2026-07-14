@@ -1,7 +1,6 @@
 "use client"
 
-import { useRef } from "react"
-import { motion, useReducedMotion, type Variants } from "framer-motion"
+import { useRef, useEffect, useState } from "react"
 import { cn } from "@/lib/utils/cn"
 
 interface AnimatedRevealProps {
@@ -12,57 +11,55 @@ interface AnimatedRevealProps {
   staggerDelay?: number
 }
 
-const defaultVariants: Variants = {
-  hidden: { opacity: 0, y: 20 },
-  visible: { opacity: 1, y: 0 },
-}
-
 function AnimatedReveal({ children, className, delay = 0, stagger, staggerDelay = 0.08 }: AnimatedRevealProps) {
-  const prefersReducedMotion = useReducedMotion()
   const ref = useRef<HTMLDivElement>(null)
+  const [isVisible, setIsVisible] = useState(false)
 
-  if (prefersReducedMotion) {
-    return <div className={cn(className)}>{children}</div>
-  }
+  useEffect(() => {
+    const el = ref.current
+    if (!el) return
 
-  if (stagger) {
-    return (
-      <motion.div
-        ref={ref}
-        initial="hidden"
-        whileInView="visible"
-        viewport={{ once: true }}
-        variants={{
-          hidden: { opacity: 0 },
-          visible: {
-            opacity: 1,
-            transition: { staggerChildren: staggerDelay, delayChildren: delay },
-          },
-        }}
-        className={cn(className)}
-      >
-        {children}
-      </motion.div>
+    const prefersReduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches
+    if (prefersReduced) {
+      setIsVisible(true)
+      return
+    }
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setIsVisible(true)
+          observer.disconnect()
+        }
+      },
+      { threshold: 0.1 },
     )
-  }
+    observer.observe(el)
+    return () => observer.disconnect()
+  }, [])
 
   return (
-    <motion.div
+    <div
       ref={ref}
-      initial="hidden"
-      whileInView="visible"
-      viewport={{ once: true }}
-      variants={{
-        hidden: defaultVariants.hidden,
-        visible: {
-          ...defaultVariants.visible,
-          transition: { duration: 0.5, delay, ease: [0.16, 1, 0.3, 1] },
-        },
+      className={cn(
+        isVisible
+          ? "animate-in"
+          : "opacity-0",
+        className,
+      )}
+      style={{
+        animationDelay: stagger ? undefined : `${delay}s`,
+        animationDuration: "0.5s",
+        animationFillMode: "both",
+        animationTimingFunction: "cubic-bezier(0.16, 1, 0.3, 1)",
+        ...(stagger ? {
+          transitionDelay: `${delay}s`,
+          transitionDuration: "0.5s",
+        } : {}),
       }}
-      className={cn(className)}
     >
       {children}
-    </motion.div>
+    </div>
   )
 }
 

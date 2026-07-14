@@ -2,7 +2,7 @@
 
 import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
-import { userSchema, type UserFormData } from "@/lib/validations/users"
+import { userSchema, type UserFormData } from "@/lib/validation/users"
 
 interface RoleOption { id: number; name: string }
 

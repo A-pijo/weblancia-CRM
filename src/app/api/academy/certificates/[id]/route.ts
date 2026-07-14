@@ -1,43 +1,37 @@
-import { NextResponse } from "next/server"
-import { getCertificateById, updateCertificate, softDeleteCertificate, permanentlyDeleteCertificate, duplicateCertificate, toggleCertificateStatus } from "@/lib/academy/certificates/queries"
-import { certificateSchema } from "@/lib/validations/academy"
+import { z } from "zod"
+import { academyService } from "@/lib/repositories/services/academy.service"
+import { certificateSchema } from "@/lib/validation/academy"
+import { apiRoute, apiBody } from "@/lib/security/api-handler"
+import { success, notFound, badRequest } from "@/lib/security/response"
+import { NotFoundError } from "@/lib/errors"
 
-export async function GET(_req: Request, { params }: { params: Promise<{ id: string }> }) {
-  const { id } = await params
-  const item = await getCertificateById(Number(id))
-  if (!item) return NextResponse.json({ error: "Not found" }, { status: 404 })
-  return NextResponse.json(item)
-}
+const certificateUpdateSchema = certificateSchema.partial().extend({
+  _action: z.enum(["duplicate", "toggle"]).optional(),
+}).strict()
 
-export async function PATCH(req: Request, { params }: { params: Promise<{ id: string }> }) {
-  const { id } = await params
-  const body = await req.json()
+const certificateDeleteSchema = z.object({ permanent: z.literal(true).optional() }).strict()
 
-  if (body._action === "duplicate") {
-    const dup = await duplicateCertificate(Number(id))
-    return NextResponse.json(dup)
-  }
+export const GET = apiRoute(async (ctx) => {
+  try { return success(await academyService.getCertificateById(Number(ctx.params.id))) }
+  catch (e) { if (e instanceof NotFoundError) return notFound(); throw e }
+})
 
-  if (body._action === "toggle") {
-    const updated = await toggleCertificateStatus(Number(id), body.isPublished)
-    return NextResponse.json(updated)
-  }
+export const PATCH = apiRoute(async (ctx) => {
+  const body = await apiBody(certificateUpdateSchema)(ctx.request)
+  if (body.error) return body.error
 
-  const parsed = certificateSchema.partial().safeParse(body)
-  if (!parsed.success) {
-    return NextResponse.json({ error: parsed.error.flatten() }, { status: 400 })
-  }
-  const updated = await updateCertificate(Number(id), parsed.data as unknown as Record<string, unknown>)
-  return NextResponse.json(updated)
-}
+  if (body.data._action === "duplicate") return success(await academyService.duplicateCertificate(Number(ctx.params.id)))
+  if (body.data._action === "toggle") return success(await academyService.toggleCertificateStatus(Number(ctx.params.id)))
 
-export async function DELETE(req: Request, { params }: { params: Promise<{ id: string }> }) {
-  const { id } = await params
-  const body = await req.json().catch(() => ({}))
-  if (body.permanent) {
-    await permanentlyDeleteCertificate(Number(id))
-  } else {
-    await softDeleteCertificate(Number(id))
-  }
-  return NextResponse.json({ success: true })
-}
+  return success(await academyService.updateCertificate(Number(ctx.params.id), body.data))
+}, { auth: true, admin: true })
+
+export const DELETE = apiRoute(async (ctx) => {
+  const raw = await ctx.request.json().catch(() => ({}))
+  const parsed = certificateDeleteSchema.safeParse(raw)
+  if (!parsed.success) return badRequest("Données invalides", parsed.error.flatten().fieldErrors)
+
+  if (parsed.data.permanent) { await academyService.permanentlyDeleteCertificate(Number(ctx.params.id)) }
+  else { await academyService.deleteCertificate(Number(ctx.params.id)) }
+  return success({ message: "Certificat supprimé" })
+}, { auth: true, admin: true })

@@ -32,7 +32,7 @@ function PricingCard({ tier }: PricingCardProps) {
         </Badge>
       )}
       <div className="mb-6">
-        <h3 className="text-h4 mb-2">{tier.name}</h3>
+        <h3 className="text-h3 mb-2">{tier.name}</h3>
         <p className="text-display mb-1">{tier.price}</p>
         <p className="text-body-sm text-text-secondary">{tier.description}</p>
       </div>

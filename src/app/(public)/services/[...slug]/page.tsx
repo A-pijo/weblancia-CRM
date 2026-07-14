@@ -8,7 +8,7 @@ import { ArrowRight, CheckCircle } from "@/components/icons"
 import { Breadcrumbs } from "@/components/layout/breadcrumbs"
 import { ServiceJsonLd } from "@/components/shared/json-ld"
 import { ServiceCards } from "./service-cards"
-import { getServiceCategoryBySlug, getServiceBySlug, getServiceById } from "@/lib/services/queries"
+import { prisma } from "@/lib/database/prisma"
 import { siteConfig } from "@/lib/constants/site"
 
 type Props = { params: Promise<{ slug: string[] }> }
@@ -24,39 +24,45 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const [first, second] = slug
 
   if (second) {
-    const svc = await getServiceBySlug(second)
+    const svc = await prisma.service.findUnique({ where: { slug: second }, include: { category: true } })
     if (svc) {
       return {
         title: `${svc.title} | Weblancia`,
         description: svc.description ?? "",
+        keywords: `Weblancia, ${svc.title}, service digital, développement web, marketing, Casablanca, Maroc`,
         alternates: { canonical: `${siteConfig.url}/services/${second}` },
-        openGraph: { title: `${svc.title} | Weblancia`, description: svc.description ?? "", url: `${siteConfig.url}/services/${second}` },
-        twitter: { card: "summary_large_image", title: `${svc.title} | Weblancia`, description: svc.description ?? "" },
+        openGraph: { title: `${svc.title} | Weblancia`, description: svc.description ?? "", url: `${siteConfig.url}/services/${second}`, siteName: "Weblancia", locale: "fr_FR", type: "website", images: [{ url: "/images/og/og.svg", width: 1200, height: 630 }] },
+        twitter: { card: "summary_large_image", site: "@weblancia", creator: "@weblancia", title: `${svc.title} | Weblancia`, description: svc.description ?? "", images: ["/images/og/og.svg"] },
+        robots: { index: true, follow: true, googleBot: { index: true, follow: true, "max-image-preview": "large" } },
       }
     }
     return { title: "Service non trouvé | Weblancia" }
   }
 
-  const cat = await getServiceCategoryBySlug(first)
+  const cat = await prisma.serviceCategory.findUnique({ where: { slug: first } })
   if (cat) {
     return {
       title: `${cat.title} | Weblancia`,
       description: cat.description ?? "",
+      keywords: `Weblancia, ${cat.title}, services digitaux, Casablanca`,
       alternates: { canonical: `${siteConfig.url}/services/${first}` },
-      openGraph: { title: `${cat.title} | Weblancia`, description: cat.description ?? "", url: `${siteConfig.url}/services/${first}` },
-      twitter: { card: "summary_large_image", title: `${cat.title} | Weblancia`, description: cat.description ?? "" },
+      openGraph: { title: `${cat.title} | Weblancia`, description: cat.description ?? "", url: `${siteConfig.url}/services/${first}`, siteName: "Weblancia", locale: "fr_FR", type: "website", images: [{ url: "/images/og/og.svg", width: 1200, height: 630 }] },
+      twitter: { card: "summary_large_image", site: "@weblancia", creator: "@weblancia", title: `${cat.title} | Weblancia`, description: cat.description ?? "", images: ["/images/og/og.svg"] },
+      robots: { index: true, follow: true, googleBot: { index: true, follow: true, "max-image-preview": "large" } },
     }
   }
 
   const resolvedSlug = SLUG_ALIASES[first] ?? first
-  const svcData = await getServiceBySlug(resolvedSlug)
+  const svcData = await prisma.service.findUnique({ where: { slug: resolvedSlug }, include: { category: true } })
   if (svcData) {
     return {
       title: `${svcData.title} | Weblancia`,
       description: svcData.description ?? "",
+      keywords: `Weblancia, ${svcData.title}, service digital, développement web, marketing, Casablanca, Maroc`,
       alternates: { canonical: `${siteConfig.url}/services/${first}` },
-      openGraph: { title: `${svcData.title} | Weblancia`, description: svcData.description ?? "", url: `${siteConfig.url}/services/${first}` },
-      twitter: { card: "summary_large_image", title: `${svcData.title} | Weblancia`, description: svcData.description ?? "" },
+      openGraph: { title: `${svcData.title} | Weblancia`, description: svcData.description ?? "", url: `${siteConfig.url}/services/${first}`, siteName: "Weblancia", locale: "fr_FR", type: "website", images: [{ url: "/images/og/og.svg", width: 1200, height: 630 }] },
+      twitter: { card: "summary_large_image", site: "@weblancia", creator: "@weblancia", title: `${svcData.title} | Weblancia`, description: svcData.description ?? "", images: ["/images/og/og.svg"] },
+      robots: { index: true, follow: true, googleBot: { index: true, follow: true, "max-image-preview": "large" } },
     }
   }
 
@@ -68,8 +74,8 @@ export default async function ServicesSlugPage({ params }: Props) {
   const [first, second] = slug
 
   if (second) {
-    const svc = await getServiceBySlug(second)
-    const category = await getServiceCategoryBySlug(first)
+    const svc = await prisma.service.findUnique({ where: { slug: second }, include: { category: true } })
+    const category = await prisma.serviceCategory.findUnique({ where: { slug: first } })
     if (!svc || !category) notFound()
 
     const deliverables = (svc.deliverables as string[]) ?? []
@@ -86,7 +92,7 @@ export default async function ServicesSlugPage({ params }: Props) {
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                 <div className="bg-surface border border-border rounded-radius-xl p-8">
-                  <h2 className="text-h3 font-semibold mb-6">Ce que nous livrons</h2>
+                  <h2 className="text-h2 font-semibold mb-6">Ce que nous livrons</h2>
                   <ul className="flex flex-col gap-3">
                     {deliverables.map((item: string) => (
                       <li key={item} className="flex items-start gap-3">
@@ -97,7 +103,7 @@ export default async function ServicesSlugPage({ params }: Props) {
                   </ul>
                 </div>
                 <div className="bg-accent-light border border-accent/20 rounded-radius-xl p-8">
-                  <h2 className="text-h3 font-semibold mb-6">Résultat attendu</h2>
+                  <h2 className="text-h2 font-semibold mb-6">Résultat attendu</h2>
                   <p className="text-body-lg text-text-primary">{svc.outcome}</p>
                   <div className="mt-8">
                     <Link
@@ -116,12 +122,12 @@ export default async function ServicesSlugPage({ params }: Props) {
     )
   }
 
-  const cat = await getServiceCategoryBySlug(first)
+  const cat = await prisma.serviceCategory.findUnique({ where: { slug: first } })
   if (cat) {
-    const { items: services } = await (await import("@/lib/services/queries")).getServices({
-      categoryId: cat.id,
-      isActive: true,
-      limit: 50,
+    const services = await prisma.service.findMany({
+      where: { categoryId: cat.id, isActive: true },
+      include: { category: true },
+      orderBy: { displayOrder: "asc" },
     })
     return (
       <SectionWrapper>
@@ -147,10 +153,10 @@ export default async function ServicesSlugPage({ params }: Props) {
   }
 
   const resolvedSlug = SLUG_ALIASES[first] ?? first
-  const svc = await getServiceBySlug(resolvedSlug)
+  const svc = await prisma.service.findUnique({ where: { slug: resolvedSlug }, include: { category: true } })
   if (!svc) notFound()
 
-  const category = await getServiceCategoryBySlug(svc.category.slug)
+  const category = await prisma.serviceCategory.findUnique({ where: { slug: svc.category.slug } })
   const deliverables = (svc.deliverables as string[]) ?? []
 
   return (
@@ -165,7 +171,7 @@ export default async function ServicesSlugPage({ params }: Props) {
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
               <div className="bg-surface border border-border rounded-radius-xl p-8">
-                <h2 className="text-h3 font-semibold mb-6">Ce que nous livrons</h2>
+                <h2 className="text-h2 font-semibold mb-6">Ce que nous livrons</h2>
                 <ul className="flex flex-col gap-3">
                   {deliverables.map((item: string) => (
                     <li key={item} className="flex items-start gap-3">
@@ -176,7 +182,7 @@ export default async function ServicesSlugPage({ params }: Props) {
                 </ul>
               </div>
               <div className="bg-accent-light border border-accent/20 rounded-radius-xl p-8">
-                <h2 className="text-h3 font-semibold mb-6">Résultat attendu</h2>
+                <h2 className="text-h2 font-semibold mb-6">Résultat attendu</h2>
                 <p className="text-body-lg text-text-primary">{svc.outcome}</p>
                 <div className="mt-8">
                   <Link

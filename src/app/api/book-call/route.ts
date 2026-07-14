@@ -1,65 +1,23 @@
-import { NextResponse } from "next/server"
 import { bookCallSchema } from "@/lib/validation"
 import { sendEmail } from "@/lib/email"
-import { env } from "@/lib/env"
-import { db } from "@/lib/db"
-import { rateLimit, getClientIp } from "@/lib/rate-limiter"
-import { createLead } from "@/lib/leads/queries"
-import { extractLeadInfo } from "@/lib/leads/tracker"
+import { env, siteConfig } from "@/lib/config"
+import { prisma } from "@/lib/database/prisma"
+import { apiRoute, apiBody } from "@/lib/security/api-handler"
+import { success } from "@/lib/security/response"
+import { leadService } from "@/lib/repositories/services/lead.service"
+import { extractLeadInfo } from "@/lib/repositories/services/lead-tracker.service"
 
-export async function POST(request: Request) {
-  try {
-    const ip = getClientIp(request)
-    const { allowed, remaining } = rateLimit(`book-call:${ip}`)
-    if (!allowed) {
-      return NextResponse.json(
-        { success: false, error: "Trop de requêtes. Veuillez réessayer dans quelques minutes." },
-        { status: 429, headers: { "Retry-After": "300", "X-RateLimit-Remaining": "0" } },
-      )
-    }
+export const POST = apiRoute(async (ctx) => {
+  const body = await apiBody(bookCallSchema)(ctx.request)
+  if (body.error) return body.error
+  const { name, email, phone, company, consultationType, date, time, notes } = body.data
 
-    const body = await request.json()
-    const parsed = bookCallSchema.safeParse(body)
+  const bookCall = await prisma.bookCall.create({ data: { name, email, phone, company, consultationType, date, time, notes } })
+  const info = extractLeadInfo(ctx.request)
+  await leadService.create({ ...info, name, email, phone, company, source: "consultation", service: consultationType, message: `Date: ${date}, Time: ${time}. ${notes ?? ""}`, originalId: bookCall.id })
 
-    if (!parsed.success) {
-      const errors = parsed.error.flatten().fieldErrors
-      return NextResponse.json({ success: false, errors }, { status: 400 })
-    }
+  const emailBody = [`Nouvelle demande de consultation`, `---`, `Nom: ${name}`, `Email: ${email}`, `Téléphone: ${phone}`, `Entreprise: ${company || "Non renseignée"}`, `Type de consultation: ${consultationType}`, `Date: ${date}`, `Créneau: ${time}`, `Notes: ${notes || "Aucune"}`, `---`, `Envoyé depuis ${siteConfig.url}`].join("\n")
+  await sendEmail({ to: env.NOTIFICATION_EMAIL, subject: `[Consultation] ${consultationType} - ${name} - ${date}`, body: emailBody, replyTo: email })
 
-    const { name, email, phone, company, consultationType, date, time, notes } = parsed.data
-
-    const bookCall = await db.bookCall.create({
-      data: { name, email, phone, company, consultationType, date, time, notes },
-    })
-
-    const info = extractLeadInfo(request)
-    await createLead({ ...info, name, email, phone, company, source: "consultation", service: consultationType, message: `Date: ${date}, Time: ${time}. ${notes ?? ""}`, originalId: bookCall.id })
-
-    const emailBody = [
-      "Nouvelle demande de consultation",
-      "---",
-      `Nom: ${name}`,
-      `Email: ${email}`,
-      `Téléphone: ${phone}`,
-      `Entreprise: ${company || "Non renseignée"}`,
-      `Type de consultation: ${consultationType}`,
-      `Date: ${date}`,
-      `Créneau: ${time}`,
-      `Notes: ${notes || "Aucune"}`,
-      "---",
-      `Envoyé depuis app.weblancia.com`,
-    ].join("\n")
-
-    await sendEmail({
-      to: env.NOTIFICATION_EMAIL,
-      subject: `[Consultation] ${consultationType} - ${name} - ${date}`,
-      body: emailBody,
-      replyTo: email,
-    })
-
-    return NextResponse.json({ success: true })
-  } catch (error) {
-    console.error("Book call API error:", error)
-    return NextResponse.json({ success: false, error: "Erreur serveur" }, { status: 500 })
-  }
-}
+  return success({ message: "Demande de consultation envoyée avec succès" })
+}, { rateLimit: { max: 10, by: "ip" } })

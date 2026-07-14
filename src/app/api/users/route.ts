@@ -1,43 +1,25 @@
-import { NextResponse } from "next/server"
-import { getUsers, createUser, getRoles } from "@/lib/users/queries"
-import { userSchema } from "@/lib/validations/users"
-import { getSession } from "@/lib/auth/session"
-import { Role } from "@/lib/auth/config"
+import { userService } from "@/lib/repositories/services/user.service"
+import { apiRoute, apiBody } from "@/lib/security/api-handler"
+import { success, created, badRequest } from "@/lib/security/response"
+import { userSchema } from "@/lib/validation/users"
 
-export async function GET(req: Request) {
-  const session = await getSession()
-  if (!session || session.role !== Role.SuperAdmin) {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
-  }
-  const { searchParams } = new URL(req.url)
+export const GET = apiRoute(async (ctx) => {
+  const { searchParams } = ctx.request.nextUrl
   if (searchParams.get("roles")) {
-    const roles = await getRoles()
-    return NextResponse.json(roles)
+    const roles = await userService.getRoles()
+    return success(roles)
   }
-  const result = await getUsers({
+  const result = await userService.list({
     search: searchParams.get("search") ?? undefined,
-    isActive: searchParams.has("isActive") ? searchParams.get("isActive") === "true" : undefined,
     page: searchParams.get("page") ? Number(searchParams.get("page")) : undefined,
     limit: searchParams.get("limit") ? Number(searchParams.get("limit")) : undefined,
   })
-  return NextResponse.json(result)
-}
+  return success(result)
+}, { auth: true, permission: "users:manage" })
 
-export async function POST(req: Request) {
-  const session = await getSession()
-  if (!session || session.role !== Role.SuperAdmin) {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
-  }
-  try {
-    const body = await req.json()
-    const parsed = userSchema.safeParse(body)
-    if (!parsed.success) {
-      return NextResponse.json({ error: parsed.error.flatten() }, { status: 400 })
-    }
-    const user = await createUser(parsed.data as unknown as Record<string, unknown>)
-    return NextResponse.json(user, { status: 201 })
-  } catch (e) {
-    const message = e instanceof Error ? e.message : "Internal error"
-    return NextResponse.json({ error: message }, { status: 500 })
-  }
-}
+export const POST = apiRoute(async (ctx) => {
+  const body = await apiBody(userSchema.strict())(ctx.request)
+  if (body.error) return body.error
+  const user = await userService.create(body.data)
+  return created(user)
+}, { auth: true, permission: "users:manage" })

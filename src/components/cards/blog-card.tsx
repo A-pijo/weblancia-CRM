@@ -1,7 +1,7 @@
 import { cn } from "@/lib/utils/cn"
 import { Badge } from "@/components/ui/badge"
 import type { Insight } from "@/types/insight"
-import { CalendarBlank, Clock } from "@/components/icons"
+import { CalendarBlank, Clock, User } from "@/components/icons"
 
 interface BlogCardProps {
   post: Insight
@@ -33,7 +33,11 @@ function BlogCard({ post }: BlogCardProps) {
         <p className="text-body-sm text-text-secondary line-clamp-2 mb-4">
           {post.description}
         </p>
-        <div className="flex items-center gap-4 text-caption text-text-tertiary">
+        <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-caption text-text-tertiary">
+          <span className="inline-flex items-center gap-1">
+            <User size={14} aria-hidden="true" />
+            {post.author}
+          </span>
           <span className="inline-flex items-center gap-1">
             <CalendarBlank size={14} aria-hidden="true" />
             {post.date}

@@ -3,11 +3,11 @@ import { aiConfig, isAiAvailable } from "./config"
 import { logger } from "./logger"
 import { withRetry } from "./retry"
 import { validateArticle, estimateTokens } from "./validate"
-import { calculateReadingTime } from "@/lib/validations/blog"
-import { getBlogCategories, getBlogPostBySlug, getPublishedPosts, createBlogPost } from "@/lib/blog/queries"
+import { calculateReadingTime } from "@/lib/validation/blog"
+import { prisma } from "@/lib/database/prisma"
 import { revalidatePath } from "next/cache"
 import { sendEmail } from "@/lib/email"
-import { env } from "@/lib/env"
+import { siteConfig } from "@/lib/constants/site"
 
 export interface GeneratedPost {
   id: number
@@ -47,13 +47,13 @@ export async function generateAndPublishArticle(): Promise<GenerationReport> {
   logger.info(`Using provider: ${provider.name}`)
 
   try {
-    const categories = await getBlogCategories()
+    const categories = await prisma.blogCategory.findMany({ orderBy: { title: "asc" } })
     if (!categories || categories.length === 0) {
       return { success: false, error: "No blog categories found", durationMs: Date.now() - start }
     }
     logger.info(`Loaded ${categories.length} categories`)
 
-    const existingPosts = await getPublishedPosts(20)
+    const existingPosts = await prisma.blogPost.findMany({ where: { isPublished: true }, include: { category: true }, orderBy: { publishedAt: "desc" }, take: 20 })
     logger.info(`Loaded ${existingPosts.length} existing posts for internal linking`)
 
     const ctaVariation = getCtaVariation(existingPosts.length)
@@ -76,7 +76,7 @@ export async function generateAndPublishArticle(): Promise<GenerationReport> {
       )
       logger.info(`Topic selected: "${result.title}" (slug: ${result.slug})`)
 
-      const existing = await getBlogPostBySlug(result.slug).catch(() => null)
+      const existing = await prisma.blogPost.findUnique({ where: { slug: result.slug } }).catch(() => null)
       if (!existing) {
         topic = result
         break
@@ -97,7 +97,7 @@ export async function generateAndPublishArticle(): Promise<GenerationReport> {
     const postLinks = existingPosts.map((p) => ({
       title: p.title,
       slug: p.slug,
-      url: `${env.SITE_URL}/insights/${p.slug}`,
+      url: `${siteConfig.url}/insights/${p.slug}`,
     }))
 
     logger.info("Generating article...")
@@ -150,30 +150,32 @@ export async function generateAndPublishArticle(): Promise<GenerationReport> {
     const estimatedTokens = estimateTokens(content)
 
     logger.info("Saving article...")
-    const post = await createBlogPost({
-      title: topic.title,
-      slug: topic.slug,
-      excerpt: topic.excerpt,
-      content,
-      categoryId: topic.categoryId,
-      author: "Weblancia",
-      publishedAt: new Date().toISOString(),
-      isPublished: true,
-      isFeatured: false,
-      readingTime,
-      tags: topic.tags,
-      featuredImage: aiConfig.defaultCoverImage,
-      focusKeyword: topic.focusKeyword,
-      canonicalUrl: null,
-      robots: seo.robots ?? "index, follow",
-      ogTitle: seo.ogTitle,
-      ogDescription: seo.ogDescription,
-      ogImage: null,
-      twitterCard: seo.twitterCard ?? "summary_large_image",
+    const post = await prisma.blogPost.create({
+      data: {
+        title: topic.title,
+        slug: topic.slug,
+        excerpt: topic.excerpt,
+        content,
+        category: { connect: { id: topic.categoryId } },
+        author: "Weblancia",
+        publishedAt: new Date(),
+        isPublished: true,
+        isFeatured: false,
+        readingTime,
+        tags: topic.tags as any,
+        featuredImage: aiConfig.defaultCoverImage,
+        focusKeyword: topic.focusKeyword,
+        canonicalUrl: null,
+        robots: seo.robots ?? "index, follow",
+        ogTitle: seo.ogTitle,
+        ogDescription: seo.ogDescription,
+        ogImage: null,
+        twitterCard: seo.twitterCard ?? "summary_large_image",
+      },
     })
     logger.info(`Article published: "${topic.title}" (ID: ${post.id})`)
 
-    const url = `${env.SITE_URL}/insights/${topic.slug}`
+    const url = `${siteConfig.url}/insights/${topic.slug}`
 
     try {
       revalidatePath("/insights")
@@ -183,7 +185,7 @@ export async function generateAndPublishArticle(): Promise<GenerationReport> {
 
     try {
       await sendEmail({
-        to: env.NOTIFICATION_EMAIL,
+        to: process.env.NOTIFICATION_EMAIL || "contact@weblancia.com",
         subject: `Nouvel article publié : ${topic.title}`,
         body: [
           `Un nouvel article a été généré et publié automatiquement via ${provider.name} :`,
