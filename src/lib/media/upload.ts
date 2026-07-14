@@ -2,7 +2,7 @@ import { prisma } from "@/lib/database/prisma"
 import { writeFile, mkdir, unlink } from "node:fs/promises"
 import { existsSync } from "node:fs"
 import path from "node:path"
-import sizeOf from "image-size"
+import { processImage, getImageDimensions as sharpDimensions } from "./process"
 
 const ALLOWED_MIMES = [
   "image/jpeg",
@@ -31,16 +31,6 @@ function sanitizeFilename(name: string): string {
   return `${base}${ext}`
 }
 
-function getImageDimensions(buffer: Buffer, mime: string) {
-  if (mime === "image/svg+xml") return { width: null, height: null }
-  try {
-    const dim = sizeOf(buffer)
-    return { width: dim.width ?? null, height: dim.height ?? null }
-  } catch {
-    return { width: null, height: null }
-  }
-}
-
 export interface UploadResult {
   url: string
   filename: string
@@ -50,6 +40,7 @@ export interface UploadResult {
   height: number | null
   alt: string
   category: string | null
+  thumbnailUrl?: string
 }
 
 export async function uploadFile(file: File, category = "general"): Promise<UploadResult> {
@@ -67,22 +58,27 @@ export async function uploadFile(file: File, category = "general"): Promise<Uplo
   }
 
   const filename = sanitizeFilename(file.name)
-  const uniqueName = `${Date.now()}-${filename}`
-  const filePath = path.join(targetDir, uniqueName)
+  const baseName = path.basename(filename, path.extname(filename))
+  const uniquePrefix = `${Date.now()}`
 
   const buffer = Buffer.from(await file.arrayBuffer())
-  await writeFile(filePath, buffer)
 
-  const { width, height } = getImageDimensions(buffer, file.type)
+  const processed = await processImage(buffer, file.type)
+  const webpName = `${uniquePrefix}-${baseName}.webp`
+  const thumbName = `${uniquePrefix}-${baseName}-thumb.webp`
+
+  await writeFile(path.join(targetDir, webpName), processed.webp)
+  await writeFile(path.join(targetDir, thumbName), processed.thumbnail)
 
   return {
-    url: `/uploads/${cat}/${uniqueName}`,
-    filename,
-    mimeType: file.type,
-    size: file.size,
-    width,
-    height,
-    alt: filename,
+    url: `/uploads/${cat}/${webpName}`,
+    thumbnailUrl: `/uploads/${cat}/${thumbName}`,
+    filename: webpName,
+    mimeType: "image/webp",
+    size: processed.webp.length,
+    width: processed.dimensions.width,
+    height: processed.dimensions.height,
+    alt: baseName,
     category: cat,
   }
 }
@@ -91,6 +87,10 @@ export async function deleteFile(url: string): Promise<void> {
   const filePath = path.join(process.cwd(), "public", url)
   if (existsSync(filePath)) {
     await unlink(filePath)
+  }
+  const thumbPath = filePath.replace(/\.webp$/, "-thumb.webp")
+  if (existsSync(thumbPath)) {
+    await unlink(thumbPath)
   }
 }
 
