@@ -209,32 +209,6 @@
   --color-admin-danger-bg: rgba(239, 68, 68, 0.1);
 }
 
-/* ── Dark Mode (system preference) ── */
-@media (prefers-color-scheme: dark) {
-  :root {
-    --color-bg: #1A1816;
-    --color-bg-secondary: #242120;
-    --color-surface: #2D2926;
-    --color-surface-hover: #34302C;
-    --color-text-primary: #F0EDE8;
-    --color-text-secondary: #A39E96;
-    --color-text-tertiary: #8A847C;
-    --color-accent: #D97A5C;
-    --color-accent-hover: #E08B6F;
-    --color-accent-light: #3D2219;
-    --color-border: #3D3934;
-    --color-border-hover: #544E47;
-    --color-focus-ring: #D97A5C;
-    --color-overlay: rgba(0, 0, 0, 0.7);
-    --color-shadow: rgba(0, 0, 0, 0.3);
-    --color-shadow-strong: rgba(0, 0, 0, 0.5);
-  }
-
-  .container-page,
-  .bg-bg { background-color: var(--color-bg); }
-  .bg-bg-secondary { background-color: var(--color-bg-secondary); }
-  .bg-surface { background-color: var(--color-surface); }
-}
 
 @media (prefers-reduced-motion: reduce) {
   *,
