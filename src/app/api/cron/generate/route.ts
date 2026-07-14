@@ -8,7 +8,7 @@ export const POST = apiRoute(async (ctx) => {
   const authHeader = ctx.request.headers.get("authorization")
   const token = authHeader?.startsWith("Bearer ") ? authHeader.slice(7) : null
 
-  if (CRON_SECRET && token !== CRON_SECRET) return unauthorized("Token invalide")
+  if (!CRON_SECRET || token !== CRON_SECRET) return unauthorized("Token invalide")
 
   const result = await generateAndPublishArticle()
 
